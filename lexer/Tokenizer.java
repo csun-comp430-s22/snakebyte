@@ -21,18 +21,18 @@ import java.util.ArrayList;
 11: BooleanToken
 12: [ LeftSqrBrktToken
 13: ] RighttSqrBrktToken
-14: { LeftCurlyToken
-15: } RightCurlyToken
-16: ( LeftParenToken
-17: ) RightParenToken
+14: { LeftCurlyToken - done
+15: } RightCurlyToken - done
+16: ( LeftParenToken - done
+17: ) RightParenToken - done
 18: WhileToken
 19: ReturnToken
 20: BreakToken
 21: ; SemiColonToken
 22: PrintToken
 23: ExtendsToken
-24: TrueToken
-25: FalseToken
+24: TrueToken - done
+25: FalseToken - done
 26: ClassToken
 27: FunctionToken
 28: CommaToken
