@@ -73,6 +73,7 @@ public class Tokenizer {
                 return new IfToken();
             } else if (input.startsWith("else", offset)) {
                 offset += 4;
+                return new ElseToken();
             } else if (input.startsWith("+", offset)) {
                 offset += 1;
                 return new PlusToken();
