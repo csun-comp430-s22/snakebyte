@@ -11,10 +11,10 @@ import java.util.ArrayList;
 1: IfToken - done
 2: ElseToken - done
 3: + PlusToken - done
-4; - MinusToken
-5: * TimesToken
-6: / DevideToken
-7: = EqualsToken
+4; - MinusToken - done
+5: * TimesToken - done
+6: / DivideToken - done
+7: = EqualsToken - done
 8: NewToken
 9: IntegerToken
 10: StringToken
@@ -84,7 +84,7 @@ public class Tokenizer {
                 return new TimesToken();
             } else if (input.startsWith("/", offset)) {
                 offset += 1;
-                return new DevideToken();
+                return new DivideToken();
             } else if (input.startsWith("=", offset)) {
                 offset += 1;
                 return new EqualsToken();
