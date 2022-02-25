@@ -25,19 +25,19 @@ import java.util.ArrayList;
 15: } RightCurlyToken - done
 16: ( LeftParenToken - done
 17: ) RightParenToken - done
-18: WhileToken
-19: ReturnToken
-20: BreakToken
+18: WhileToken  - done
+19: ReturnToken - done
+20: BreakToken - done
 21: ; SemiColonToken - done
-22: PrintToken
-23: ExtendsToken
+22: PrintToken - done
+23: ExtendsToken - done
 24: TrueToken - done
 25: FalseToken - done
-26: ClassToken
-27: FunctionToken
-28: CommaToken
-29: PeriodToken
-30: ThisToken
+26: ClassToken - done
+27: FunctionToken - done
+28: CommaToken - done
+29: PeriodToken - done
+30: ThisToken - done
 
 
 /// items below may not need to be done since not in the syntax
