@@ -15,12 +15,12 @@ import java.util.ArrayList;
 5: * TimesToken - done
 6: / DivideToken - done
 7: = EqualsToken - done
-8: NewToken
-9: IntegerToken
-10: StringToken
-11: BooleanToken
-12: [ LeftSqrBrktToken
-13: ] RighttSqrBrktToken
+8: NewToken - done
+9: IntegerToken - done
+10: StringToken - done
+11: BooleanToken - done
+12: [ LeftSqrBrktToken - done
+13: ] RighttSqrBrktToken - done
 14: { LeftCurlyToken - done
 15: } RightCurlyToken - done
 16: ( LeftParenToken - done
@@ -28,7 +28,7 @@ import java.util.ArrayList;
 18: WhileToken
 19: ReturnToken
 20: BreakToken
-21: ; SemiColonToken
+21: ; SemiColonToken - done
 22: PrintToken
 23: ExtendsToken
 24: TrueToken - done
@@ -46,7 +46,7 @@ import java.util.ArrayList;
  ==
  &&
  != 
-
+ !
 */
 public class Tokenizer {
     private final String input;
