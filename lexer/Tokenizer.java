@@ -38,7 +38,7 @@ import java.util.ArrayList;
 28: CommaToken - done
 29: PeriodToken - done
 30: ThisToken - done
-
+31: VarToken - In progress
 
 /// items below may not need to be done since not in the syntax
  >
@@ -63,7 +63,11 @@ public class Tokenizer {
             offset++;
         }
     }
-
+    public Token tryTokenizerVar(){
+        String name = "";
+        //check if the name is special, if true emit a special token
+        //otherwise emit a variable token
+    }
     public Token tokenizeSingle() throws TokenizerException {
         skipWhitespace();
         if (offset < input.length()) {
