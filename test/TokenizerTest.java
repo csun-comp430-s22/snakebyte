@@ -1,11 +1,16 @@
 package lexer;
+import java.util.List;
+
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
-public class TokenizerTest throws TokennizerException {
+public class TokenizerTest{
     @Test
-    public void testTrue() throws TokennizerException{
+    public void testTrueItSelf() throws TokennizerException{
         Tokenizer tokenizer = new Tokenizer("true");
-        assertEquals(1, tokenizer.getOffset());
-        Assert.assertTrue(tokenizer instanceof TrueToken);
+        List<Token> tokens = tokenizer.tokenize();
+        assertEquals(1, tokens.size());
+        Token trueToken = tokens.get(0);
+        assertTrue(trueToken instanceof TrueToken);
     }
 }
