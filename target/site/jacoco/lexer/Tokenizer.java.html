@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Tokenizer.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">maven_testing_example</a> &gt; <a href="index.source.html" class="el_package">lexer</a> &gt; <span class="el_source">Tokenizer.java</span></div><h1>Tokenizer.java</h1><pre class="source lang-java linenums">package lexer;
+
+import java.util.List;
+import java.util.ArrayList;
+
+/* tokens that need to be implemented, the hash code it return must match its position on this list to avoid duplicate hash codes
+
+// add items to end of list
+// mark done when implemented
+
+1: IfToken - done
+2: ElseToken - done
+3: + PlusToken - done
+4; - MinusToken - done
+5: * TimesToken - done
+6: / DivideToken - done
+7: = EqualsToken - done
+8: NewToken - done
+9: IntegerToken - done
+10: StringToken - done
+11: BooleanToken - done
+12: [ LeftSqrBrktToken - done
+13: ] RighttSqrBrktToken - done
+14: { LeftCurlyToken - done
+15: } RightCurlyToken - done
+16: ( LeftParenToken - done
+17: ) RightParenToken - done
+18: WhileToken  - done
+19: ReturnToken - done
+20: BreakToken - done
+21: ; SemiColonToken - done
+22: PrintToken - done
+23: ExtendsToken - done
+24: TrueToken - done
+25: FalseToken - done
+26: ClassToken - done
+27: FunctionToken - done
+28: CommaToken - done
+29: PeriodToken - done
+30: ThisToken - done
+31: VarToken - In progress
+
+/// items below may not need to be done since not in the syntax
+ &gt;
+ &lt;
+ ==
+ &amp;&amp;
+ != 
+ !
+*/
+public class Tokenizer {
+    private final String input;
+    private int offset;
+
+<span class="fc" id="L55">    public Tokenizer(final String input) {</span>
+<span class="fc" id="L56">        this.input = input;</span>
+<span class="fc" id="L57">        offset = 0;</span>
+<span class="fc" id="L58">    }</span>
+
+    public void skipWhitespace() {
+<span class="fc bfc" id="L61" title="All 2 branches covered.">        while (offset &lt; input.length() &amp;&amp;</span>
+<span class="pc bpc" id="L62" title="1 of 2 branches missed.">                Character.isWhitespace(input.charAt(offset))) {</span>
+<span class="nc" id="L63">            offset++;</span>
+        }
+<span class="fc" id="L65">    }</span>
+    /*
+    public Token tryTokenizerVar(){
+        String name = &quot;&quot;;
+        //check if the name is special, if true emit a special token
+        //otherwise emit a variable token
+    }
+    */
+    public Token tokenizeSingle() throws TokenizerException {
+<span class="fc" id="L74">        skipWhitespace();</span>
+<span class="fc bfc" id="L75" title="All 2 branches covered.">        if (offset &lt; input.length()) {</span>
+
+<span class="pc bpc" id="L77" title="1 of 2 branches missed.">            if (input.startsWith(&quot;if&quot;, offset)) {</span>
+<span class="nc" id="L78">                offset += 2;</span>
+<span class="nc" id="L79">                return new IfToken();</span>
+<span class="pc bpc" id="L80" title="1 of 2 branches missed.">            } else if (input.startsWith(&quot;else&quot;, offset)) {</span>
+<span class="nc" id="L81">                offset += 4;</span>
+<span class="nc" id="L82">                return new ElseToken();</span>
+<span class="pc bpc" id="L83" title="1 of 2 branches missed.">            } else if (input.startsWith(&quot;+&quot;, offset)) {</span>
+<span class="nc" id="L84">                offset += 1;</span>
+<span class="nc" id="L85">                return new PlusToken();</span>
+<span class="pc bpc" id="L86" title="1 of 2 branches missed.">            } else if (input.startsWith(&quot;-&quot;, offset)) {</span>
+<span class="nc" id="L87">                offset += 1;</span>
+<span class="nc" id="L88">                return new MinusToken();</span>
+<span class="pc bpc" id="L89" title="1 of 2 branches missed.">            } else if (input.startsWith(&quot;*&quot;, offset)) {</span>
+<span class="nc" id="L90">                offset += 1;</span>
+<span class="nc" id="L91">                return new TimesToken();</span>
+<span class="pc bpc" id="L92" title="1 of 2 branches missed.">            } else if (input.startsWith(&quot;/&quot;, offset)) {</span>
+<span class="nc" id="L93">                offset += 1;</span>
+<span class="nc" id="L94">                return new DivideToken();</span>
+<span class="pc bpc" id="L95" title="1 of 2 branches missed.">            } else if (input.startsWith(&quot;=&quot;, offset)) {</span>
+<span class="nc" id="L96">                offset += 1;</span>
+<span class="nc" id="L97">                return new EqualsToken();</span>
+<span class="pc bpc" id="L98" title="1 of 2 branches missed.">            } else if (input.startsWith(&quot;new&quot;, offset)) {</span>
+<span class="nc" id="L99">                offset += 3;</span>
+<span class="nc" id="L100">                return new NewToken();</span>
+<span class="pc bpc" id="L101" title="1 of 2 branches missed.">            } else if (input.startsWith(&quot;Int&quot;, offset)) {</span>
+<span class="nc" id="L102">                offset += 3;</span>
+<span class="nc" id="L103">                return new IntegerToken();</span>
+<span class="pc bpc" id="L104" title="1 of 2 branches missed.">            } else if (input.startsWith(&quot;Str&quot;, offset)) {</span>
+<span class="nc" id="L105">                offset += 3;</span>
+<span class="nc" id="L106">                return new StringToken();</span>
+<span class="pc bpc" id="L107" title="1 of 2 branches missed.">            } else if (input.startsWith(&quot;Bool&quot;, offset)) {</span>
+<span class="nc" id="L108">                offset += 4;</span>
+<span class="nc" id="L109">                return new BooleanToken();</span>
+<span class="pc bpc" id="L110" title="1 of 2 branches missed.">            } else if (input.startsWith(&quot;[&quot;, offset)) {</span>
+<span class="nc" id="L111">                offset += 1;</span>
+<span class="nc" id="L112">                return new LeftSqrBrktToken();</span>
+<span class="pc bpc" id="L113" title="1 of 2 branches missed.">            } else if (input.startsWith(&quot;]&quot;, offset)) {</span>
+<span class="nc" id="L114">                offset += 1;</span>
+<span class="nc" id="L115">                return new RightSqrBrktToken();</span>
+<span class="pc bpc" id="L116" title="1 of 2 branches missed.">            } else if (input.startsWith(&quot;{&quot;, offset)) {</span>
+<span class="nc" id="L117">                offset += 1;</span>
+<span class="nc" id="L118">                return new LeftCurlyToken();</span>
+<span class="pc bpc" id="L119" title="1 of 2 branches missed.">            } else if (input.startsWith(&quot;}&quot;, offset)) {</span>
+<span class="nc" id="L120">                offset += 1;</span>
+<span class="nc" id="L121">                return new RightCurlyToken();</span>
+<span class="pc bpc" id="L122" title="1 of 2 branches missed.">            } else if (input.startsWith(&quot;(&quot;, offset)) {</span>
+<span class="nc" id="L123">                offset += 1;</span>
+<span class="nc" id="L124">                return new LeftParenToken();</span>
+<span class="pc bpc" id="L125" title="1 of 2 branches missed.">            } else if (input.startsWith(&quot;)&quot;, offset)) {</span>
+<span class="nc" id="L126">                offset += 1;</span>
+<span class="nc" id="L127">                return new RightParenToken();</span>
+<span class="pc bpc" id="L128" title="1 of 2 branches missed.">            } else if (input.startsWith(&quot;while&quot;, offset)) {</span>
+<span class="nc" id="L129">                offset += 5;</span>
+<span class="nc" id="L130">                return new WhileToken();</span>
+<span class="pc bpc" id="L131" title="1 of 2 branches missed.">            } else if (input.startsWith(&quot;return&quot;, offset)) {</span>
+<span class="nc" id="L132">                offset += 6;</span>
+<span class="nc" id="L133">                return new ReturnToken();</span>
+<span class="pc bpc" id="L134" title="1 of 2 branches missed.">            } else if (input.startsWith(&quot;break&quot;, offset)) {</span>
+<span class="nc" id="L135">                offset += 5;</span>
+<span class="nc" id="L136">                return new BreakToken();</span>
+<span class="pc bpc" id="L137" title="1 of 2 branches missed.">            } else if (input.startsWith(&quot;;&quot;, offset)) {</span>
+<span class="nc" id="L138">                offset += 1;</span>
+<span class="nc" id="L139">                return new SemiColonToken();</span>
+<span class="pc bpc" id="L140" title="1 of 2 branches missed.">            } else if (input.startsWith(&quot;print&quot;, offset)) {</span>
+<span class="nc" id="L141">                offset += 5;</span>
+<span class="nc" id="L142">                return new PrintToken();</span>
+<span class="pc bpc" id="L143" title="1 of 2 branches missed.">            } else if (input.startsWith(&quot;extends&quot;, offset)) {</span>
+<span class="nc" id="L144">                offset += 7;</span>
+<span class="nc" id="L145">                return new ExtendsToken();</span>
+<span class="pc bpc" id="L146" title="1 of 2 branches missed.">            } else if (input.startsWith(&quot;true&quot;, offset)) {</span>
+<span class="fc" id="L147">                offset += 4;</span>
+<span class="fc" id="L148">                return new TrueToken();</span>
+<span class="nc bnc" id="L149" title="All 2 branches missed.">            } else if (input.startsWith(&quot;false&quot;, offset)) {</span>
+<span class="nc" id="L150">                offset += 5;</span>
+<span class="nc" id="L151">                return new FalseToken();</span>
+<span class="nc bnc" id="L152" title="All 2 branches missed.">            } else if (input.startsWith(&quot;class&quot;, offset)) {</span>
+<span class="nc" id="L153">                offset += 5;</span>
+<span class="nc" id="L154">                return new ClassToken();</span>
+<span class="nc bnc" id="L155" title="All 2 branches missed.">            } else if (input.startsWith(&quot;function&quot;, offset)) {</span>
+<span class="nc" id="L156">                offset += 8;</span>
+<span class="nc" id="L157">                return new FunctionToken();</span>
+<span class="nc bnc" id="L158" title="All 2 branches missed.">            } else if (input.startsWith(&quot;,&quot;, offset)) {</span>
+<span class="nc" id="L159">                offset += 1;</span>
+<span class="nc" id="L160">                return new CommaToken();</span>
+<span class="nc bnc" id="L161" title="All 2 branches missed.">            } else if (input.startsWith(&quot;.&quot;, offset)) {</span>
+<span class="nc" id="L162">                offset += 1;</span>
+<span class="nc" id="L163">                return new PeriodToken();</span>
+<span class="nc bnc" id="L164" title="All 2 branches missed.">            } else if (input.startsWith(&quot;this&quot;, offset)) {</span>
+<span class="nc" id="L165">                offset += 4;</span>
+<span class="nc" id="L166">                return new ThisToken();</span>
+            }
+
+            else {
+<span class="nc" id="L170">                throw new TokenizerException();</span>
+            }
+        } else {
+<span class="fc" id="L173">            return null;</span>
+        }
+    }
+
+    public List&lt;Token&gt; tokenize() throws TokenizerException {
+<span class="fc" id="L178">        final List&lt;Token&gt; tokens = new ArrayList&lt;Token&gt;();</span>
+<span class="fc" id="L179">        Token token = tokenizeSingle();</span>
+
+<span class="fc bfc" id="L181" title="All 2 branches covered.">        while (token != null) {</span>
+<span class="fc" id="L182">            tokens.add(token);</span>
+<span class="fc" id="L183">            token = tokenizeSingle();</span>
+        }
+
+<span class="fc" id="L186">        return tokens;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

@@ -63,11 +63,13 @@ public class Tokenizer {
             offset++;
         }
     }
+    /*
     public Token tryTokenizerVar(){
         String name = "";
         //check if the name is special, if true emit a special token
         //otherwise emit a variable token
     }
+    */
     public Token tokenizeSingle() throws TokenizerException {
         skipWhitespace();
         if (offset < input.length()) {
