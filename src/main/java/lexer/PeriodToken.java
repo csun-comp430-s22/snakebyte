@@ -5,7 +5,7 @@ public class PeriodToken implements Token {
     }
 
     public int hashCode() {
-        return 28;
+        return 29;
     }
 
     public String toString() {

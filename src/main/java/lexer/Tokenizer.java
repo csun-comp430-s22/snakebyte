@@ -73,57 +73,56 @@ public class Tokenizer {
         if(offset < input.length() && Character.isLetter(input.charAt(offset))){
             name += input.charAt(offset);
             offset++;
-            while(offset < input.length() &&
-                Character.isLetterOrDigit(input.charAt(offset))){
+            while(offset < input.length() && Character.isLetterOrDigit(input.charAt(offset))){
                 name += input.charAt(offset);
                 offset++;
             }
             //name is hold a possible variable name
             // name could be "true"
-            if(name.equals("true")){
-                return new TrueToken();
-            }else if(name.equals("false")){
-                return new FalseToken();
-            }else if(name.equals("this")){
-                return new ThisToken();
-            }else if(name.equals("if")){
-                return new IfToken();
-            }else if(name.equals("else")){
-                return new ElseToken();
-            }else if(name.equals("while")){
-                return new WhileToken();
-            }else if(name.equals("break")){
-                return new BreakToken();
-            }else if(name.equals("return")){
-                return new ReturnToken();
-            }else if(name.equals("print")){
-                return new PrintToken();
-            }else if(name.equals("extends")){
-                return new ExtendsToken();
-            }else if(name.equals("class")){
-                return new ClassToken();
-            }else if(name.equals("function")){
-                return new FunctionToken();
-            }else if(name.equals("new")){
-                return new NewToken();
-            }else if(name.equals("Bool")){
-                return new BooleanToken();
-            }else if(name.equals("Int")){
-                return new IntegerToken();
-            }else if(name.equals("Str")){
-                return new StringToken();
-            }else if(name.equals("var")){
-                return new VarToken();
-            }
+            // if(name.equals("true")){
+            //     return new TrueToken();
+            // }else if(name.equals("false")){
+            //     return new FalseToken();
+            // }else if(name.equals("this")){
+            //     return new ThisToken();
+            // }else if(name.equals("if")){
+            //     return new IfToken();
+            // }else if(name.equals("else")){
+            //     return new ElseToken();
+            // }else if(name.equals("while")){
+            //     return new WhileToken();
+            // }else if(name.equals("break")){
+            //     return new BreakToken();
+            // }else if(name.equals("return")){
+            //     return new ReturnToken();
+            // }else if(name.equals("print")){
+            //     return new PrintToken();
+            // }else if(name.equals("extends")){
+            //     return new ExtendsToken();
+            // }else if(name.equals("class")){
+            //     return new ClassToken();
+            // }else if(name.equals("function")){
+            //     return new FunctionToken();
+            // }else if(name.equals("new")){
+            //     return new NewToken();
+            // }else if(name.equals("Bool")){
+            //     return new BooleanToken();
+            // }else if(name.equals("Int")){
+            //     return new IntegerToken();
+            // }else if(name.equals("Str")){
+            //     return new StringToken();
+            // }else if(name.equals("var")){
+            //     return new VarToken();
+            // }
 
         }else{
             return null;
         }
-    
-    public Token tokenizeSingle() throws TokenizerException {
+        return new VarToken(name);
+    }
+    public Token tokenizeSingle() throws TokenizerException{
         skipWhitespace();
         if (offset < input.length()) {
-
             if (input.startsWith("if", offset)) {
                 offset += 2;
                 return new IfToken();
@@ -214,9 +213,7 @@ public class Tokenizer {
             } else if (input.startsWith("this", offset)) {
                 offset += 4;
                 return new ThisToken();
-            }
-
-            else {
+            }else {
                 throw new TokenizerException();
             }
         } else {
