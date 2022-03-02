@@ -1,5 +1,5 @@
 package lexer;
-public class VarToken{
+public class VarToken implements Token {
     public final String name;
     public VarToken(String name){
         this.name = name;
