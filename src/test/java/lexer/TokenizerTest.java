@@ -19,7 +19,15 @@ public class TokenizerTest{
     "(true" -- pass
     "true)" -- pass
      */
-   @Test
+     //test TrueToken.java class for code coverage
+    @Test
+    public void testTrueToken() throws TokenizerException {
+        TrueToken trueToken = new TrueToken();
+        assertTrue(trueToken.equals(new TrueToken()));
+        assertEquals(24, trueToken.hashCode());
+        assertEquals("true", trueToken.toString());
+    }
+    @Test
     public void testTrueItSelf() throws TokenizerException{
         Tokenizer tokenizer = new Tokenizer("true");
         List<Token> tokens = tokenizer.tokenize();

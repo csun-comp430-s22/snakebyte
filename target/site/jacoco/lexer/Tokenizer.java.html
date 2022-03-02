@@ -59,8 +59,8 @@ public class Tokenizer {
 
     public void skipWhitespace() {
 <span class="fc bfc" id="L61" title="All 2 branches covered.">        while (offset &lt; input.length() &amp;&amp;</span>
-<span class="pc bpc" id="L62" title="1 of 2 branches missed.">                Character.isWhitespace(input.charAt(offset))) {</span>
-<span class="nc" id="L63">            offset++;</span>
+<span class="fc bfc" id="L62" title="All 2 branches covered.">                Character.isWhitespace(input.charAt(offset))) {</span>
+<span class="fc" id="L63">            offset++;</span>
         }
 <span class="fc" id="L65">    }</span>
     /*
@@ -119,12 +119,12 @@ public class Tokenizer {
 <span class="pc bpc" id="L119" title="1 of 2 branches missed.">            } else if (input.startsWith(&quot;}&quot;, offset)) {</span>
 <span class="nc" id="L120">                offset += 1;</span>
 <span class="nc" id="L121">                return new RightCurlyToken();</span>
-<span class="pc bpc" id="L122" title="1 of 2 branches missed.">            } else if (input.startsWith(&quot;(&quot;, offset)) {</span>
-<span class="nc" id="L123">                offset += 1;</span>
-<span class="nc" id="L124">                return new LeftParenToken();</span>
-<span class="pc bpc" id="L125" title="1 of 2 branches missed.">            } else if (input.startsWith(&quot;)&quot;, offset)) {</span>
-<span class="nc" id="L126">                offset += 1;</span>
-<span class="nc" id="L127">                return new RightParenToken();</span>
+<span class="fc bfc" id="L122" title="All 2 branches covered.">            } else if (input.startsWith(&quot;(&quot;, offset)) {</span>
+<span class="fc" id="L123">                offset += 1;</span>
+<span class="fc" id="L124">                return new LeftParenToken();</span>
+<span class="fc bfc" id="L125" title="All 2 branches covered.">            } else if (input.startsWith(&quot;)&quot;, offset)) {</span>
+<span class="fc" id="L126">                offset += 1;</span>
+<span class="fc" id="L127">                return new RightParenToken();</span>
 <span class="pc bpc" id="L128" title="1 of 2 branches missed.">            } else if (input.startsWith(&quot;while&quot;, offset)) {</span>
 <span class="nc" id="L129">                offset += 5;</span>
 <span class="nc" id="L130">                return new WhileToken();</span>
@@ -143,12 +143,12 @@ public class Tokenizer {
 <span class="pc bpc" id="L143" title="1 of 2 branches missed.">            } else if (input.startsWith(&quot;extends&quot;, offset)) {</span>
 <span class="nc" id="L144">                offset += 7;</span>
 <span class="nc" id="L145">                return new ExtendsToken();</span>
-<span class="pc bpc" id="L146" title="1 of 2 branches missed.">            } else if (input.startsWith(&quot;true&quot;, offset)) {</span>
+<span class="fc bfc" id="L146" title="All 2 branches covered.">            } else if (input.startsWith(&quot;true&quot;, offset)) {</span>
 <span class="fc" id="L147">                offset += 4;</span>
 <span class="fc" id="L148">                return new TrueToken();</span>
-<span class="nc bnc" id="L149" title="All 2 branches missed.">            } else if (input.startsWith(&quot;false&quot;, offset)) {</span>
-<span class="nc" id="L150">                offset += 5;</span>
-<span class="nc" id="L151">                return new FalseToken();</span>
+<span class="pc bpc" id="L149" title="1 of 2 branches missed.">            } else if (input.startsWith(&quot;false&quot;, offset)) {</span>
+<span class="fc" id="L150">                offset += 5;</span>
+<span class="fc" id="L151">                return new FalseToken();</span>
 <span class="nc bnc" id="L152" title="All 2 branches missed.">            } else if (input.startsWith(&quot;class&quot;, offset)) {</span>
 <span class="nc" id="L153">                offset += 5;</span>
 <span class="nc" id="L154">                return new ClassToken();</span>
