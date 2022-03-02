@@ -1,5 +1,11 @@
-# snakebyte
-Compiler written in Java targeting Python
+# snakebyte  
+Compiler written in Java targeting Python  
+---
+## Test Status  
+1. throw new TokenizerException() case is missing  
+2. else if (input.startsWith(".", offset)) 1 of 2 branch is missing  
+3. if(offset < input.length() && Character.isLetter(input.charAt(offset))) 1 of 2 branch is missing  
+4. VarToken.java class equals 'false' case is missing  
 ---  
 ## Syntax  
 ```  
