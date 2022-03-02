@@ -13,4 +13,12 @@ public class TokenizerTest{
         Token trueToken = tokens.get(0);
         assertTrue(trueToken instanceof TrueToken);
     }
+    @Test
+    public void testTrueEmptyBefore() throws TokenizerException{
+        Tokenizer tokenizer = new Tokenizer(" true");
+        List<Token> tokens = tokenizer.tokenize();
+        assertEquals(1, tokens.size());
+        Token trueToken = tokens.get(0);
+        assertTrue(trueToken instanceof TrueToken);
+    }
 }
