@@ -6,7 +6,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 public class TokenizerTest{
     @Test
-    public void testTrueItSelf() throws TokennizerException{
+    public void testTrueItSelf() throws TokenizerException{
         Tokenizer tokenizer = new Tokenizer("true");
         List<Token> tokens = tokenizer.tokenize();
         assertEquals(1, tokens.size());
