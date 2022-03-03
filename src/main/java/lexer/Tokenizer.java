@@ -129,46 +129,46 @@ public class Tokenizer {
             if(retval == null){
                 if(input.startsWith("+", offset)) {
                     offset += 1;
-                    return new PlusToken();
+                    retval =  new PlusToken();
                 } else if (input.startsWith("-", offset)) {
                     offset += 1;
-                    return new MinusToken();
+                    retval =  new MinusToken();
                 } else if (input.startsWith("*", offset)) {
                     offset += 1;
-                    return new TimesToken();
+                    retval =  new TimesToken();
                 } else if (input.startsWith("/", offset)) {
                     offset += 1;
-                    return new DivideToken();
+                    retval =  new DivideToken();
                 } else if (input.startsWith("=", offset)) {
                     offset += 1;
-                    return new EqualsToken();
+                    retval =  new EqualsToken();
                 }else if (input.startsWith("[", offset)) {
                     offset += 1;
-                    return new LeftSqrBrktToken();
+                    retval =  new LeftSqrBrktToken();
                 } else if (input.startsWith("]", offset)) {
                     offset += 1;
-                    return new RightSqrBrktToken();
+                    retval =  new RightSqrBrktToken();
                 } else if (input.startsWith("{", offset)) {
                     offset += 1;
-                    return new LeftCurlyToken();
+                    retval =  new LeftCurlyToken();
                 } else if (input.startsWith("}", offset)) {
                     offset += 1;
-                    return new RightCurlyToken();
+                    retval =  new RightCurlyToken();
                 } else if (input.startsWith("(", offset)) {
                     offset += 1;
-                    return new LeftParenToken();
+                    retval =  new LeftParenToken();
                 } else if (input.startsWith(")", offset)) {
                     offset += 1;
-                    return new RightParenToken();
+                    retval =  new RightParenToken();
                 }else if (input.startsWith(";", offset)) {
                     offset += 1;
-                    return new SemiColonToken();
+                    retval =  new SemiColonToken();
                 }else if (input.startsWith(",", offset)) {
                     offset += 1;
-                    return new CommaToken();
+                    retval =  new CommaToken();
                 } else if (input.startsWith(".", offset)) {
                     offset += 1;
-                    return new PeriodToken();
+                    retval =  new PeriodToken();
                 } else{
                     throw new TokenizerException();
                 }
