@@ -1,11 +1,15 @@
 package lexer;
 import java.util.List;
 
+import javax.print.attribute.standard.MediaSize.Other;
+
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.fail;
 
+import org.junit.Assert;
 import org.junit.Test;
 public class TokenizerTest{
      //test token classes
@@ -448,7 +452,13 @@ public class TokenizerTest{
     public void testTrueTrue(){
         asserTokenizes("truetrue",new Token[]{new VarToken("truetrue")});
     }
-   
+    @Test
+    public void testVarReturnFalse(){
+        Token token = new VarToken("true");
+        Token tokenfalse=  new TrueToken();
+    
+        assertEquals(false,token.equals(tokenfalse));
+    }
     @Test
     public void testWhiteSpace(){
         asserTokenizes("    ",new Token[0]);
