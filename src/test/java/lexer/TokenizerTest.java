@@ -300,7 +300,7 @@ public class TokenizerTest{
     //     assertEquals(1, tokens.size());
     //     Token trueToken = tokens.get(0);
     //     assertTrue(trueToken instanceof TrueToken);
-    // }
+     
     // @Test
     // public void testTrueAndFalseEmptyBefore() throws TokenizerException{
     //     Tokenizer tokenizer = new Tokenizer(" truefalse");
@@ -363,6 +363,14 @@ public class TokenizerTest{
         // Token trueToken = tokens.get(1);
         // assertTrue(trueToken instanceof TrueToken);
         asserTokenizes("(true)",new Token[]{new LeftParenToken(),new TrueToken(),new RightParenToken()});
+    }
+    @Test
+    public void testFalseEqualsAndTrue () throws TokenizerException{
+        asserTokenizes("false=true", new Token[]{new FalseToken(),new EqualsToken(),new TrueToken()});
+    }
+    @Test
+    public void testPeriodFalse () throws TokenizerException{
+        asserTokenizes(".false", new Token[]{new PeriodToken(),new FalseToken()});
     }
     @Test
     public void testThis(){
