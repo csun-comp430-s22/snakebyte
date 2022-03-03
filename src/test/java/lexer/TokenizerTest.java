@@ -373,6 +373,22 @@ public class TokenizerTest{
         asserTokenizes(".false", new Token[]{new PeriodToken(),new FalseToken()});
     }
     @Test
+    public void testThisPeriodLeftAndRightParentheses() throws TokenizerException{
+        asserTokenizes("this.()", new Token[]{new ThisToken(), new PeriodToken(),new LeftParenToken(), new RightParenToken()});
+    }
+    @Test
+    public void testIfLeftAndRightParentheses() throws TokenizerException{
+        asserTokenizes("if(  )", new Token[]{new IfToken(),new LeftParenToken(), new RightParenToken()});
+    }
+    @Test
+    public void testPrintLeftparenthesesStringRightparentheses() throws TokenizerException{
+        asserTokenizes("print(Str)", new Token[]{new PrintToken(), new LeftParenToken(),new StringToken(), new RightParenToken()});
+    }
+    @Test
+    public void testIntPlusInt() throws TokenizerException{
+        asserTokenizes("Int + Int", new Token[]{new IntegerToken(), new PlusToken(),new IntegerToken()});
+    }
+    @Test
     public void testThis(){
         asserTokenizes("this",new Token[]{new ThisToken()});
     }
@@ -432,6 +448,7 @@ public class TokenizerTest{
     public void testTrueTrue(){
         asserTokenizes("truetrue",new Token[]{new VarToken("truetrue")});
     }
+   
     @Test
     public void testWhiteSpace(){
         asserTokenizes("    ",new Token[0]);
