@@ -38,7 +38,7 @@ import java.util.ArrayList;
 28: CommaToken - done
 29: PeriodToken - done
 30: ThisToken - done
-31: VarToken - In progress
+31: VarToken - done
 32: SuperToken - done
 /// items below may not need to be done since not in the syntax
  >

@@ -1,9 +1,8 @@
 # snakebyte  
 Compiler written in Java targeting Python  
 ---
-## Test Status   
-1. else if (input.startsWith(".", offset)) 1 of 2 branch is missing  
-2. if(offset < input.length() && Character.isLetter(input.charAt(offset))) 1 of 2 branch is missing  
+## Test Status     
+1. if(offset < input.length() && Character.isLetter(input.charAt(offset))) 1 of 2 branch is missing  
  
 ---  
 ## Syntax  
@@ -26,6 +25,7 @@ exp ::= exp Op exp | exp.functionname(exp*) method call
 	
 exp ::= i | s| b | var  
 |this | Refers to my instance  
+|super refers to superclass (parent) objects
 |var=exp  
 | new classname(exp*)  new instance of a class  
 | (type)exp Casts an expression as a type   
