@@ -447,6 +447,22 @@ public class TokenizerTest {
     }
 
     @Test
+    public void testAllTokens() throws TokenizerException {
+        asserTokenizes(
+                "if else + - * / = new Int Str Bool [ ] { } ( ) while return break ; print extends true false class function , . this thisIsAVariable",
+                new Token[] { new IfToken(), new ElseToken(), new PlusToken(), new MinusToken(), new TimesToken(),
+                        new DivideToken(), new EqualsToken(),
+                        new NewToken(), new IntegerToken(), new StringToken(), new BooleanToken(),
+                        new LeftSqrBrktToken(), new RightSqrBrktToken(),
+                        new LeftCurlyToken(), new RightCurlyToken(), new LeftParenToken(), new RightParenToken(),
+                        new WhileToken(), new ReturnToken(),
+                        new BreakToken(), new SemiColonToken(), new PrintToken(), new ExtendsToken(), new TrueToken(),
+                        new FalseToken(), new ClassToken(),
+                        new FunctionToken(), new CommaToken(), new PeriodToken(), new ThisToken(),
+                        new VarToken("thisIsAVariable") });
+    }
+
+    @Test
     public void testThis() {
         asserTokenizes("this", new Token[] { new ThisToken() });
     }
