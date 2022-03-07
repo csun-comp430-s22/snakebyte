@@ -273,6 +273,15 @@ public class TokenizerTest {
         assertEquals("IntegerValue(1)", integerValue.toString());
     }
 
+    @Test
+    public void testStringValueTokenClass() {
+        StringValue stringValue = new StringValue("hello");
+        assertTrue(stringValue.equals(new StringValue("hello")));
+        assertFalse(stringValue.equals(new StringToken()));
+        assertEquals("hello".hashCode(), stringValue.hashCode());
+        assertEquals("StringValue(hello)", stringValue.toString());
+    }
+
     public void asserTokenizes(final String input, final Token[] expected) {
         try {
             final Tokenizer tokenizer = new Tokenizer(input);
