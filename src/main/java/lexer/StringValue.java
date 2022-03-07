@@ -1,3 +1,4 @@
+package lexer;
 public class StringValue implements Token {
     final String value;
     public StringValue(final String value) {

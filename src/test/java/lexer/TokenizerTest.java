@@ -5,6 +5,7 @@ import java.util.List;
 import javax.print.attribute.standard.MediaSize.Other;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertArrayEquals;
@@ -261,6 +262,15 @@ public class TokenizerTest {
         assertTrue(thisToken.equals(new ThisToken()));
         assertEquals(30, thisToken.hashCode());
         assertEquals("this", thisToken.toString());
+    }
+
+    @Test
+    public void testIntegerValueTokenClass() {
+        IntegerValue integerValue = new IntegerValue(1);
+        assertTrue(integerValue.equals(new IntegerValue(1)));
+        assertFalse(integerValue.equals(new IntegerToken()));
+        assertEquals(1, integerValue.hashCode());
+        assertEquals("IntegerValue(1)", integerValue.toString());
     }
 
     public void asserTokenizes(final String input, final Token[] expected) {
