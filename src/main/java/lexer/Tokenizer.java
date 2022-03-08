@@ -64,6 +64,51 @@ public class Tokenizer {
         }
     }
 
+    public IntegerValue tryTokenizeInteger() {
+        skipWhitespace();
+
+        // 12345
+        String number = "";
+
+        while (offset < input.length() &&
+                Character.isDigit(input.charAt(offset))) {
+            number += input.charAt(offset);
+            offset++;
+        }
+
+        if (number.length() > 0) {
+            // convert string to an integer
+            return new IntegerValue(Integer.parseInt(number));
+        } else {
+            return null;
+        }
+    }
+
+    public StringValue tryTokenizeString() {
+        skipWhitespace();
+        String string = "";
+        Boolean stringEnded = false;
+
+        if (offset < input.length() && input.charAt(offset) == '"') {
+            string += input.charAt(offset);
+            offset++;
+            while (offset < input.length()) {
+                if (input.charAt(offset) != '"') {
+                    string += input.charAt(offset);
+                    offset++;
+                } else {
+                    string += input.charAt(offset);
+                    stringEnded = true;
+                    break;
+                }
+            }
+
+            if (stringEnded)
+                return new StringValue(string);
+        }
+        return null;
+    }
+
     public Token tryTokenizerVar() {
         skipWhitespace();
         String name = "";

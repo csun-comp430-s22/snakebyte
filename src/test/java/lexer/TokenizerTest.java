@@ -25,7 +25,7 @@ public class TokenizerTest {
     }
 
     @Test
-    public void testIfToeknClass() {
+    public void testIfTokenClass() {
         IfToken ifToken = new IfToken();
         assertTrue(ifToken.equals(new IfToken()));
         assertEquals(1, ifToken.hashCode());
@@ -485,18 +485,22 @@ public class TokenizerTest {
     public void testThis() {
         asserTokenizes("this", new Token[] { new ThisToken() });
     }
+
     @Test
-    public void testSupertoken() throws TokenizerException{
-        asserTokenizes("Super", new Token[]{new SuperToken()}); 
+    public void testSupertoken() throws TokenizerException {
+        asserTokenizes("Super", new Token[] { new SuperToken() });
     }
+
     @Test
-    public void testSuperToStringtoken() throws TokenizerException{
-        assertEquals("Super", new SuperToken().toString()); 
+    public void testSuperToStringtoken() throws TokenizerException {
+        assertEquals("Super", new SuperToken().toString());
     }
+
     @Test
-    public void testSuperHashCodetoken() throws TokenizerException{
-        assertEquals(32, new SuperToken().hashCode()); 
+    public void testSuperHashCodetoken() throws TokenizerException {
+        assertEquals(32, new SuperToken().hashCode());
     }
+
     @Test
     public void testIf() {
         asserTokenizes("if", new Token[] { new IfToken() });
