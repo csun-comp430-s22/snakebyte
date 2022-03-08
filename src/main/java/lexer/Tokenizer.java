@@ -98,6 +98,7 @@ public class Tokenizer {
                     offset++;
                 } else {
                     string += input.charAt(offset);
+                    offset++;
                     stringEnded = true;
                     break;
                 }
