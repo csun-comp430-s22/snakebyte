@@ -97,10 +97,15 @@ public class Tokenizer {
                     string += input.charAt(offset);
                     offset++;
                 } else {
-                    string += input.charAt(offset);
-                    offset++;
-                    stringEnded = true;
-                    break;
+                    if (string.charAt(string.length() - 1) == '/') {
+                        string += input.charAt(offset);
+                        offset++;
+                    } else {
+                        string += input.charAt(offset);
+                        offset++;
+                        stringEnded = true;
+                        break;
+                    }
                 }
             }
 
