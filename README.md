@@ -1,9 +1,9 @@
 # snakebyte  
 Compiler written in Java targeting Python  
 ---
-## Test Status     
-1. if(offset < input.length() && Character.isLetter(input.charAt(offset))) 1 of 2 branch is missing  
- 
+## Encountered issuses  
+1. the Exception is nor working  
+2. the tryTokenizeString() is not covering all cases
 ---  
 ## Syntax  
 ```  
