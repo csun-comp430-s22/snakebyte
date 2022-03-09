@@ -2,8 +2,7 @@
 Compiler written in Java targeting Python  
 ---
 ## Encountered issuses  
-1. the Exception is nor working  
-2. the tryTokenizeString() is not covering all cases
+1. the tryTokenizeString() is not covering all cases
 ---  
 ## Syntax  
 ```  
