@@ -49,8 +49,6 @@ import java.util.ArrayList;
  !
 */
 
-
-
 //*******COPY OF THE ORIGIN CODE */
 // public Token tokenizeSingle() throws TokenizerException {
 //         Token retval = null;
@@ -290,18 +288,20 @@ public class Tokenizer {
         }
         return retval;
     }
+
     public Token tokenizeSingle() throws TokenizerException {
         Token retval = null;
         skipWhitespace();
-        if(offset < input.length() &&
-            (retval = tryTokenizerVar()) == null &&
-            (retval = tryTokenizeInteger()) == null &&
-            (retval = tokenizeSymbol()) == null &&
-            (retval = tryTokenizeString()) == null){
+        if (offset < input.length() &&
+                (retval = tryTokenizeString()) == null &&
+                (retval = tryTokenizerVar()) == null &&
+                (retval = tryTokenizeInteger()) == null &&
+                (retval = tokenizeSymbol()) == null) {
             throw new TokenizerException();
-            }
+        }
         return retval;
     }
+
     public List<Token> tokenize() throws TokenizerException {
         final List<Token> tokens = new ArrayList<Token>();
         Token token = tokenizeSingle();
