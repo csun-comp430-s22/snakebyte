@@ -281,17 +281,21 @@ public class TokenizerTest {
         assertEquals("hello".hashCode(), stringValue.hashCode());
         assertEquals("StringValue(hello)", stringValue.toString());
     }
-
-    public void asserTokenizes(final String input, final Token[] expected) {
-        try {
-            final Tokenizer tokenizer = new Tokenizer(input);
-            final List<Token> received = tokenizer.tokenize();
-            assertArrayEquals(expected, received.toArray(new Token[received.size()]));
-        } catch (final TokenizerException e) {
-            fail("Tokenizer threw exception");
-        }
+    //original code
+    // public void asserTokenizes(final String input, final Token[] expected) throws TokenizerException{
+    //     try {
+    //         final Tokenizer tokenizer = new Tokenizer(input);
+    //         final List<Token> received = tokenizer.tokenize();
+    //         assertArrayEquals(expected, received.toArray(new Token[received.size()]));
+    //     } catch (final TokenizerException e) {
+    //         fail("Tokenizer threw exception");
+    //     }
+    // }
+    public void asserTokenizes(final String input, final Token[] expected) throws TokenizerException{
+        final Tokenizer tokenizer = new Tokenizer(input);
+        final List<Token> received = tokenizer.tokenize();
+        assertArrayEquals(expected, received.toArray(new Token[received.size()]));
     }
-
     //// test token with different cases
     /*
      * test true tokens
@@ -309,7 +313,7 @@ public class TokenizerTest {
      * "true)" -- pass
      */
     @Test
-    public void testEmptyString() {
+    public void testEmptyString() throws TokenizerException {
         asserTokenizes("", new Token[0]);
     }
 
@@ -359,42 +363,20 @@ public class TokenizerTest {
     //     new Tokenizer("|||").tokenizeSingle();
     // }
 
+    @Test
+    public void testSingleIntegerValue() throws TokenizerException {
+        asserTokenizes("1", new Token[] { new IntegerValue(1) });
+    }   
+    @Test
+    public void testMultiIntegerValue() throws TokenizerException {
+        asserTokenizes("12345", new Token[] { new IntegerValue(12345) });
+    }
 
+    @Test(expected = TokenizerException.class)
+    public void testExeception() throws TokenizerException{
+        asserTokenizes("$", null);
+    }
 
-    // test case : "truetrue"
-    // @Test
-    // public void testTrueAndFalse() throws TokenizerException{
-    // Tokenizer tokenizer = new Tokenizer("truefalse");
-    // List<Token> tokens = tokenizer.tokenize();
-    // assertEquals(1, tokens.size());
-    // Token trueToken = tokens.get(0);
-    // assertTrue(trueToken instanceof TrueToken);
-
-    // @Test
-    // public void testTrueAndFalseEmptyBefore() throws TokenizerException{
-    // Tokenizer tokenizer = new Tokenizer(" truefalse");
-    // List<Token> tokens = tokenizer.tokenize();
-    // assertEquals(1, tokens.size());
-    // Token trueToken = tokens.get(0);
-    // assertTrue(trueToken instanceof TrueToken);
-    // }
-    // @Test
-    // public void testTrueAndFalseEmptyAfter() throws TokenizerException{
-    // Tokenizer tokenizer = new Tokenizer("truefalse ");
-    // List<Token> tokens = tokenizer.tokenize();
-    // assertEquals(1, tokens.size());
-    // Token trueToken = tokens.get(0);
-    // assertTrue(trueToken instanceof TrueToken);
-
-    // }
-    // @Test
-    // public void testTrueAndFalseEmptyBeforeAndAfter() throws TokenizerException{
-    // Tokenizer tokenizer = new Tokenizer(" truefalse ");
-    // List<Token> tokens = tokenizer.tokenize();
-    // assertEquals(1, tokens.size());
-    // Token trueToken = tokens.get(0);
-    // assertTrue(trueToken instanceof TrueToken);
-    // }
     @Test
     public void testTrueAndFalseEmptyBetween() throws TokenizerException {
         // Tokenizer tokenizer = new Tokenizer("true false");
@@ -486,7 +468,7 @@ public class TokenizerTest {
     }
 
     @Test
-    public void testThis() {
+    public void testThis() throws TokenizerException {
         asserTokenizes("this", new Token[] { new ThisToken() });
     }
 
@@ -506,77 +488,77 @@ public class TokenizerTest {
     }
 
     @Test
-    public void testIf() {
+    public void testIf() throws TokenizerException{
         asserTokenizes("if", new Token[] { new IfToken() });
     }
 
     @Test
-    public void testElse() {
+    public void testElse() throws TokenizerException{
         asserTokenizes("else", new Token[] { new ElseToken() });
     }
 
     @Test
-    public void testWhile() {
+    public void testWhile() throws TokenizerException{
         asserTokenizes("while", new Token[] { new WhileToken() });
     }
 
     @Test
-    public void testBreak() {
+    public void testBreak() throws TokenizerException{
         asserTokenizes("break", new Token[] { new BreakToken() });
     }
 
     @Test
-    public void testReturn() {
+    public void testReturn() throws TokenizerException{
         asserTokenizes("return", new Token[] { new ReturnToken() });
     }
 
     @Test
-    public void testPrint() {
+    public void testPrint() throws TokenizerException{
         asserTokenizes("print", new Token[] { new PrintToken() });
     }
 
     @Test
-    public void testExtends() {
+    public void testExtends() throws TokenizerException{
         asserTokenizes("extends", new Token[] { new ExtendsToken() });
     }
 
     @Test
-    public void testClass() {
+    public void testClass() throws TokenizerException{
         asserTokenizes("class", new Token[] { new ClassToken() });
     }
 
     @Test
-    public void testFunction() {
+    public void testFunction() throws TokenizerException{
         asserTokenizes("function", new Token[] { new FunctionToken() });
     }
 
     @Test
-    public void testNew() {
+    public void testNew() throws TokenizerException{
         asserTokenizes("new", new Token[] { new NewToken() });
     }
 
     @Test
-    public void testBool() {
+    public void testBool() throws TokenizerException{
         asserTokenizes("Bool", new Token[] { new BooleanToken() });
     }
 
     @Test
-    public void testInt() {
+    public void testInt() throws TokenizerException{
         asserTokenizes("Int", new Token[] { new IntegerToken() });
     }
 
     @Test
-    public void testString() {
+    public void testString() throws TokenizerException{
         asserTokenizes("Str", new Token[] { new StringToken() });
     }
 
     @Test
-    public void testTrueTrue() {
+    public void testTrueTrue() throws TokenizerException{
         asserTokenizes("truetrue", new Token[] { new VarToken("truetrue") });
     }
 
     @Test
-    public void testVarReturnFalse() {
+    public void testVarReturnFalse() throws TokenizerException{
         Token token = new VarToken("true");
         Token tokenfalse = new TrueToken();
 
@@ -584,67 +566,67 @@ public class TokenizerTest {
     }
 
     @Test
-    public void testWhiteSpace() {
+    public void testWhiteSpace() throws TokenizerException{
         asserTokenizes("    ", new Token[0]);
     }
 
     @Test
-    public void testPlus() {
+    public void testPlus() throws TokenizerException{
         asserTokenizes("+", new Token[] { new PlusToken() });
     }
 
     @Test
-    public void testTimes() {
+    public void testTimes() throws TokenizerException{
         asserTokenizes("*", new Token[] { new TimesToken() });
     }
 
     @Test
-    public void testDivide() {
+    public void testDivide() throws TokenizerException{
         asserTokenizes("/", new Token[] { new DivideToken() });
     }
 
     @Test
-    public void testMinus() {
+    public void testMinus() throws TokenizerException{
         asserTokenizes("-", new Token[] { new MinusToken() });
     }
 
     @Test
-    public void testEquals() {
+    public void testEquals() throws TokenizerException{
         asserTokenizes("=", new Token[] { new EqualsToken() });
     }
 
     @Test
-    public void testPeiod() {
+    public void testPeiod() throws TokenizerException{
         asserTokenizes(".", new Token[] { new PeriodToken() });
     }
 
     @Test
-    public void testComma() {
+    public void testComma() throws TokenizerException{
         asserTokenizes(",", new Token[] { new CommaToken() });
     }
 
     @Test
-    public void testLeftCurly() {
+    public void testLeftCurly() throws TokenizerException{
         asserTokenizes("{", new Token[] { new LeftCurlyToken() });
     }
 
     @Test
-    public void testLeftSqr() {
+    public void testLeftSqr() throws TokenizerException{
         asserTokenizes("[", new Token[] { new LeftSqrBrktToken() });
     }
 
     @Test
-    public void testRightCurly() {
+    public void testRightCurly() throws TokenizerException{
         asserTokenizes("}", new Token[] { new RightCurlyToken() });
     }
 
     @Test
-    public void testRightSqr() {
+    public void testRightSqr() throws TokenizerException{
         asserTokenizes("]", new Token[] { new RightSqrBrktToken() });
     }
 
     @Test
-    public void testSemiColon() {
+    public void testSemiColon() throws TokenizerException{
         asserTokenizes(";", new Token[] { new SemiColonToken() });
     }
 
