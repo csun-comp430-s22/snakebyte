@@ -294,10 +294,10 @@ public class Tokenizer {
         Token retval = null;
         skipWhitespace();
         if (offset < input.length() &&
-                (retval = tryTokenizerVar()) == null &&
-                (retval = tryTokenizeInteger()) == null &&
-                (retval = tokenizeSymbol()) == null &&
-                (retval = tryTokenizeString()) == null) {
+                ((retval = tryTokenizeString()) == null &&
+                        (retval = tryTokenizeInteger()) == null &&
+                        (retval = tokenizeSymbol()) == null &&
+                        (retval = tryTokenizerVar()) == null)) {
             throw new TokenizerException();
         }
         return retval;
