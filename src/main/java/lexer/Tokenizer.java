@@ -281,9 +281,10 @@ public class Tokenizer {
                 } else if (input.startsWith(".", offset)) {
                     offset += 1;
                     retval = new PeriodToken();
-                } else {
-                    throw new TokenizerException();
                 }
+                // } else {
+                // throw new TokenizerException();
+                // }
             }
         }
         return retval;
@@ -293,10 +294,10 @@ public class Tokenizer {
         Token retval = null;
         skipWhitespace();
         if (offset < input.length() &&
-                (retval = tryTokenizeString()) == null &&
                 (retval = tryTokenizerVar()) == null &&
                 (retval = tryTokenizeInteger()) == null &&
-                (retval = tokenizeSymbol()) == null) {
+                (retval = tokenizeSymbol()) == null &&
+                (retval = tryTokenizeString()) == null) {
             throw new TokenizerException();
         }
         return retval;
