@@ -154,7 +154,7 @@ public class Tokenizer {
                     string += input.charAt(offset);
                     offset++;
                 } else {
-                    if (string.charAt(string.length() - 1) == '/') {
+                    if (string.charAt(string.length() - 1) == '\\') {
                         string += input.charAt(offset);
                         offset++;
                     } else {
