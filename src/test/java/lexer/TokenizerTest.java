@@ -38,6 +38,12 @@ public class TokenizerTest {
     }
 
     @Test
+    public void testStringValueWithEscape() throws TokenizerException {
+        asserTokenizes("\"he\\\"llo\"", new Token[] { new StringValue("\"he\\\"llo\"")
+        });
+    }
+
+    @Test
     public void testElseTokenClass() {
         ElseToken elseToken = new ElseToken();
         assertTrue(elseToken.equals(new ElseToken()));
