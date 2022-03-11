@@ -280,6 +280,7 @@ public class TokenizerTest {
         IntegerValue integerValue = new IntegerValue(1);
         assertTrue(integerValue.equals(new IntegerValue(1)));
         assertFalse(integerValue.equals(new IntegerToken()));
+        assertFalse(integerValue.equals(new IntegerValue(2)));
         assertEquals(1, integerValue.hashCode());
         assertEquals("IntegerValue(1)", integerValue.toString());
     }
