@@ -20,7 +20,7 @@ Int Integers
 type ::= Int | Boolean | Str | type[ ]   
 exp  is an expression  
 vardec ::= type var  variable declaration     
-Op::= +| - | * | /   arithmetic operators  
+Op::= +| - | * | /|>|<   arithmetic operators  
 exp ::= exp Op exp | exp.functionname(exp*) method call  
 	
 exp ::= i | s| b | var  
