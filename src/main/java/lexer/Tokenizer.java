@@ -40,6 +40,8 @@ import java.util.ArrayList;
 30: ThisToken - done
 31: VarToken - done
 32: SuperToken - done
+33: < LessThanToken- done
+34: > GreaterThanToken - done
 /// items below may not need to be done since not in the syntax
  >
  <
@@ -281,6 +283,14 @@ public class Tokenizer {
                 } else if (input.startsWith(".", offset)) {
                     offset += 1;
                     retval = new PeriodToken();
+                }
+                else if (input.startsWith("<", offset)) {
+                    offset += 1;
+                    retval = new LessThanToken();
+                }
+                else if (input.startsWith(">", offset)) {
+                    offset += 1;
+                    retval = new GreaterThanToken();
                 }
                 // } else {
                 // throw new TokenizerException();

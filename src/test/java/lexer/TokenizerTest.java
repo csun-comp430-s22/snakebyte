@@ -645,5 +645,28 @@ public class TokenizerTest {
     public void testSemiColon() throws TokenizerException {
         asserTokenizes(";", new Token[] { new SemiColonToken() });
     }
-
+    @Test
+    public void testLessthan() throws TokenizerException{
+        asserTokenizes("<",  new Token[] { new LessThanToken() });
+    }
+    @Test
+    public void testLessthanHashcode() throws TokenizerException{
+        assertEquals(33, new LessThanToken().hashCode());
+    }
+    @Test
+    public void testLessthantoString() throws TokenizerException{
+        assertEquals("<", new LessThanToken().toString());
+    }
+    @Test
+    public void testGreaterthan() throws TokenizerException{
+        asserTokenizes(">",  new Token[] { new GreaterThanToken() });
+    }
+    @Test
+    public void testGreaterthanHashcode() throws TokenizerException{
+        assertEquals(34, new GreaterThanToken().hashCode());
+    }
+    @Test
+    public void testGreaterthantoString() throws TokenizerException{
+        assertEquals(">", new GreaterThanToken().toString());
+    }
 }
