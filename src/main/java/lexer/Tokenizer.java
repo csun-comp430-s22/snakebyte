@@ -2,7 +2,7 @@ package lexer;
 
 import java.util.List;
 import java.util.ArrayList;
-//testing commit changes
+
 /* tokens that need to be implemented, the hash code it return must match its position on this list to avoid duplicate hash codes
 
 // add items to end of list
