@@ -2,7 +2,7 @@ package lexer;
 
 import java.util.List;
 import java.util.ArrayList;
-
+//testing commit changes
 /* tokens that need to be implemented, the hash code it return must match its position on this list to avoid duplicate hash codes
 
 // add items to end of list
@@ -285,18 +285,16 @@ public class Tokenizer {
                 } else if (input.startsWith(".", offset)) {
                     offset += 1;
                     retval = new PeriodToken();
-                }else if (input.startsWith("<=",offset)){
-                    offset+=2;
+                } else if (input.startsWith("<=", offset)) {
+                    offset += 2;
                     retval = new LessThanEqualtoToken();
-                }
-                else if (input.startsWith("<", offset)) {
+                } else if (input.startsWith("<", offset)) {
                     offset += 1;
                     retval = new LessThanToken();
-                }else if (input.startsWith(">=",offset)){
-                    offset+=2;
+                } else if (input.startsWith(">=", offset)) {
+                    offset += 2;
                     retval = new GreaterThanEqualtoToken();
-                }
-                else if (input.startsWith(">", offset)) {
+                } else if (input.startsWith(">", offset)) {
                     offset += 1;
                     retval = new GreaterThanToken();
                 }
