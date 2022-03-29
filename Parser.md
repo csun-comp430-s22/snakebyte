@@ -1,10 +1,10 @@
 # We need the following taknes which from our lexer:
 
 1 IfToken -- done  
-2 ElseToken  
-3 + PlusToken  
-4 - MinusToken  
-5 * TimesToken  
+2 ElseToken -- done  
+3 + PlusToken -- done  
+4 - MinusToken -- done  
+5 * TimesToken -- done  
 6 / DivideToken  
 7 = EqualsToken  
 8 NewToken  
