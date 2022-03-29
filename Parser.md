@@ -36,10 +36,3 @@
 34 > GreaterThanToken  
 35 < LessThanequaltoToken- done
 36 > GreaterThanequaltoToken  
-items below may not need to be done since not in the syntax  
- >  
- <  
- ==  
- &&  
- !=   
- !  
