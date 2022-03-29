@@ -1,6 +1,6 @@
 # We need the following taknes which from our lexer:
 
-1 IfToken  
+1 IfToken -- done  
 2 ElseToken  
 3 + PlusToken  
 4 - MinusToken  
