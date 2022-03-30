@@ -1,14 +1,12 @@
 package parser;
-public class MinusToken implements Token{
+public class EqualsToken implements Token{
     public boolean equals(final Object other) {
-        return other instanceof MinusToken;
+        return other instanceof EqualsToken;
     }
-
     public int hashCode() {
-        return 4;
+        return 7;
     }
-    
     public String toString() {
-        return "MinusToken";
+        return "EqualsToken";
     }
 }

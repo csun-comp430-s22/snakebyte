@@ -5,17 +5,17 @@
 3 + PlusToken -- done  
 4 - MinusToken -- done  
 5 * TimesToken -- done  
-6 / DivideToken  
-7 = EqualsToken  
-8 NewToken  
-9 IntegerToken  
-10 StringToken  
-11 BooleanToken  
-12 [ LeftSqrBrktToken  
-13 ] RighttSqrBrktToken  
-14 { LeftCurlyToken  
-15 } RightCurlyToken  
-16 ( LeftParenToken  
+6 / DivideToken -- done  
+7 = EqualsToken -- done  
+8 NewToken -- done  
+9 IntegerToken -- done  
+10 StringToken -- done  
+11 BooleanToken -- done  
+12 [ LeftSqrBrktToken -- done  
+13 ] RighttSqrBrktToken -- done  
+14 { LeftCurlyToken -- done  
+15 } RightCurlyToken -- done  
+16 ( LeftParenToken -- done  
 17 ) RightParenToken  
 18 WhileToken   
 19 ReturnToken  
