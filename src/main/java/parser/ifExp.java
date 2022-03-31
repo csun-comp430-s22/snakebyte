@@ -1,12 +1,12 @@
-package src.main.java.parser;
+package parser;
 
 
 public class ifExp implements Expression{
     public final Expression gaurd;
-    public final Statement truebranch;
-    public final Statement falsebranch;
+    public final Expression truebranch;
+    public final Expression falsebranch;
     
-    public ifExp(final Expression Guard,final Statement trueBranch,final Statement falseBranch){
+    public ifExp(final Expression Guard,final Expression trueBranch,final Expression falseBranch){
         this.gaurd= Guard;
         this.truebranch=trueBranch;
         this.falsebranch= falseBranch;

@@ -1,4 +1,5 @@
-package src.main.java.parser;
+package parser;
+
 import java.util.List;
 /*HashCode Numbers
 PlusOP = 100
@@ -13,6 +14,15 @@ public class Parser {
 
     public Parser(final List<Token> tokens) {
         this.tokens = tokens;
+    }
+
+    private class ParseResult<A> {
+        public final A result;
+        public final int nextPosition;
+        public ParseResult(final A result, final int nextPosition) {
+            this.result = result;
+            this.nextPosition = nextPosition;
+        }
     }
 
     public Token getToken(final int position) throws ParseException {
@@ -36,7 +46,8 @@ public class Parser {
         } else if (token instanceof IntegerToken) {
             final int value = ((IntegerToken)token).value;
             return new ParseResult<Expression>(new IntExp(value), position + 1);
-        } else if (token instanceof LeftParenToken) {
+        }
+        else if (token instanceof LeftParenToken) {
             final ParseResult<Expression> inParens = parseExp(position + 1);
             assertTokenHereIs(inParens.position, new RightParenToken());
             return new ParseResult<Expression>(inParens.result,
@@ -71,6 +82,21 @@ public class Parser {
         }
 
         return current;
+    }
+    public ParseResult<Expression> parseExp(final int position) throws ParseException {
+        final Token token = getToken(position);
+        if (token instanceof IfToken) {
+            assertTokenHereIs(position + 1, new LeftParenToken());
+            final ParseResult<Expression> guard = parseExp(position + 2);
+            assertTokenHereIs(guard.nextPosition, new RightParenToken());
+            final ParseResult<Expression> ifTrue = parseExp(guard.nextPosition + 1);
+            assertTokenHereIs(ifTrue.nextPosition, new ElseToken());
+            final ParseResult<Expression> ifFalse = parseExp(ifTrue.nextPosition + 1);
+            return new ParseResult<Expression>(new ifExp(guard.result, ifTrue.result, ifFalse.result), 
+                                                ifFalse.nextPosition);
+        } else {
+            return parseAdditiveExp(position);
+        }
     }
     public ParseResult<Statement> parseStmt(final int position) throws ParseException {
         final Token token = getToken(position);

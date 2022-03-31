@@ -1,4 +1,4 @@
-package src.main.java.parser;;
+package parser;;
 
 public class VarToken implements Token {
     public final String name;

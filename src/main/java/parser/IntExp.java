@@ -1,4 +1,4 @@
-package src.main.java.parser;
+package parser;
 
 
 public class IntExp implements Expression {
@@ -20,3 +20,4 @@ public class IntExp implements Expression {
     public String toString() {
         return "IntExp(" + value + ")";
     }
+}
