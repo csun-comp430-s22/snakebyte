@@ -1,15 +1,16 @@
 package src.main.java.parser;
 
-public class RightParenToken implements Token {
+
+public class MinusOP implements Operator {
     public boolean equals(final Object other) {
-        return other instanceof RightParenToken;
+        return other instanceof MinusOP;
     }
 
     public int hashCode() {
-        return 17;
+        return 101;
     }
 
     public String toString() {
-        return "RightParenToken";
+        return "MinusOp";
     }
 }
