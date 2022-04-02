@@ -1,7 +1,6 @@
 package parser;
-
-
 public class IfExp implements Expression{
+// public class IfExp implements Statement{
     public final Expression gaurd;
     public final Expression truebranch;
     public final Expression falsebranch;

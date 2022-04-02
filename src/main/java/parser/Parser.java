@@ -49,9 +49,10 @@ public class Parser {
         }
         else if (token instanceof LeftParenToken) {
             final ParseResult<Expression> inParens = parseExp(position + 1);
-            assertTokenHereIs(inParens.position, new RightParenToken());
+            //it was inParens.position
+            assertTokenHereIs(inParens.nextPosition, new RightParenToken());
             return new ParseResult<Expression>(inParens.result,
-                                        inParens.position + 1);
+                                        inParens.nextPosition + 1);
         }
     }
     public ParseResult<Operator> parseAdditiveOp(final int position) throws ParseException {
@@ -70,12 +71,12 @@ public class Parser {
         
         while (shouldRun) {
             try {
-                final ParseResult<Operator> additiveOp = parseAdditiveOp(current.position);
-                final ParseResult<Expression> anotherPrimary = parsePrimaryExp(additiveOp.position);
+                final ParseResult<Operator> additiveOp = parseAdditiveOp(current.nextPosition);
+                final ParseResult<Expression> anotherPrimary = parsePrimaryExp(additiveOp.nextPosition);
                 current = new ParseResult<Expression>(new OPExp(current.result,
                                                          additiveOp.result,
                                                          anotherPrimary.result),
-                                               anotherPrimary.position);
+                                               anotherPrimary.nextPosition);
             } catch (final ParseException e) {
                 shouldRun = false;
             }
@@ -92,7 +93,7 @@ public class Parser {
             final ParseResult<Expression> ifTrue = parseExp(guard.nextPosition + 1);
             assertTokenHereIs(ifTrue.nextPosition, new ElseToken());
             final ParseResult<Expression> ifFalse = parseExp(ifTrue.nextPosition + 1);
-            return new ParseResult<Expression>(new ifExp(guard.result, ifTrue.result, ifFalse.result), 
+            return new ParseResult<Expression>(new IfExp(guard.result, ifTrue.result, ifFalse.result), 
                                                 ifFalse.nextPosition);
         } else {
             return parseAdditiveExp(position);
@@ -104,14 +105,14 @@ public class Parser {
         if (token instanceof IfToken) {
             assertTokenHereIs(position + 1, new LeftParenToken());
             final ParseResult<Expression> guard = parseExp(position + 2);
-            assertTokenHereIs(guard.position, new RightParenToken());
-            final ParseResult<Statement> trueBranch = parseStmt(guard.position + 1);
-            assertTokenHereIs(trueBranch.position, new ElseToken());
-            final ParseResult<Statement> falseBranch = parseStmt(trueBranch.position + 1);
-            return new ParseResult<Statement>(new ifExp(guard.result,
+            assertTokenHereIs(guard.nextPosition, new RightParenToken());
+            final ParseResult<Statement> trueBranch = parseStmt(guard.nextPosition + 1);
+            assertTokenHereIs(trueBranch.nextPosition, new ElseToken());
+            final ParseResult<Statement> falseBranch = parseStmt(trueBranch.nextPosition + 1);
+            return new ParseResult<Statement>(new IfExp(guard.result,
                                                    trueBranch.result,
                                                    falseBranch.result),
-                                         falseBranch.position);
+                                         falseBranch.nextPosition);
         } else if (token instanceof LeftCurlyToken) {
             final List<Statement> stmts = new ArrayList<Statement>();
             int curPosition = position + 1;
@@ -120,7 +121,7 @@ public class Parser {
                 try {
                     final ParseResult<Statement> stmt = parseStmt(curPosition);
                     stmts.add(stmt.result);
-                    curPosition = stmt.position;
+                    curPosition = stmt.nextPosition;
                 } catch (final ParseException e) {
                     shouldRun = false;
                 }
@@ -130,10 +131,10 @@ public class Parser {
         } else if (token instanceof PrintToken) {
             assertTokenHereIs(position + 1, new LeftParenToken());
             final ParseResult<Expression> exp = parseExp(position + 2);
-            assertTokenHereIs(exp.position, new RightParenToken());
-            assertTokenHereIs(exp.position + 1, new SemicolonToken());
+            assertTokenHereIs(exp.nextPosition, new RightParenToken());
+            assertTokenHereIs(exp.nextPosition + 1, new SemiColonToken());
             return new ParseResult<Statement>(new PrintStatement(exp.result),
-                                         exp.position + 2);
+                                         exp.nextPosition + 2);
         } else {
             throw new ParseException("expected statement; received: " + token);
         }
