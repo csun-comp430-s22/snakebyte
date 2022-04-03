@@ -21,6 +21,6 @@ public class PrintStatement implements Statement{
     }
 
     public String toString() {
-        return ("IfStmt(" + exp.toString()+ ")");
+        return ("Print(" + exp.toString()+ ")");
     }
 }
