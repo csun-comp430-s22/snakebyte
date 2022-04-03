@@ -118,7 +118,7 @@ public class Parser {
             final ParseResult<Statement> trueBranch = parserStatement(guard.position + 1);
             assertTokenHereIs(trueBranch.position, new ElseToken());
             final ParseResult<Statement> falseBranch = parserStatement(trueBranch.position + 1);
-            return new ParseResult<Statement>(new IfExp(guard.result,
+            return new ParseResult<Statement>(new IfStatement(guard.result,
                                                    trueBranch.result,
                                                    falseBranch.result),
                                          falseBranch.position);
@@ -160,7 +160,7 @@ public class Parser {
             final ParseResult<Expression> ifTrue = parseExp(guard.position + 1);
             assertTokenHereIs(ifTrue.position, new ElseToken());
             final ParseResult<Expression> ifFalse = parseExp(ifTrue.position + 1);
-            return new ParseResult<Expression>(new IfExp(guard.result, ifTrue.result, ifFalse.result), 
+            return new ParseResult<Expression>(new IfStatement(guard.result, ifTrue.result, ifFalse.result), 
                                                 ifFalse.position);
         } else {
             return parserAdditiveExp(position);
