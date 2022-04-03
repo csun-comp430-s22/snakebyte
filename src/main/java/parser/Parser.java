@@ -56,8 +56,8 @@ public class Parser {
         if(token instanceof VarToken){
             final String name = ((VarToken)token).name;
             return new ParseResult<Expression>(new VarExp(name), position+1);
-        }else if(token instanceof IntToken){
-            final int value = ((IntToken)token).value;
+        }else if(token instanceof IntegerToken){
+            final int value = ((IntegerToken)token).value;
             return new ParseResult<Expression>(new IntExp(value), position+1);
         }else if(token instanceof LeftParenToken){
             final ParseResult<Expression> inParens = parseExp(position+1);
@@ -65,12 +65,12 @@ public class Parser {
             return new ParseResult<Expression>(inParens.result, inParens.position+1);
         }
     }
-    public ParseResult<Operator> parserPrimaryOp(final int position) throws ParseException{
+    public ParseResult<Operator> parseAdditiveOp(final int position) throws ParseException{
         final Token token = getToken(position);
         if(token instanceof PlusToken){
-            return new ParseResult<Operator>(new PlusOp(), position+1);
+            return new ParseResult<Operator>(new PlusOP(), position+1);
         }else if(token instanceof MinusToken){
-            return new ParseResult<Operator>(new MinusOp(), position+1);
+            return new ParseResult<Operator>(new MinusOP(), position+1);
         }else if(token instanceof TimesToken){
             return new ParseResult<Operator>(new TimesOp(), position+1);
         }else if(token instanceof DivideToken){
@@ -79,9 +79,9 @@ public class Parser {
             return new ParseResult<Operator>(new LessThanOp(), position+1);
         }else if(token instanceof GreaterThanToken){
             return new ParseResult<Operator>(new GreaterThanOp(), position+1);
-        }else if(token instanceof LessThanEqualToken){
+        }else if(token instanceof LessThanequaltoToken){
             return new ParseResult<Operator>(new LessThanEqualOp(), position+1);
-        }else if(token instanceof GreaterThanEqualToken){
+        }else if(token instanceof GreaterThanequaltoToken){
             return new ParseResult<Operator>(new GreaterThanEqualOp(), position+1);
         }else{
             throw new ParseException("Expected +,-,/,*,<,>,<=,>=, it was: "+token);
@@ -106,29 +106,31 @@ public class Parser {
 
         return current;
     }
+    
+
     public ParseResult<Statement> parserStatement(final int position) throws ParseException{
         final Token token = getToken(position);
         // if
         if (token instanceof IfToken) {
             assertTokenHereIs(position + 1, new LeftParenToken());
             final ParseResult<Expression> guard = parseExp(position + 2);
-            assertTokenHereIs(guard.nextPosition, new RightParenToken());
-            final ParseResult<Statement> trueBranch = parseStmt(guard.nextPosition + 1);
-            assertTokenHereIs(trueBranch.nextPosition, new ElseToken());
-            final ParseResult<Statement> falseBranch = parseStmt(trueBranch.nextPosition + 1);
+            assertTokenHereIs(guard.position, new RightParenToken());
+            final ParseResult<Statement> trueBranch = parserStatement(guard.position + 1);
+            assertTokenHereIs(trueBranch.position, new ElseToken());
+            final ParseResult<Statement> falseBranch = parserStatement(trueBranch.position + 1);
             return new ParseResult<Statement>(new IfExp(guard.result,
                                                    trueBranch.result,
                                                    falseBranch.result),
-                                         falseBranch.nextPosition);
+                                         falseBranch.position);
         } else if (token instanceof LeftCurlyToken) {
             final List<Statement> stmts = new ArrayList<Statement>();
             int curPosition = position + 1;
             boolean shouldRun = true;
             while (shouldRun) {
                 try {
-                    final ParseResult<Statement> stmt = parseStmt(curPosition);
+                    final ParseResult<Statement> stmt = parserStatement(curPosition);
                     stmts.add(stmt.result);
-                    curPosition = stmt.nextPosition;
+                    curPosition = stmt.position;
                 } catch (final ParseException e) {
                     shouldRun = false;
                 }
@@ -138,15 +140,15 @@ public class Parser {
         } else if (token instanceof PrintToken) {
             assertTokenHereIs(position + 1, new LeftParenToken());
             final ParseResult<Expression> exp = parseExp(position + 2);
-            assertTokenHereIs(exp.nextPosition, new RightParenToken());
-            assertTokenHereIs(exp.nextPosition + 1, new SemiColonToken());
+            assertTokenHereIs(exp.position, new RightParenToken());
+            assertTokenHereIs(exp.position + 1, new SemiColonToken());
             return new ParseResult<Statement>(new PrintStatement(exp.result),
-                                         exp.nextPosition + 2);
+                                         exp.position + 2);
         } else {
             throw new ParseException("expected statement; received: " + token);
         }
     }
-    /*the following code was the original code:
+    //the following code was the original code:
 
     
     public ParseResult<Expression> parseExp(final int position) throws ParseException {
@@ -154,15 +156,14 @@ public class Parser {
         if (token instanceof IfToken) {
             assertTokenHereIs(position + 1, new LeftParenToken());
             final ParseResult<Expression> guard = parseExp(position + 2);
-            assertTokenHereIs(guard.nextPosition, new RightParenToken());
-            final ParseResult<Expression> ifTrue = parseExp(guard.nextPosition + 1);
-            assertTokenHereIs(ifTrue.nextPosition, new ElseToken());
-            final ParseResult<Expression> ifFalse = parseExp(ifTrue.nextPosition + 1);
+            assertTokenHereIs(guard.position, new RightParenToken());
+            final ParseResult<Expression> ifTrue = parseExp(guard.position + 1);
+            assertTokenHereIs(ifTrue.position, new ElseToken());
+            final ParseResult<Expression> ifFalse = parseExp(ifTrue.position + 1);
             return new ParseResult<Expression>(new IfExp(guard.result, ifTrue.result, ifFalse.result), 
-                                                ifFalse.nextPosition);
+                                                ifFalse.position);
         } else {
-            return parseAdditiveExp(position);
+            return parserAdditiveExp(position);
         }
     }
-    */
 }
