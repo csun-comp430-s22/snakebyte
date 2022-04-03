@@ -1,20 +1,21 @@
 package parser;
-public class IfExp implements Expression{
-// public class IfExp implements Statement{
+
+public class IfExp implements Expression {
+    // public class IfExp implements Statement{
     public final Expression gaurd;
     public final Expression truebranch;
     public final Expression falsebranch;
-    
 
-    //chagned ifExp to IfExp hereafter 
-    public IfExp(final Expression Guard,final Expression trueBranch,final Expression falseBranch){
-        this.gaurd= Guard;
-        this.truebranch=trueBranch;
-        this.falsebranch= falseBranch;
+    // chagned ifExp to IfExp hereafter
+    public IfExp(final Expression Guard, final Expression trueBranch, final Expression falseBranch) {
+        this.gaurd = Guard;
+        this.truebranch = trueBranch;
+        this.falsebranch = falseBranch;
     }
+
     public boolean equals(final Object other) {
         if (other instanceof IfExp) {
-            final IfExp otherif = (IfExp)other;
+            final IfExp otherif = (IfExp) other;
             return (gaurd.equals(otherif.gaurd) &&
                     truebranch.equals(otherif.truebranch) &&
                     falsebranch.equals(otherif.falsebranch));
@@ -22,6 +23,7 @@ public class IfExp implements Expression{
             return false;
         }
     }
+
     public int hashCode() {
         return (gaurd.hashCode() +
                 truebranch.hashCode() +
@@ -34,5 +36,5 @@ public class IfExp implements Expression{
                 truebranch.toString() + ", " +
                 falsebranch.toString() + ")");
     }
-    
+
 }
