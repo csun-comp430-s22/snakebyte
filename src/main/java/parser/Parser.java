@@ -60,9 +60,13 @@ public class Parser {
             final int value = ((IntegerToken)token).value;
             return new ParseResult<Expression>(new IntExp(value), position+1);
         }else if(token instanceof LeftParenToken){
-            final ParseResult<Expression> inParens = parseExp(position+1);
+            //changed to parserAdditiveExp, it was: parseExp
+            final ParseResult<Expression> inParens = parserAdditiveExp(position+1);
             assertTokenHereIs(inParens.position, new RightParenToken());
             return new ParseResult<Expression>(inParens.result, inParens.position+1);
+        }else{
+            //added default if branch
+            throw new ParseException("Unexpected token: " + token);
         }
     }
     public ParseResult<Operator> parseAdditiveOp(final int position) throws ParseException{
@@ -113,7 +117,8 @@ public class Parser {
         // if
         if (token instanceof IfToken) {
             assertTokenHereIs(position + 1, new LeftParenToken());
-            final ParseResult<Expression> guard = parseExp(position + 2);
+            //changed to parserAdditiveExp, it was: parseExp
+            final ParseResult<Expression> guard = parserAdditiveExp(position + 2);
             assertTokenHereIs(guard.position, new RightParenToken());
             final ParseResult<Statement> trueBranch = parserStatement(guard.position + 1);
             assertTokenHereIs(trueBranch.position, new ElseToken());
@@ -139,7 +144,8 @@ public class Parser {
                                          curPosition);
         } else if (token instanceof PrintToken) {
             assertTokenHereIs(position + 1, new LeftParenToken());
-            final ParseResult<Expression> exp = parseExp(position + 2);
+            //changed to parserAdditiveExp, it was: parseExp
+            final ParseResult<Expression> exp = parserAdditiveExp(position + 2);
             assertTokenHereIs(exp.position, new RightParenToken());
             assertTokenHereIs(exp.position + 1, new SemiColonToken());
             return new ParseResult<Statement>(new PrintStatement(exp.result),
@@ -151,19 +157,19 @@ public class Parser {
     //the following code was the original code:
 
     
-    public ParseResult<Expression> parseExp(final int position) throws ParseException {
-        final Token token = getToken(position);
-        if (token instanceof IfToken) {
-            assertTokenHereIs(position + 1, new LeftParenToken());
-            final ParseResult<Expression> guard = parseExp(position + 2);
-            assertTokenHereIs(guard.position, new RightParenToken());
-            final ParseResult<Expression> ifTrue = parseExp(guard.position + 1);
-            assertTokenHereIs(ifTrue.position, new ElseToken());
-            final ParseResult<Expression> ifFalse = parseExp(ifTrue.position + 1);
-            return new ParseResult<Expression>(new IfStatement(guard.result, ifTrue.result, ifFalse.result), 
-                                                ifFalse.position);
-        } else {
-            return parserAdditiveExp(position);
-        }
-    }
+    // public ParseResult<Expression> parseExp(final int position) throws ParseException {
+    //     final Token token = getToken(position);
+    //     if (token instanceof IfToken) {
+    //         assertTokenHereIs(position + 1, new LeftParenToken());
+    //         final ParseResult<Expression> guard = parseExp(position + 2);
+    //         assertTokenHereIs(guard.position, new RightParenToken());
+    //         final ParseResult<Expression> ifTrue = parseExp(guard.position + 1);
+    //         assertTokenHereIs(ifTrue.position, new ElseToken());
+    //         final ParseResult<Expression> ifFalse = parseExp(ifTrue.position + 1);
+    //         return new ParseResult<Expression>(new IfStatement(guard.result, ifTrue.result, ifFalse.result), 
+    //                                             ifFalse.position);
+    //     } else {
+    //         return parserAdditiveExp(position);
+    //     }
+    // }
 }
