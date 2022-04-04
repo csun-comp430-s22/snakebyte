@@ -58,13 +58,16 @@ public class Parser {
         final Token token = getToken(position);
         if (token instanceof VarToken) {
             final String name = ((VarToken) token).name;
-            return new ParseResult<Expression>(new VarExp(name), position + 1);
+            //return new ParseResult<Expression>(new VarExp(name), position + 1);
+             return new ParseResult<Expression>(new VarExp(new Var(name)),
+                                        position + 1);
+            
         } else if (token instanceof IntegerToken) {
             final int value = ((IntegerToken) token).value;
             return new ParseResult<Expression>(new IntExp(value), position + 1);
         } else if (token instanceof LeftParenToken) {
             // changed to parserAdditiveExp, it was: parseExp
-            final ParseResult<Expression> inParens = parserAdditiveExp(position + 1);
+            final ParseResult<Expression> inParens = parseExp(position + 1);
             assertTokenHereIs(inParens.position, new RightParenToken());
             return new ParseResult<Expression>(inParens.result, inParens.position + 1);
         } else {
@@ -125,8 +128,7 @@ public class Parser {
         // if
         if (token instanceof IfToken) {
             assertTokenHereIs(position + 1, new LeftParenToken());
-            // changed to parserAdditiveExp, it was: parseExp
-            final ParseResult<Expression> guard = parserAdditiveExp(position + 2);
+            final ParseResult<Expression> guard = parseExp(position + 2);
             assertTokenHereIs(guard.position, new RightParenToken());
             final ParseResult<Statement> trueBranch = parserStatement(guard.position + 1);
             assertTokenHereIs(trueBranch.position, new ElseToken());
@@ -152,8 +154,7 @@ public class Parser {
                     curPosition);
         } else if (token instanceof PrintToken) {
             assertTokenHereIs(position + 1, new LeftParenToken());
-            // changed to parserAdditiveExp, it was: parseExp
-            final ParseResult<Expression> exp = parserAdditiveExp(position + 2);
+            final ParseResult<Expression> exp = parseExp(position + 2);
             assertTokenHereIs(exp.position, new RightParenToken());
             assertTokenHereIs(exp.position + 1, new SemiColonToken());
             return new ParseResult<Statement>(new PrintStatement(exp.result),
@@ -162,23 +163,70 @@ public class Parser {
             throw new ParseException("expected statement; received: " + token);
         }
     }
-    // the following code was the original code:
+    // the following code is new code:
 
-    // public ParseResult<Expression> parseExp(final int position) throws
-    // ParseException {
-    // final Token token = getToken(position);
-    // if (token instanceof IfToken) {
-    // assertTokenHereIs(position + 1, new LeftParenToken());
-    // final ParseResult<Expression> guard = parseExp(position + 2);
-    // assertTokenHereIs(guard.position, new RightParenToken());
-    // final ParseResult<Expression> ifTrue = parseExp(guard.position + 1);
-    // assertTokenHereIs(ifTrue.position, new ElseToken());
-    // final ParseResult<Expression> ifFalse = parseExp(ifTrue.position + 1);
-    // return new ParseResult<Expression>(new IfStatement(guard.result,
-    // ifTrue.result, ifFalse.result),
-    // ifFalse.position);
-    // } else {
-    // return parserAdditiveExp(position);
-    // }
-    // }
+     public ParseResult<Expression> parseExp(final int position) throws ParseException {
+        return parseEqualsExp(position);
+    }
+    //
+    public ParseResult<Program> parseProgram(final int position) throws ParseException {
+        final ParseResult<Statement> stmt = parserStatement(position);
+        return new ParseResult<Program>(new Program(stmt.result),
+                                        stmt.position);
+    } // parseProgram
+
+    // intended to be called on the top-level
+    public Program parseProgram() throws ParseException {
+        final ParseResult<Program> program = parseProgram(0);
+        // make sure all tokens were read in
+        // if any tokens remain, then there is something extra at the end
+        // of the program, which should be a syntax error
+        if (program.position == tokens.size()) {
+            return program.result;
+        } else {
+            throw new ParseException("Remaining tokens at end");
+        }
+    } // parseProgram
+    //parse operator: <,==
+    // parseLessThanExp
+    public ParseResult<Expression> parseLessThanExp(final int position) throws ParseException {
+        ParseResult<Expression> current = parserAdditiveExp(position);
+        boolean shouldRun = true;
+        
+        while (shouldRun) {
+            try {
+                assertTokenHereIs(current.position, new LessThanToken());
+                final ParseResult<Expression> other = parserAdditiveExp(current.position + 1);
+                current = new ParseResult<Expression>(new OPExp(current.result,
+                                                         new LessThanOp(),
+                                                         other.result),
+                                               other.position);
+            } catch (final ParseException e) {
+                shouldRun = false;
+            }
+        }
+
+        return current;
+    } 
+    // parseEqualsExp
+     public ParseResult<Expression> parseEqualsExp(final int position) throws ParseException {
+        ParseResult<Expression> current = parseLessThanExp(position);
+        boolean shouldRun = true;
+
+        while (shouldRun) {
+            try {
+                assertTokenHereIs(current.position, new EqualsToken());
+                final ParseResult<Expression> other = parseLessThanExp(current.position + 1);
+                current = new ParseResult<Expression>(new OPExp(current.result,
+                                                         new EqualsOp(),
+                                                         other.result),
+                                               other.position);
+            } catch (final ParseException e) {
+                shouldRun = false;
+            }
+        }
+
+        return current;
+    } 
+
 }
