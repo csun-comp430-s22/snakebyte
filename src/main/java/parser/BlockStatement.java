@@ -2,7 +2,6 @@ package parser;
 
 import java.util.List;
 
-
 public class BlockStatement implements Statement {
     public final List<Statement> stmts;
 
@@ -10,3 +9,4 @@ public class BlockStatement implements Statement {
         this.stmts = stmts;
     }
 }
+// need to implement equals and to string and hash code
