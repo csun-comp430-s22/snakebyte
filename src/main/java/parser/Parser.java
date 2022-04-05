@@ -59,8 +59,7 @@ public class Parser {
     public ParseResult<Expression> parserPrimaryExp(final int position) throws ParseException {
         final Token token = getToken(position);
         if (token instanceof VarToken) {
-            final String name = ((VarToken) token).name;
-            //return new ParseResult<Expression>(new VarExp(name), position + 1);
+            final String name = ((VarToken)token).name;
              return new ParseResult<Expression>(new VarExp(new Var(name)),
                                         position + 1);
             
@@ -68,7 +67,6 @@ public class Parser {
             final int value = ((IntegerToken) token).value;
             return new ParseResult<Expression>(new IntExp(value), position + 1);
         } else if (token instanceof LeftParenToken) {
-            // changed to parserAdditiveExp, it was: parseExp
             final ParseResult<Expression> inParens = parseExp(position + 1);
             assertTokenHereIs(inParens.position, new RightParenToken());
             return new ParseResult<Expression>(inParens.result, inParens.position + 1);
@@ -114,9 +112,9 @@ public class Parser {
                 final ParseResult<Operator> additiveOp = parseAdditiveOp(current.position);
                 final ParseResult<Expression> anotherPrimary = parserPrimaryExp(additiveOp.position);
                 current = new ParseResult<Expression>(new OPExp(current.result,
-                        additiveOp.result,
-                        anotherPrimary.result),
-                        anotherPrimary.position);
+                                                        additiveOp.result,
+                                                        anotherPrimary.result),
+                                                        anotherPrimary.position);
             } catch (final ParseException e) {
                 shouldRun = false;
             }
@@ -136,9 +134,9 @@ public class Parser {
             assertTokenHereIs(trueBranch.position, new ElseToken());
             final ParseResult<Statement> falseBranch = parserStatement(trueBranch.position + 1);
             return new ParseResult<Statement>(new IfStatement(guard.result,
-                    trueBranch.result,
-                    falseBranch.result),
-                    falseBranch.position);
+                                                    trueBranch.result,
+                                                    falseBranch.result),
+                                                    falseBranch.position);
         } else if (token instanceof LeftCurlyToken) {
             final List<Statement> stmts = new ArrayList<Statement>();
             int curPosition = position + 1;

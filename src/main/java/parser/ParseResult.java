@@ -20,4 +20,7 @@ public class ParseResult<A>{
             return false;
         }
     }
+    public String toString() {
+        return "ParseResult(" + result.toString() + ", " + position + ")";
+    }
 }
