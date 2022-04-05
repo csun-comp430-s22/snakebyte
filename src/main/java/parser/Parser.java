@@ -10,6 +10,7 @@ LessThanOp = 104
 GreaterThanOp = 105
 LessThanEqualOp = 106
 GreaterThanEqualOp = 107
+IfExp = 108
 */
 
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ public class Parser {
     public Parser(final List<Token> tokens) {
         this.tokens = tokens;
     }
+
 
     public Token getToken(final int position) throws ParseException {
         if (position >= 0 && position < tokens.size()) {
