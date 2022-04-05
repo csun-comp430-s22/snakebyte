@@ -58,17 +58,10 @@ public class Parser {
     public ParseResult<Expression> parserPrimaryExp(final int position) throws ParseException {
         final Token token = getToken(position);
         if (token instanceof VarToken) {
-<<<<<<< HEAD
             final String name = ((VarToken)token).name;
              return new ParseResult<Expression>(new VarExp(new Var(name)),
                                         position + 1);
             
-=======
-            final String name = ((VarToken) token).name;
-            // return new ParseResult<Expression>(new VarExp(name), position + 1);
-            return new ParseResult<Expression>(new VarExp(new Var(name)),
-                    position + 1);
->>>>>>> bae64ec957489bf3c417eafecd1d9bf8416edf87
         } else if (token instanceof IntegerToken) {
             final int value = ((IntegerToken) token).value;
             return new ParseResult<Expression>(new IntExp(value), position + 1);
