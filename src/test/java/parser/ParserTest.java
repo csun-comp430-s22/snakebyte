@@ -37,7 +37,18 @@ public class ParserTest {
         assertEquals(new ParseResult<Expression>(new IntExp(123), 1),
                      parser.parserPrimaryExp(0));
     }
-
+    @Test
+    public void testPrimaryString() throws ParseException{
+        final Parser parser = new Parser(Arrays.asList(new StringToken("hello")));
+        assertEquals(new ParseResult<Expression>(new StringExp("hello"), 1),
+                     parser.parserPrimaryExp(0));
+    }
+    @Test
+    public void testPrimaryBool() throws ParseException{
+        final Parser parser = new Parser(Arrays.asList(new BooleanToken(true)));
+        assertEquals(new ParseResult<Expression>(new BooleanExp(true), 1),
+                     parser.parserPrimaryExp(0));
+    }
     @Test
     public void testPrimaryParens() throws ParseException {
         final Parser parser = new Parser(Arrays.asList(new LeftParenToken(),
