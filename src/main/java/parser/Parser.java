@@ -22,7 +22,6 @@ public class Parser {
         this.tokens = tokens;
     }
 
-
     public Token getToken(final int position) throws ParseException {
         if (position >= 0 && position < tokens.size()) {
             return tokens.get(position);
@@ -59,13 +58,26 @@ public class Parser {
     public ParseResult<Expression> parserPrimaryExp(final int position) throws ParseException {
         final Token token = getToken(position);
         if (token instanceof VarToken) {
+<<<<<<< HEAD
             final String name = ((VarToken)token).name;
              return new ParseResult<Expression>(new VarExp(new Var(name)),
                                         position + 1);
             
+=======
+            final String name = ((VarToken) token).name;
+            // return new ParseResult<Expression>(new VarExp(name), position + 1);
+            return new ParseResult<Expression>(new VarExp(new Var(name)),
+                    position + 1);
+>>>>>>> bae64ec957489bf3c417eafecd1d9bf8416edf87
         } else if (token instanceof IntegerToken) {
             final int value = ((IntegerToken) token).value;
             return new ParseResult<Expression>(new IntExp(value), position + 1);
+        } else if (token instanceof StringToken) {
+            final String value = ((StringToken) token).value;
+            return new ParseResult<Expression>(new StringExp(value), position + 1);
+        } else if (token instanceof BooleanToken) {
+            final Boolean value = ((BooleanToken) token).value;
+            return new ParseResult<Expression>(new BooleanExp(value), position + 1);
         } else if (token instanceof LeftParenToken) {
             final ParseResult<Expression> inParens = parseExp(position + 1);
             assertTokenHereIs(inParens.position, new RightParenToken());
@@ -165,14 +177,15 @@ public class Parser {
     }
     // the following code is new code:
 
-     public ParseResult<Expression> parseExp(final int position) throws ParseException {
+    public ParseResult<Expression> parseExp(final int position) throws ParseException {
         return parseEqualsExp(position);
     }
+
     //
     public ParseResult<Program> parseProgram(final int position) throws ParseException {
         final ParseResult<Statement> stmt = parserStatement(position);
         return new ParseResult<Program>(new Program(stmt.result),
-                                        stmt.position);
+                stmt.position);
     } // parseProgram
 
     // intended to be called on the top-level
@@ -187,29 +200,31 @@ public class Parser {
             throw new ParseException("Remaining tokens at end");
         }
     } // parseProgram
-    //parse operator: <,==
-    // parseLessThanExp
+      // parse operator: <,==
+      // parseLessThanExp
+
     public ParseResult<Expression> parseLessThanExp(final int position) throws ParseException {
         ParseResult<Expression> current = parserAdditiveExp(position);
         boolean shouldRun = true;
-        
+
         while (shouldRun) {
             try {
                 assertTokenHereIs(current.position, new LessThanToken());
                 final ParseResult<Expression> other = parserAdditiveExp(current.position + 1);
                 current = new ParseResult<Expression>(new OPExp(current.result,
-                                                         new LessThanOp(),
-                                                         other.result),
-                                               other.position);
+                        new LessThanOp(),
+                        other.result),
+                        other.position);
             } catch (final ParseException e) {
                 shouldRun = false;
             }
         }
 
         return current;
-    } 
+    }
+
     // parseEqualsExp
-     public ParseResult<Expression> parseEqualsExp(final int position) throws ParseException {
+    public ParseResult<Expression> parseEqualsExp(final int position) throws ParseException {
         ParseResult<Expression> current = parseLessThanExp(position);
         boolean shouldRun = true;
 
@@ -218,15 +233,34 @@ public class Parser {
                 assertTokenHereIs(current.position, new EqualsToken());
                 final ParseResult<Expression> other = parseLessThanExp(current.position + 1);
                 current = new ParseResult<Expression>(new OPExp(current.result,
-                                                         new EqualsOp(),
-                                                         other.result),
-                                               other.position);
+                        new EqualsOp(),
+                        other.result),
+                        other.position);
             } catch (final ParseException e) {
                 shouldRun = false;
             }
         }
 
         return current;
-    } 
+    }
 
 }
+
+/*
+ * precedence of parsing
+ * 
+ * this is deweys basic structure add extra ops and expressions from our own
+ * language
+ * 
+ * primary_expression ::= x | i | s | b | '(' exp ')'
+ * additive_operation ::= + | -
+ * additive_expression ::= primary_expression(additive_operation
+ * primary_expression)*
+ * less_than_expression ::= additive_expression('<' additive_exp)*
+ * equals_expression ::= less_than_expression('==' less_than_expression)*
+ * exp :: equals_expression
+ * statement ::= if(expression) statement else statement | {statement*} |
+ * while(expression) statement | println(exp) statement seperated by ;
+ * program ::= statement
+ * 
+ */
