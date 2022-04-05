@@ -62,10 +62,15 @@ public class Parser {
             // return new ParseResult<Expression>(new VarExp(name), position + 1);
             return new ParseResult<Expression>(new VarExp(new Var(name)),
                     position + 1);
-
         } else if (token instanceof IntegerToken) {
             final int value = ((IntegerToken) token).value;
             return new ParseResult<Expression>(new IntExp(value), position + 1);
+        } else if (token instanceof StringToken) {
+            final String value = ((StringToken) token).value;
+            return new ParseResult<Expression>(new StringExp(value), position + 1);
+        } else if (token instanceof BooleanToken) {
+            final Boolean value = ((BooleanToken) token).value;
+            return new ParseResult<Expression>(new BooleanExp(value), position + 1);
         } else if (token instanceof LeftParenToken) {
             // changed to parserAdditiveExp, it was: parseExp
             final ParseResult<Expression> inParens = parseExp(position + 1);
