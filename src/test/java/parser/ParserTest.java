@@ -60,7 +60,6 @@ public class ParserTest {
         assertEquals(new ParseResult<Expression>(new IntExp(123), 3),
                 parser.parserPrimaryExp(0));
     }
-
     @Test(expected = ParseException.class)
     public void testPrimaryException() throws ParseException {
         final Parser parser = new Parser(Arrays.asList(new RightParenToken()));
@@ -204,25 +203,25 @@ public class ParserTest {
                 parser.parseLessThanExp(0));
     }
 
-    // @Test
-    // public void testLessThanMixedOperator() throws ParseException {
-    // // 1 < 2 + 3 ==> 1 < (2 + 3)
-    // //can not pass this test
-    // //expected: OPExp(IntExp(1), LessThanOp, OPExp(IntExp(2), PlusOp, IntExp(3)))
-    // //but was: OPExp(OPExp(IntExp(1), LessThanOp, IntExp(2)), PlusOp, IntExp(3))
-    // final Parser parser = new Parser(Arrays.asList(new IntegerToken(1),
-    // new LessThanToken(),
-    // new IntegerToken(2),
-    // new PlusToken(),
-    // new IntegerToken(3)));
-    // final Expression expected = new OPExp(new IntExp(1),
-    // new LessThanOp(),
-    // new OPExp(new IntExp(2),
-    // new PlusOP(),
-    // new IntExp(3)));
-    // assertEquals(new ParseResult<Expression>(expected, 5),
-    // parser.parseLessThanExp(0));
-    // }
+    @Test
+    public void testLessThanMixedOperator() throws ParseException {
+        // 1 < 2 + 3 ==> 1 < (2 + 3)
+        //can not pass this test
+        //expected: OPExp(IntExp(1), LessThanOp, OPExp(IntExp(2), PlusOp, IntExp(3)))
+        //but was: OPExp(OPExp(IntExp(1), LessThanOp, IntExp(2)), PlusOp, IntExp(3))
+        final Parser parser = new Parser(Arrays.asList(new IntegerValue(1),
+                                        new LessThanToken(),
+                                        new IntegerValue(2),
+                                        new PlusToken(),
+                                        new IntegerValue(3)));
+        final Expression expected = new OPExp(new IntExp(1),
+                                        new LessThanOp(),
+                                        new OPExp(new IntExp(2),
+                                                new PlusOP(),
+                                                new IntExp(3)));
+        assertEquals(new ParseResult<Expression>(expected, 5),
+        parser.parseLessThanExp(0));
+    }
     @Test
     public void testOpExpression() throws ParseException {
         final Expression first = new OPExp(new IntExp(1),
@@ -249,5 +248,9 @@ public class ParserTest {
         assertNotEquals(new ParseResult<Statement>(expected, 3), parser.parserStatement(0));
 
     }
+//     @Test
+//     public void testStatementLeftCurly() throws ParserException{
+        
+//     }
 
 }
