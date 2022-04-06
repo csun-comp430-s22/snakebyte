@@ -202,7 +202,7 @@ public class ParserTest {
         assertEquals(new ParseResult<Expression>(expected, 5),
                 parser.parseLessThanExp(0));
     }
-
+    //test fail
     @Test
     public void testLessThanMixedOperator() throws ParseException {
         // 1 < 2 + 3 ==> 1 < (2 + 3)
@@ -233,7 +233,7 @@ public class ParserTest {
                 new OPExp(new IntExp(2), new PlusOP(), new IntExp(3)))),
                 true);
     }
-
+    //test fail
     @Test
     public void testIfStatementZeroParameters() throws ParseException {
         //expected:ParseResult(IfStatement(IfExp(), Print(IntExp(1)), Print(IntExp(1))), 15)
@@ -249,9 +249,14 @@ public class ParserTest {
         assertEquals(new ParseResult<Statement>(expected, 15), parser.parserStatement(0));
 
     }
-//     @Test
-//     public void testStatementLeftCurly() throws ParserException{
-        
-//     }
+    //test fail
+    @Test
+    //test the statement: {statement *}
+    public void testStatementLeftCurly() throws ParseException{
+        final Parser parser = new Parser(Arrays.asList(new LeftCurlyToken(),
+                new RightCurlyToken()));
+        final Statement expected = new BlockStatement(Arrays.asList());
+        assertEquals(new ParseResult<Statement>(expected, 1),parser.parserStatement(0));
+    }
 
 }
