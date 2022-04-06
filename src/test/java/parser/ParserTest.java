@@ -259,4 +259,14 @@ public class ParserTest {
         assertEquals(new ParseResult<Statement>(expected, 1),parser.parserStatement(0));
     }
 
+    //test parsePrgram method
+    @Test(expected = ParseException.class)
+    public void testParserProgram() throws ParseException{
+        final Parser parser = new Parser(Arrays.asList(new LeftCurlyToken(),
+                new RightCurlyToken()));
+        final Program expected = new Program(new BlockStatement(Arrays.asList()));
+        assertEquals(new ParseResult<Program>(expected, 1), parser.parseProgram());
+    }
+
+
 }
