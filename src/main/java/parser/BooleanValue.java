@@ -17,6 +17,6 @@ public class BooleanValue implements Token {
     }
 
     public String toString() {
-        return "BooleanValue";
+        return "BooleanValue: " + value;
     }
 }
