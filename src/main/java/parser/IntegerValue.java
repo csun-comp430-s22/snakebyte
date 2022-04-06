@@ -1,6 +1,6 @@
 package parser;
 
-public class IntegerValue {
+public class IntegerValue implements Token {
     public final int value;
 
     public IntegerValue(final int value) {
