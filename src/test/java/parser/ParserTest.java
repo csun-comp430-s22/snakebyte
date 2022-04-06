@@ -236,16 +236,17 @@ public class ParserTest {
 
     @Test
     public void testIfStatementZeroParameters() throws ParseException {
+        //expected:ParseResult(IfStatement(IfExp(), Print(IntExp(1)), Print(IntExp(1))), 15)
+        //was: ParseResult(IfStatement(IntExp(1), Print(IntExp(1)), Print(IntExp(1))), 15)
         final Parser parser = new Parser(
                 Arrays.asList(new IfToken(), new LeftParenToken(), new IntegerValue(1), new RightParenToken(),
                         new PrintToken(), new LeftParenToken(), new IntegerValue(1), new RightParenToken(),
                         new SemiColonToken(),
                         new ElseToken(), new PrintToken(), new LeftParenToken(), new IntegerValue(1),
                         new RightParenToken(), new SemiColonToken()));
-
         final Statement expected = new IfStatement(new IfExp(), new PrintStatement(new IntExp(1)),
                 new PrintStatement(new IntExp(1)));
-        assertNotEquals(new ParseResult<Statement>(expected, 3), parser.parserStatement(0));
+        assertEquals(new ParseResult<Statement>(expected, 15), parser.parserStatement(0));
 
     }
 //     @Test
