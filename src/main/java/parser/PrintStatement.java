@@ -10,7 +10,7 @@ public class PrintStatement implements Statement{
     public boolean equals(final Object other){
         if(other instanceof PrintStatement){
             final PrintStatement otherstatement= (PrintStatement)other;
-            return (exp.equals(otherstatement));
+            return (otherstatement.exp.equals(exp));
         }
         else{
             return false;
