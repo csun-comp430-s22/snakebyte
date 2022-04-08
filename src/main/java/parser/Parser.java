@@ -81,45 +81,60 @@ public class Parser {
         }
     }
 
+    public ParseResult<Operator> parseMultiplicativeOp(final int position) throws ParseException {
+        final Token token = getToken(position);
+        if (token instanceof TimesToken) {
+            return new ParseResult<Operator>(new TimesOp(), position + 1);
+        } else if (token instanceof DivideToken) {
+            return new ParseResult<Operator>(new DivideOp(), position + 1);
+        } else {
+            throw new ParseException("Expected /,* it was: " + token);
+        }
+    }
+
+    public ParseResult<Expression> parserMultiplicativeExp(final int position) throws ParseException {
+        ParseResult<Expression> current = parserPrimaryExp(position);
+        boolean shouldRun = true;
+
+        while (shouldRun) {
+            try {
+                final ParseResult<Operator> multiplicativeOp = parseMultiplicativeOp(current.position);
+                final ParseResult<Expression> anotherPrimary = parserPrimaryExp(multiplicativeOp.position);
+                current = new ParseResult<Expression>(new OPExp(current.result,
+                        multiplicativeOp.result,
+                        anotherPrimary.result),
+                        anotherPrimary.position);
+            } catch (final ParseException e) {
+                shouldRun = false;
+            }
+        }
+
+        return current;
+    }
+
     public ParseResult<Operator> parseAdditiveOp(final int position) throws ParseException {
         final Token token = getToken(position);
         if (token instanceof PlusToken) {
             return new ParseResult<Operator>(new PlusOP(), position + 1);
         } else if (token instanceof MinusToken) {
             return new ParseResult<Operator>(new MinusOP(), position + 1);
-        } else if (token instanceof TimesToken) {
-            return new ParseResult<Operator>(new TimesOp(), position + 1);
-        } else if (token instanceof DivideToken) {
-            return new ParseResult<Operator>(new DivideOp(), position + 1);
-        } else if (token instanceof LessThanToken) {
-            return new ParseResult<Operator>(new LessThanOp(), position + 1);
-        } else if (token instanceof GreaterThanToken) {
-            return new ParseResult<Operator>(new GreaterThanOp(), position + 1);
-        } else if (token instanceof LessThanequaltoToken) {
-            return new ParseResult<Operator>(new LessThanEqualOp(), position + 1);
-        } else if (token instanceof GreaterThanequaltoToken) {
-            return new ParseResult<Operator>(new GreaterThanEqualOp(), position + 1);
-        } else if (token instanceof EqualsEqualsToken) {
-            return new ParseResult<Operator>(new EqualsEqualsOp(), position + 1);
-        } else if (token instanceof EqualsToken) {
-            return new ParseResult<Operator>(new EqualsOp(), position + 1);
         } else {
-            throw new ParseException("Expected +,-,/,*,<,>,<=,>=,=,==, it was: " + token);
+            throw new ParseException("Expected +,- it was: " + token);
         }
     }
 
     public ParseResult<Expression> parserAdditiveExp(final int position) throws ParseException {
-        ParseResult<Expression> current = parserPrimaryExp(position);
+        ParseResult<Expression> current = parserMultiplicativeExp(position);
         boolean shouldRun = true;
 
         while (shouldRun) {
             try {
                 final ParseResult<Operator> additiveOp = parseAdditiveOp(current.position);
-                final ParseResult<Expression> anotherPrimary = parserPrimaryExp(additiveOp.position);
+                final ParseResult<Expression> other = parserMultiplicativeExp(additiveOp.position);
                 current = new ParseResult<Expression>(new OPExp(current.result,
                         additiveOp.result,
-                        anotherPrimary.result),
-                        anotherPrimary.position);
+                        other.result),
+                        other.position);
             } catch (final ParseException e) {
                 shouldRun = false;
             }
@@ -196,16 +211,51 @@ public class Parser {
       // parse operator: <,==
       // parseLessThanExp
 
-    public ParseResult<Expression> parseLessThanExp(final int position) throws ParseException {
+    public ParseResult<Operator> parseRelationalOp(final int position) throws ParseException {
+        final Token token = getToken(position);
+        if (token instanceof LessThanToken) {
+            return new ParseResult<Operator>(new LessThanOp(), position + 1);
+        } else if (token instanceof GreaterThanToken) {
+            return new ParseResult<Operator>(new GreaterThanOp(), position + 1);
+        } else if (token instanceof LessThanequaltoToken) {
+            return new ParseResult<Operator>(new LessThanEqualOp(), position + 1);
+        } else if (token instanceof GreaterThanequaltoToken) {
+            return new ParseResult<Operator>(new GreaterThanEqualOp(), position + 1);
+        } else {
+            throw new ParseException("Expected <,>,<=,>= it was: " + token);
+        }
+    }
+
+    public ParseResult<Expression> parserRelationalExp(final int position) throws ParseException {
         ParseResult<Expression> current = parserAdditiveExp(position);
         boolean shouldRun = true;
 
         while (shouldRun) {
             try {
-                assertTokenHereIs(current.position, new LessThanToken());
-                final ParseResult<Expression> other = parserAdditiveExp(current.position + 1);
+                final ParseResult<Operator> relationalOp = parseRelationalOp(current.position);
+                final ParseResult<Expression> other = parserAdditiveExp(relationalOp.position);
                 current = new ParseResult<Expression>(new OPExp(current.result,
-                        new LessThanOp(),
+                        relationalOp.result,
+                        other.result),
+                        other.position);
+            } catch (final ParseException e) {
+                shouldRun = false;
+            }
+        }
+
+        return current;
+    }
+
+    public ParseResult<Expression> parserEqualsEqualsExp(final int position) throws ParseException {
+        ParseResult<Expression> current = parserRelationalExp(position);
+        boolean shouldRun = true;
+
+        while (shouldRun) {
+            try {
+                assertTokenHereIs(current.position, new EqualsEqualsToken());
+                final ParseResult<Expression> other = parserRelationalExp(current.position + 1);
+                current = new ParseResult<Expression>(new OPExp(current.result,
+                        new EqualsEqualsOp(),
                         other.result),
                         other.position);
             } catch (final ParseException e) {
@@ -218,13 +268,13 @@ public class Parser {
 
     // parseEqualsExp
     public ParseResult<Expression> parseEqualsExp(final int position) throws ParseException {
-        ParseResult<Expression> current = parseLessThanExp(position);
+        ParseResult<Expression> current = parserEqualsEqualsExp(position);
         boolean shouldRun = true;
 
         while (shouldRun) {
             try {
                 assertTokenHereIs(current.position, new EqualsToken());
-                final ParseResult<Expression> other = parseLessThanExp(current.position + 1);
+                final ParseResult<Expression> other = parserEqualsEqualsExp(current.position + 1);
                 current = new ParseResult<Expression>(new OPExp(current.result,
                         new EqualsOp(),
                         other.result),
