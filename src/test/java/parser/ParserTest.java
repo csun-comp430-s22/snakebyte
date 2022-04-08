@@ -170,7 +170,7 @@ public class ParserTest {
     public void testLessThanExpOnlyAdditive() throws ParseException {
         final Parser parser = new Parser(Arrays.asList(new IntegerValue(123)));
         assertEquals(new ParseResult<Expression>(new IntExp(123), 1),
-                parser.parseLessThanExp(0));
+                parser.parseRelationalExp(0));
     }
 
     @Test
@@ -183,7 +183,7 @@ public class ParserTest {
                 new LessThanOp(),
                 new IntExp(2));
         assertEquals(new ParseResult<Expression>(expected, 3),
-                parser.parseLessThanExp(0));
+                parser.parseRelationalExp(0));
     }
 
     @Test
@@ -200,7 +200,7 @@ public class ParserTest {
                 new LessThanOp(),
                 new IntExp(3));
         assertEquals(new ParseResult<Expression>(expected, 5),
-                parser.parseLessThanExp(0));
+                parser.parseRelationalExp(0));
     }
     //test fail
     @Test
@@ -220,7 +220,7 @@ public class ParserTest {
                                                 new PlusOP(),
                                                 new IntExp(3)));
         assertEquals(new ParseResult<Expression>(expected, 5),
-        parser.parseLessThanExp(0));
+        parser.parseRelationalExp(0));
     }
     @Test
     public void testOpExpression() throws ParseException {
