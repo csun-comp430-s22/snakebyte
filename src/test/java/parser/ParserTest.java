@@ -273,6 +273,7 @@ public class ParserTest {
 
     @Test
     public void testIfStatementEqualsEquals() throws ParseException {
+        // should represent if (1 == 1) 1; else 1;
         final Parser parser = new Parser(
                 Arrays.asList(new IfToken(), new LeftParenToken(), new IntegerValue(1), new EqualsEqualsToken(),
                         new IntegerValue(1), new RightParenToken(), new PrintToken(), new LeftParenToken(), 
