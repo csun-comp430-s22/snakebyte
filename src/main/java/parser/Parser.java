@@ -72,10 +72,6 @@ public class Parser {
             return new ParseResult<Operator>(new PlusOP(), position + 1);
         } else if (token instanceof MinusToken) {
             return new ParseResult<Operator>(new MinusOP(), position + 1);
-        } else if (token instanceof EqualsEqualsToken) {
-            return new ParseResult<Operator>(new EqualsEqualsOp(), position + 1);
-        } else if (token instanceof EqualsToken) {
-            return new ParseResult<Operator>(new EqualsOp(), position + 1);
         } else {
             throw new ParseException("Expected +,-, it was: " + token);
         }
