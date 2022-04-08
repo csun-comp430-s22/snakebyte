@@ -87,10 +87,10 @@ public class Parser {
             return new ParseResult<Operator>(new LessThanEqualOp(), position + 1);
         } else if (token instanceof GreaterThanequaltoToken) {
             return new ParseResult<Operator>(new GreaterThanEqualOp(), position + 1);
-            else {
+        } else {
                 throw new ParseException("Expected >,<,>=,<=, it was: " + token);
-            }
         }
+    }
 
     // parse multiplicative * /
     public ParseResult<Expression> parserMultiplicativeExp(final int position) throws ParseException {
