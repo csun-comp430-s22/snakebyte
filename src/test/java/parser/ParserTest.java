@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
 import java.lang.Thread.State;
+import java.sql.Array;
 import java.util.Arrays;
 
 import org.junit.Test;
@@ -308,10 +309,10 @@ public class ParserTest {
     public void testIfStatementBooleanExp() throws ParseException {
         // if (false) 1 * 3 = 
         final Parser parser = new Parser(
-                Arrays.asList(new IfToken(), new LeftParenToken(), new BooleanValue(false), new RightParenToken(), 
-                        new PrintToken(), new LeftParenToken(), new IntegerValue(1), new RightParenToken(), new SemiColonToken(), new ElseToken(),
-                        new PrintToken(), new LeftParenToken(), new IntegerValue(1), new RightParenToken(),
-                        new SemiColonToken()));
+            Arrays.asList(new IfToken(), new LeftParenToken(), new BooleanValue(false), new RightParenToken(), 
+                    new PrintToken(), new LeftParenToken(), new IntegerValue(1), new RightParenToken(), new SemiColonToken(), new ElseToken(),
+                    new PrintToken(), new LeftParenToken(), new IntegerValue(1), new RightParenToken(),
+                    new SemiColonToken())); 
         final Statement expected = new IfStatement(new BooleanExp(false),  new PrintStatement(new IntExp(1)), 
                         new PrintStatement(new IntExp(1)));
         assertEquals(new ParseResult<Statement>(expected, 15), (ParseResult<Statement>)parser.parserStatement(0));
@@ -413,8 +414,65 @@ public class ParserTest {
         final Expression test = new OPExp(new IntExp(1), new PlusOP(), new IntExp(5));
         assertEquals("OPExp(IntExp(1), PlusOp, IntExp(5))", test.toString());
     }
-    
-  
+    @Test
+    public void testMultiplicativeOpTimesSecondtest() throws ParseException{
+        final Parser parser= new Parser(
+            Arrays.asList(new IfToken(), new LeftParenToken(), new IntegerValue(5), new TimesToken(),new IntegerValue(5), new RightParenToken(), 
+                    new PrintToken(), new LeftParenToken(), new IntegerValue(1), new RightParenToken(), new SemiColonToken(), new ElseToken(),
+                    new PrintToken(), new LeftParenToken(), new IntegerValue(1), new RightParenToken(),
+                    new SemiColonToken()));
+        final Statement expected= new IfStatement(new OPExp(new IntExp(5), new TimesOp(), new IntExp(5)), new PrintStatement(new IntExp(1)), new PrintStatement(new IntExp(1)));
+        assertEquals(new ParseResult<Statement>(expected, 17), parser.parserStatement(0));
+
+    }
+    @Test
+    public void testIntVardec() throws ParseException{
+        final Parser parser= new Parser(
+            Arrays.asList(new IntegerToken(), new VarToken("Test")));
+     
+        assertEquals(new ParseResult<Statement>( new VarDecStatement<IntegerToken>("Test", new IntegerToken()),1), parser.parserStatement(0));
+    }
+    @Test
+    public void testStringVardec() throws ParseException{
+        final Parser parser= new Parser(
+            Arrays.asList(new StringToken(), new VarToken("Test")));
+     
+        assertEquals(new ParseResult<Statement>( new VarDecStatement<StringToken>("Test", new StringToken()),1), parser.parserStatement(0));
+    }
+    @Test
+    public void testBoolVardec() throws ParseException{
+        final Parser parser= new Parser(
+            Arrays.asList(new BooleanToken(), new VarToken("Test")));
+     
+        assertEquals(new ParseResult<Statement>( new VarDecStatement<BooleanToken>("Test", new BooleanToken()),1), parser.parserStatement(0));
+    }
+    @Test
+    public void testVardecToString() throws ParseException{
+        final Statement test = new VarDecStatement<IntegerToken>("Test", new IntegerToken());
+        assertEquals("VarDecStatement(Int, Test)", test.toString());
+
+    }
+    @Test
+    public void testBlockStatementToString() throws ParseException{
+        final Statement test = new BlockStatement(Arrays.asList(new PrintStatement(new IntExp(5))));
+        assertEquals("BlockStatement([Print(IntExp(5))])", test.toString());
+    }   
+    @Test
+    public void testStringExptostring() throws ParseException{
+        final Expression test = new StringExp("value");
+        assertEquals("StringExp(value)", test.toString());
+    }
+    @Test
+    public void testVarExptostring() throws ParseException{
+        final Expression test = new VarExp(new Var("value"));
+        assertEquals("VarExp(Var(value))", test.toString());
+    }
+    @Test
+    public void testParseResulttostring() throws ParseException{
+        final Parser parser= new Parser(
+            Arrays.asList(new BooleanToken(), new VarToken("Test")));
+        assertEquals("ParseResult(VarDecStatement(Bool, Test), 1)", parser.parserStatement(0).toString());
+    }
     // -----------------------------------REUSING TOKEN TESTS ----------------------------------------------------
 
     @Test
