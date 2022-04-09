@@ -16,7 +16,7 @@ public class VarDecStatement<A> implements Statement {
     public boolean equals(final Object other) {
         if (other instanceof VarDecStatement<?>) {
             final VarDecStatement<?> otherResult = (VarDecStatement<?>) other;
-            return (otherResult.name == name && otherResult.type == type);
+            return (otherResult.name.equals(name) && otherResult.type.equals(type));
         } else {
             return false;
         }
