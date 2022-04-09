@@ -88,7 +88,7 @@ public class Parser {
         } else if (token instanceof GreaterThanequaltoToken) {
             return new ParseResult<Operator>(new GreaterThanEqualOp(), position + 1);
         } else {
-                throw new ParseException("Expected >,<,>=,<=, it was: " + token);
+            throw new ParseException("Expected >,<,>=,<=, it was: " + token);
         }
     }
 
@@ -202,6 +202,7 @@ public class Parser {
 
     // ***********************************************************************************************Statements****************************************************************************************
     // */
+    // add while and var dec
 
     public ParseResult<Statement> parserStatement(final int position) throws ParseException {
         final Token token = getToken(position);
@@ -217,6 +218,12 @@ public class Parser {
                     trueBranch.result,
                     falseBranch.result),
                     falseBranch.position);
+        } else if (token instanceof WhileToken) {
+            assertTokenHereIs(position + 1, new LeftParenToken());
+            final ParseResult<Expression> guard = parseExp(position + 2);
+            assertTokenHereIs(guard.position, new RightParenToken());
+            final ParseResult<Statement> trueBranch = parserStatement(guard.position + 1);
+            return new ParseResult<Statement>(new WhileStatement(guard.result, trueBranch.result), trueBranch.position);
         } else if (token instanceof LeftCurlyToken) {
             final List<Statement> stmts = new ArrayList<Statement>();
             int curPosition = position + 1;
@@ -288,21 +295,13 @@ public class Parser {
  * program ::= statement
  * 
  */
-// missing expressions
-// add multiplicative
-// add relational
-// add equality
-// add and
-// add or
-// add assignment
-// add new
-// add return and return value token
+
 // missing statement
 // while
 // method def
 // class def
 // vardec
-
+// add return and return value token
 /*
  * HashCode Numbers
  * PlusOP = 100
