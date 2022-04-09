@@ -383,6 +383,31 @@ public class ParserTest {
                 3),
                 parser.parseAssignmentExp(0));
     }
+    @Test
+    public void testWhileStatement() throws ParseException{
+        final Parser parser = new Parser(Arrays.asList(new WhileToken(), new LeftParenToken(), new BooleanValue(true), new RightParenToken(), 
+                              new PrintToken(), new LeftParenToken(), new IntegerValue(55), new RightParenToken(), new SemiColonToken()));
+        final Statement expected = new WhileStatement(new BooleanExp(true), new PrintStatement(new IntExp(55)));
+        assertEquals((new ParseResult<Statement>(expected,9)),parser.parserStatement(0));
+    }
+    @Test
+    public void TestWhileStatementToString() throws ParseException{
+        final Statement expected = new WhileStatement(new BooleanExp(true), new PrintStatement(new IntExp(55)));
+        assertEquals("WhileStatement(BooleanExp(true), Print(IntExp(55)))", expected.toString());
+    }
+    @Test
+    public void TestWhileStatementEqualsFalse() throws ParseException{
+        final Statement expected = new WhileStatement(new BooleanExp(true), new PrintStatement(new IntExp(55)));
+        final Statement test=new IfStatement(new BooleanExp(false),  new PrintStatement(new IntExp(1)), 
+        new PrintStatement(new IntExp(1)));
+        assertEquals(false, expected.equals(test));
+    }
+    @Test
+    public void TestWhileStatementEqualsTrue() throws ParseException{
+        final Statement expected = new WhileStatement(new BooleanExp(true), new PrintStatement(new IntExp(55)));
+        final Statement test=new WhileStatement(new BooleanExp(true), new PrintStatement(new IntExp(55)));
+        assertEquals(true, expected.equals(test));
+    }
     // -----------------------------------REUSING TOKEN TESTS ----------------------------------------------------
 
     @Test
