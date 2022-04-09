@@ -316,7 +316,35 @@ public class ParserTest {
                         new PrintStatement(new IntExp(1)));
         assertEquals(new ParseResult<Statement>(expected, 15), (ParseResult<Statement>)parser.parserStatement(0));
     }
-
+    @Test 
+    public void testIfStatementToString() throws ParseException{
+        final Statement test = new IfStatement(new BooleanExp(false),  new PrintStatement(new IntExp(1)), 
+                        new PrintStatement(new IntExp(1)));
+        assertEquals("IfStatement(BooleanExp(false), Print(IntExp(1)), Print(IntExp(1)))",test.toString());
+    }
+    @Test
+    public void testProgramToString() throws ParseException{
+        final Program test= new Program(new IfStatement(new BooleanExp(false),  new PrintStatement(new IntExp(1)), 
+        new PrintStatement(new IntExp(1))));
+        assertEquals("Program(IfStatement(BooleanExp(false), Print(IntExp(1)), Print(IntExp(1))))", test.toString()); 
+    }
+    @Test
+    public void testProgramEquals() throws ParseException{
+        
+    final Program test= new Program(new IfStatement(new BooleanExp(false),  new PrintStatement(new IntExp(1)), 
+        new PrintStatement(new IntExp(1))));
+        final Program test2= new Program(new IfStatement(new BooleanExp(false),  new PrintStatement(new IntExp(1)), 
+        new PrintStatement(new IntExp(1))));
+        assertEquals(true, test.equals(test2));
+    }
+    @Test
+    public void testProgramNotEquals() throws ParseException{
+        final Program test= new Program(new IfStatement(new BooleanExp(false),  new PrintStatement(new IntExp(1)), 
+        new PrintStatement(new IntExp(1))));
+        final Statement test2 = new IfStatement(new BooleanExp(false),  new PrintStatement(new IntExp(1)), 
+        new PrintStatement(new IntExp(1)));
+        assertEquals(false, test.equals(test2));
+    }
     @Test
     public void testBooleanValue() {
         BooleanValue booleanValue = new BooleanValue(true);
