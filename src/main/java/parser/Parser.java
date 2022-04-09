@@ -246,6 +246,25 @@ public class Parser {
             assertTokenHereIs(exp.position + 1, new SemiColonToken());
             return new ParseResult<Statement>(new PrintStatement(exp.result),
                     exp.position + 2);
+        } else if (token instanceof IntegerToken) {
+            assertTokenHereIs(position + 1, new VarToken(""));
+            VarToken variable = (VarToken) getToken(position + 1);
+            String name = variable.name;
+            return new ParseResult<Statement>(new VarDecStatement<IntegerToken>(name, new IntegerToken()),
+                    position + 1);
+        } else if (token instanceof StringToken) {
+            assertTokenHereIs(position + 1, new VarToken(""));
+            VarToken variable = (VarToken) getToken(position + 1);
+            String name = variable.name;
+            return new ParseResult<Statement>(new VarDecStatement<StringToken>(name, new StringToken()), position + 1);
+
+        } else if (token instanceof BooleanToken) {
+            assertTokenHereIs(position + 1, new VarToken(""));
+            VarToken variable = (VarToken) getToken(position + 1);
+            String name = variable.name;
+            return new ParseResult<Statement>(new VarDecStatement<BooleanToken>(name, new BooleanToken()),
+                    position + 1);
+
         } else {
             throw new ParseException("expected statement; received: " + token);
         }
