@@ -408,6 +408,13 @@ public class ParserTest {
         final Statement test=new WhileStatement(new BooleanExp(true), new PrintStatement(new IntExp(55)));
         assertEquals(true, expected.equals(test));
     }
+    @Test
+    public void testOPExpToString() throws ParseException{
+        final Expression test = new OPExp(new IntExp(1), new PlusOP(), new IntExp(5));
+        assertEquals("OPExp(IntExp(1), PlusOp, IntExp(5))", test.toString());
+    }
+    
+  
     // -----------------------------------REUSING TOKEN TESTS ----------------------------------------------------
 
     @Test
