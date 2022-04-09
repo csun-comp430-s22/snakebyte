@@ -4,19 +4,19 @@ public class VarDecStatement<A> implements Statement {
     final String name;
     final A type;
 
-    public VarDecStatement(final String name, final A type) {
+    public VarDecStatement(final String name, A type) {
         this.name = name;
         this.type = type;
     }
 
     public int hashCode() {
-        return name.hashCode() + type.hashCode();
+        return name.hashCode();
     }
 
     public boolean equals(final Object other) {
         if (other instanceof VarDecStatement<?>) {
             final VarDecStatement<?> otherResult = (VarDecStatement<?>) other;
-            return (otherResult.name == name && otherResult.type.equals(type));
+            return (otherResult.name == name && otherResult.type == type);
         } else {
             return false;
         }
