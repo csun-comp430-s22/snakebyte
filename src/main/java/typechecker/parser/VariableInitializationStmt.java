@@ -1,4 +1,4 @@
-pack typechecker.parser;
+package typechecker.parser;
 public class VariableInitializationStmt implements Statement{
     public final VarDec vardec;
     public final Expression expression;

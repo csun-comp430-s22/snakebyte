@@ -1,6 +1,6 @@
 package typechecker.parser;
 public class VarDec{
-    public fianl Type type;
+    public final Type type;
     public final Var var;
     public VarDec(final Type type, final Var var){
         this.type = type;

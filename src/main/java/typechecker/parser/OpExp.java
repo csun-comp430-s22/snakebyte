@@ -1,6 +1,6 @@
 package typechecker.parser;
 public class OpExp implements Expression{
-    pbulic final Expression left;
+    public final Expression left;
     public final Operator operator;
     public final Expression right;
     public OpExp(final Expression left, final Operator operator, final Expression right){
