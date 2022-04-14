@@ -1,8 +1,9 @@
 package typechecker;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
-
+import typechecker.parser.*;
 // typechecks: well-typed: no type errors
 // doesn't typecheck: ill-typed: some number of type errors (>0)
 
@@ -60,26 +61,26 @@ public class Typechecker {
         //   case (IntType, LessThanOp | EqualsOp, IntType) => Booltype
         //   case _ => throw new TypeErrorException("Operator mismatch")
         // }
-        if (exp.op instanceof PlusOp) {
+        if (exp.operator instanceof PlusOp) {
             if (leftType instanceof IntType && rightType instanceof IntType) {
                 return new IntType();
             } else {
                 throw new TypeErrorException("Operand type mismatch for +");
             }
-        } else if (exp.op instanceof LessThanOp) {
+        } else if (exp.operator instanceof LessThanOp) {
             if (leftType instanceof IntType && rightType instanceof IntType) {
                 return new BoolType();
             } else {
                 throw new TypeErrorException("Operand type mismatch for <");
             }
-        } else if (exp.op instanceof EqualsOp) {
+        } else if (exp.operator instanceof EqualsOp) {
             if (leftType instanceof IntType && rightType instanceof IntType) {
                 return new BoolType();
             } else {
                 throw new TypeErrorException("Operand type mismatch for ==");
             }
         } else {
-            throw new TypeErrorException("Unsupported operation: " + exp.op);
+            throw new TypeErrorException("Unsupported operation: " + exp.operator);
         }
     }
 
@@ -126,7 +127,7 @@ public class Typechecker {
                 for (final MethodDef candidateMethod : candidateClass.methods) {
                     if (candidateMethod.methodName.equals(methodName)) {
                         final List<Type> expectedTypes = new ArrayList<Type>();
-                        for (final VarDec vardec : candidteMethod.arguments) {
+                        for (final VarDec vardec : candidateMethod.arguments) {
                             expectedTypes.add(vardec.type);
                         }
                         return expectedTypes;
@@ -145,14 +146,14 @@ public class Typechecker {
     
     public void isEqualOrSubtypeOf(final Type first, final Type second) throws TypeErrorException {
         if (!(first.equals(second) || isSubtypeOf(first, second))) {
-            throw new TypeErorException("types incompatible: " + first + ", " + second);
+            throw new TypeErrorException("types incompatible: " + first + ", " + second);
         }
     }
 
     // List<Type> - expected types
     // List<Exp> - received expressions
     public void expressionsOk(final List<Type> expectedTypes,
-                              final List<Exp> receivedExpressions,
+                              final List<Expression> receivedExpressions,
                               final Map<Var, Type> typeEnvironment,
                               final ClassName classWeAreIn) throws TypeErrorException {
         if (expectedTypes.size() != receivedExpressions.size()) {
@@ -210,7 +211,7 @@ public class Typechecker {
     }
     
     // classWeAreIn is null if we are in the entry point
-    public Type typeof(final Exp exp,
+    public Type typeof(final Expression exp,
                        final Map<Var, Type> typeEnvironment,
                        final ClassName classWeAreIn) throws TypeErrorException {
         if (exp instanceof IntLiteralExp) {
@@ -315,7 +316,7 @@ public class Typechecker {
     //   int x = 17;
     //   break;
     // }
-    public Map<Var, Type> isWellTypedStmt(final Stmt stmt,
+    public Map<Var, Type> isWellTypedStmt(final Statement stmt,
                                                final Map<Var, Type> typeEnvironment,
                                                final ClassName classWeAreIn,
                                                final Type functionReturnType) throws TypeErrorException {
