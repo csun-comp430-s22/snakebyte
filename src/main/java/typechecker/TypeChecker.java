@@ -113,8 +113,8 @@ public class TypeChecker {
     }
 
     // type environment: Variable -> Type
-    public Type typeof(final Exp exp,
-            final Map<Variable, Type> typeEnvironment) throws TypeErrorException {
+    public Type typeof(final Expression exp,
+            final Map<Var, Type> typeEnvironment) throws TypeErrorException {
         if (exp instanceof BooleanLiteralExp) {
             return new BoolType();
         } else if (exp instanceof IntegerLiteralExp) {
@@ -123,7 +123,7 @@ public class TypeChecker {
             // needed: some way to track variables in scope,
             // including the types they were declared as
             // int x = ...; // need to remeber that x is an int
-            final Variable variable = ((VariableExp) exp).variable;
+            final Var variable = ((VarExp) exp).variable;
             final Type variableType = typeEnvironment.get(variable);
             // get returns null if the key isn't in the map
             if (variableType == null) {
