@@ -1,30 +1,27 @@
 package typechecker;
 
 import typechecker.parser.*;
-import parser.*;
 import parser.Statement;
-
 import java.util.List;
 import java.util.Map;
-
 import lexer.BooleanToken;
-
 import java.util.HashMap;
 
-public TypeChecker {
+public class TypeChecker {
     public final Program program;
     // if the functions were overloaded:
     // public final Map<Signature, Fdef> functions;
     // public class Signature {
-    //   public final FunctionName name;
-    //   public final List<Type> params;
+    // public final FunctionName name;
+    // public final List<Type> params;
     // }
     //
     // if you had classes:
     // public final Map<ClassName, ClassInformation> classes;
     // public class ClassInformation {
-    //   public final ClassDef cdef;
-    //   public final Map<Signature, MethodDefinition> methods; // may include inherited methods
+    // public final ClassDef cdef;
+    // public final Map<Signature, MethodDefinition> methods; // may include
+    // inherited methods
     // }
     public final Map<FunctionName, Fdef> functions;
 
@@ -37,7 +34,7 @@ public TypeChecker {
     // foo(5, true)
     // foo(int, bool)
     //
-    public Typechecker(final Program program) throws TypeErrorException {
+    public void Typechecker(final Program program) throws TypeErrorException {
         this.program = program;
         functions = new HashMap<FunctionName, FDef>();
         for (final Fdef fdef : program.functions) {
@@ -50,14 +47,14 @@ public TypeChecker {
     }
 
     public Fdef getFunctionByName(final FunctionName fname) throws TypeErrorException {
-        final FDef fdef = functions.get(fname);
+        final Fdef fdef = functions.get(fname);
         if (fdef == null) {
             throw new TypeErrorException("No such function with name: " + fname);
         } else {
             return fdef;
         }
     }
-    
+
     // int foo(int x, bool y) { ... }
     //
     // int x = foo(1, true);
@@ -66,8 +63,8 @@ public TypeChecker {
     // 2. Does foo take an integer and a boolean? - (int, bool)
     // 3. Does foo return an integer?
     public static Type typeofFunctionCall(final FunctionCallExp exp,
-                                          final Map<Variable, Type> typeEnvironment) throws TypeErrorException {
-        // what are functions?  Are they data?  Are they somehow special?
+            final Map<Var, Type> typeEnvironment) throws TypeErrorException {
+        // what are functions? Are they data? Are they somehow special?
         final Fdef fdef = getFunctionByName(exp.fname);
         if (exp.params.size() != fdef.arguments.size()) {
             throw new TypeErrorException("Wrong number of arguments for function: " + fdef.fname);
@@ -86,13 +83,13 @@ public TypeChecker {
         }
         return fdef.returnType;
     }
-    
+
     // op ::= + | < | &&
     public Type typeofOp(final OpExp exp,
-                         final Map<Variable, Type> typeEnvironment) throws TypeErrorException {
+            final Map<Var, Type> typeEnvironment) throws TypeErrorException {
         final Type leftType = typeof(exp.left, typeEnvironment);
         final Type rightType = typeof(exp.right, typeEnvironment);
-        if (exp.op instanceof PlusOp) {
+        if (exp.op instanceof PlusOP) {
             if (leftType instanceof IntType && rightType instanceof IntType) {
                 return new IntType();
             } else {
@@ -114,19 +111,19 @@ public TypeChecker {
             throw new TypeErrorException("Unsupported operation: " + exp.op);
         }
     }
-    
+
     // type environment: Variable -> Type
     public Type typeof(final Exp exp,
-                       final Map<Variable, Type> typeEnvironment) throws TypeErrorException {
+            final Map<Variable, Type> typeEnvironment) throws TypeErrorException {
         if (exp instanceof BooleanLiteralExp) {
             return new BoolType();
         } else if (exp instanceof IntegerLiteralExp) {
             return new IntType();
-        } else if (exp instanceof VariableExp) {
+        } else if (exp instanceof VarExp) {
             // needed: some way to track variables in scope,
-            //         including the types they were declared as
+            // including the types they were declared as
             // int x = ...; // need to remeber that x is an int
-            final Variable variable = ((VariableExp)exp).variable;
+            final Variable variable = ((VariableExp) exp).variable;
             final Type variableType = typeEnvironment.get(variable);
             // get returns null if the key isn't in the map
             if (variableType == null) {
@@ -135,9 +132,9 @@ public TypeChecker {
                 return variableType;
             }
         } else if (exp instanceof OpExp) {
-            return typeofOpExp((OpExp)exp, typeEnvironment);
+            return typeofOpExp((OpExp) exp, typeEnvironment);
         } else if (exp instanceof FunctionCallExp) {
-            return typeofFunctionCall((FunctionCallExp)exp, typeEnvironment);
+            return typeofFunctionCall((FunctionCallExp) exp, typeEnvironment);
         } else {
             throw new TypeErrorException("Unsupported expresssion: " + exp);
         }
@@ -146,8 +143,8 @@ public TypeChecker {
     // addToMap: O(n) - to add one key/value pair
     // with immutable data structures: O(log(n))
     public static Map<Variable, Type> addToMap(final Map<Variable, Type> typeEnvironment,
-                                               final Variable key,
-                                               final Type value) {
+            final Variable key,
+            final Type value) {
         final Map<Variable, Type> retval = new HashMap<Variable, Type>();
         retval.putAll(typeEnvironment);
         retval.put(key, value);
@@ -155,8 +152,8 @@ public TypeChecker {
     }
 
     public Map<Variable, Type> typecheckVardec(final VardecStmt asDec,
-                                               final Map<Variable, Type> typeEnvironment,
-                                               final Type returnType) throws TypeErrorException {
+            final Map<Variable, Type> typeEnvironment,
+            final Type returnType) throws TypeErrorException {
         final Type expectedType = asDec.vardec.type;
         final Type receivedType = typeof(asDec.exp, typeEnvironment);
         // Animal a = new Dog();
@@ -170,15 +167,15 @@ public TypeChecker {
     }
 
     public Map<Variable, Type> typecheckIf(final IfStmt asIf,
-                                           final Map<Variable, Type> typeEnvironment,
-                                           final Type returnType) throws TypeErrorException {
-        final IfStmt asIf = (IfStmt)stmt;
+            final Map<Variable, Type> typeEnvironment,
+            final Type returnType) throws TypeErrorException {
+        final IfStmt asIf = (IfStmt) stmt;
         final Type receivedType = typeof(asIf.guard, typeEnvironment);
         if (receivedType.equals(new BoolType())) {
             // if (...) {
-            //   int x = 17;
+            // int x = 17;
             // } else {
-            //   int y = true;
+            // int y = true;
             // }
             typecheckStmt(asIf.trueBranch, typeEnvironment, returnType);
             typecheckStmt(asIf.falseBranch, typeEnvironment, returnType);
@@ -189,8 +186,8 @@ public TypeChecker {
     }
 
     public Map<Variable, Type> typecheckWhile(final WhileStmt asWhile,
-                                              final Map<Variable, Type> typeEnvironment,
-                                              final Type returnType) throws TypeErrorException {
+            final Map<Variable, Type> typeEnvironment,
+            final Type returnType) throws TypeErrorException {
         // while (...) { ... }
         final Type receivedType = typeof(asWhile.guard, typeEnvironment);
         if (receivedType.equals(new BoolType())) {
@@ -202,9 +199,9 @@ public TypeChecker {
     }
 
     public Map<Variable, Type> typecheckReturn(final ReturnStmt asReturn,
-                                               final Map<Variable, Type> typeEnvironment,
-                                               final Type returnType) throws TypeErrorException {
-        final ReturnStmt asReturn = (ReturnStmt)stmt;
+            final Map<Variable, Type> typeEnvironment,
+            final Type returnType) throws TypeErrorException {
+        final ReturnStmt asReturn = (ReturnStmt) stmt;
         final Type receivedType = typeof(asReturn.exp, typeEnvironment);
         if (returnType.equals(receivedType)) {
             return typeEnvironment;
@@ -212,15 +209,15 @@ public TypeChecker {
             throw new TypeErrorException("expected return type: " + returnType + ", received: " + receivedType);
         }
     }
-    
+
     public Map<Variable, Type> typecheckBlock(final BlockStmt asBlock,
-                                              final Map<Variable, Type> originalTypeEnvironment,
-                                              final Type returnType) throws TypeErrorException {
+            final Map<Variable, Type> originalTypeEnvironment,
+            final Type returnType) throws TypeErrorException {
         Map<Variable, Type> typeEnvironment = originalTypeEnvironment;
         // {
-        //   int x = 17;
-        //   int y = x + x;
-        //   if (...) { return y; } else { ... } // maybe returns
+        // int x = 17;
+        // int y = x + x;
+        // if (...) { return y; } else { ... } // maybe returns
         // }
         for (final Stmt stmt : asBlock.body) {
             typeEnvironment = typecheckStmt(stmt, typeEnvironment, returnType);
@@ -228,33 +225,33 @@ public TypeChecker {
 
         return originalTypeEnvironment;
     }
-    
+
     // int x = 7;
     // while (...) {
-    //   bool x = true; // remember: x is an integer
-    //   // only the boolean available here
-    //   // remember: reinstate x as an integer
+    // bool x = true; // remember: x is an integer
+    // // only the boolean available here
+    // // remember: reinstate x as an integer
     // }
     // // only the integer available here
     public Map<Variable, Type> typecheckStmt(final Stmt stmt,
-                                             final Map<Variable, Type> typeEnvironment,
-                                             final Type returnType) throws TypeErrorException {
+            final Map<Variable, Type> typeEnvironment,
+            final Type returnType) throws TypeErrorException {
         if (stmt instanceof VardecStmt) {
             // vardec = exp;
             // int x = 17; // initialized type should be compatible with provided type
-            return typecheckVardec((VardecStmt)stmt, typeEnvironment, returnType);
+            return typecheckVardec((VardecStmt) stmt, typeEnvironment, returnType);
         } else if (stmt instanceof IfStmt) {
             // if (exp) stmt else stmt
             // exp: bool
-            //   possible other check: returning
-            return typecheckIf((IfStmt)stmt, typeEnvironment, returnType);
+            // possible other check: returning
+            return typecheckIf((IfStmt) stmt, typeEnvironment, returnType);
         } else if (stmt instanceof WhileStmt) {
-            return typecheckWhile((WhileStmt)stmt, typeEnvironment, returnType);
+            return typecheckWhile((WhileStmt) stmt, typeEnvironment, returnType);
         } else if (stmt instanceof ReturnStmt) {
             // return exp;
-            return typecheckReturn((ReturnStmt)stmt, typeEnvironment, returnType);
+            return typecheckReturn((ReturnStmt) stmt, typeEnvironment, returnType);
         } else if (stmt instanceof BlockStmt) {
-            return typecheckBlock((BlockStmt)stmt, typeEnvironment, returnType);
+            return typecheckBlock((BlockStmt) stmt, typeEnvironment, returnType);
         } else {
             throw new TypeErrorException("Unsupported statement: " + stmt);
         }
@@ -271,7 +268,7 @@ public TypeChecker {
                 typeEnvironment.put(vardec.variable, vardec.type);
             }
         }
-        
+
         typecheckStmt(fdef.body, typeEnvironment, fdef.returnType);
     }
 
