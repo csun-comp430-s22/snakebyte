@@ -245,9 +245,9 @@ public class Typechecker {
     public Map<Var, Type> isWellTypedVar(final VariableInitializationStmt stmt,
                                               final Map<Var, Type> typeEnvironment,
                                               final ClassName classWeAreIn) throws TypeErrorException {
-        final Type expType = typeof(stmt.exp, typeEnvironment, classWeAreIn);
+        final Type expType = typeof(stmt.expression, typeEnvironment, classWeAreIn);
         isEqualOrSubtypeOf(expType, stmt.vardec.type);
-        return addToMap(typeEnvironment, stt.vardec.variable, stmt.vardec.type);
+        return addToMap(typeEnvironment, stmt.vardec.var, stmt.vardec.type);
     }
 
     public Map<Var, Type> isWellTypedIf(final IfStatement stmt,
@@ -255,8 +255,8 @@ public class Typechecker {
                                              final ClassName classWeAreIn,
                                              final Type functionReturnType) throws TypeErrorException {
         if (typeof(stmt.guard, typeEnvironment, classWeAreIn) instanceof BoolType) {
-            isWellTypedStmt(stmt.ifTrue, typeEnvironment, classWeAreIn, functionReturnType);
-            isWellTypedStmt(stmt.ifFalse, typeEnvironment, classWeAreIn, functionReturnType);
+            isWellTypedStmt(stmt.trueBranch, typeEnvironment, classWeAreIn, functionReturnType);
+            isWellTypedStmt(stmt.falseBranch, typeEnvironment, classWeAreIn, functionReturnType);
             return typeEnvironment;
         } else {
             throw new TypeErrorException("guard of if is not a boolean: " + stmt);
@@ -279,7 +279,7 @@ public class Typechecker {
                                                 Map<Var, Type> typeEnvironment,
                                                 final ClassName classWeAreIn,
                                                 final Type functionReturnType) throws TypeErrorException {
-        for (final Stmt bodyStmt : stmt.body) {
+        for (final Statement bodyStmt : stmt.body) {
             typeEnvironment = isWellTypedStmt(bodyStmt, typeEnvironment, classWeAreIn, functionReturnType);
         }
         return typeEnvironment;
@@ -321,7 +321,7 @@ public class Typechecker {
                                                final ClassName classWeAreIn,
                                                final Type functionReturnType) throws TypeErrorException {
         if (stmt instanceof ExpStmt) {
-            typeof(((ExpStmt)stmt).exp, typeEnvironment, classWeAreIn, functionReturnType);
+            typeof(((ExpStmt)stmt).expression, typeEnvironment, classWeAreIn, functionReturnType);
             return typeEnvironment;
         } else if (stmt instanceof VariableInitializationStmt) {
             return isWellTypedVar((VariableInitializationStmt)stmt, typeEnvironment, classWeAreIn, functionReturnType);
@@ -334,7 +334,7 @@ public class Typechecker {
         } else if (stmt instanceof ReturnVoidStmt) {
             return isWellTypedReturnVoid(typeEnvironment, classWeAreIn, functionReturnType);
         } else if (stmt instanceof PrintlnStmt) {
-            typeof(((PrintlnStmt)stmt).exp, typeEnvironment, classWeAreIn, functionReturnType);
+            typeof(((PrintlnStmt)stmt).expression, typeEnvironment, classWeAreIn, functionReturnType);
             return typeEnvironment;
         } else if (stmt instanceof BlockStmt) {
             return isWellTypedBlock((BlockStmt)stmt, typeEnvironment, classWeAreIn, functionReturnType);
@@ -354,7 +354,7 @@ public class Typechecker {
         // int addTwo(bool x, int x) { return x; }
         for (final VarDec vardec : method.arguments) {
             // odd semantics: last variable declaration shadows prior one
-            typeEnvironment = addToMap(typeEnvironment, vardec.variable, vardec.type);
+            typeEnvironment = addToMap(typeEnvironment, vardec.var, vardec.type);
         }
         
         isWellTypedStmt(method.body,
@@ -382,15 +382,15 @@ public class Typechecker {
         //   bool x;
         //   ...
         // }
-        Map<Variable, Type> typeEnvironment = new HashMap<Variable, Type>();
+        Map<Var, Type> typeEnvironment = new HashMap<Var, Type>();
         for (final VarDec vardec : classDef.instanceVariables) {
-            typeEnvironment = addToMap(typeEnvironment, vardec.variable, vardec.type);
+            typeEnvironment = addToMap(typeEnvironment, vardec.var, vardec.type);
         }
         
         // check constructor
-        Map<Variable, Type> constructorTypeEnvironment = typeEnvironment;
+        Map<Var, Type> constructorTypeEnvironment = typeEnvironment;
         for (final VarDec vardec : classDef.constructorArguments) {
-            constructorTypeEnvironment = addToMap(constructorTypeEnvironment, vardec.variable, vardec.type);
+            constructorTypeEnvironment = addToMap(constructorTypeEnvironment, vardec.var, vardec.type);
         }
         // check call to super
         expressionsOk(expectedConstructorTypesForClass(classDef.extendsClassName),
