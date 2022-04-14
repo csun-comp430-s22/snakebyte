@@ -34,6 +34,10 @@ public class TypeChecker {
     // foo(5, true)
     // foo(int, bool)
     //
+    /*****************************************************************************
+     * this needs to be changed possibly to check functions inside of
+     * classes*************************
+     */
     public void Typechecker(final Program program) throws TypeErrorException {
         this.program = program;
         functions = new HashMap<FunctionName, FDef>();
@@ -46,7 +50,7 @@ public class TypeChecker {
         }
     }
 
-    public Fdef getFunctionByName(final FunctionName fname) throws TypeErrorException {
+    public static Fdef getFunctionByName(final FunctionName fname) throws TypeErrorException {
         final Fdef fdef = functions.get(fname);
         if (fdef == null) {
             throw new TypeErrorException("No such function with name: " + fname);
@@ -98,12 +102,7 @@ public class TypeChecker {
         } else if (exp.op instanceof LessThanOp) {
             if (leftType instanceof IntType && rightType instanceof IntType) {
                 return new BoolType();
-            } else {
-                throw new TypeErrorException("Incorrect types for <");
-            }
-        } else if (exp.op instanceof AndOp) {
-            if (leftType instanceof BoolType && rightType instanceof BoolType) {
-                return new BoolType();
+
             } else {
                 throw new TypeErrorException("Incorrect types for &&");
             }
@@ -115,9 +114,9 @@ public class TypeChecker {
     // type environment: Variable -> Type
     public Type typeof(final Expression exp,
             final Map<Var, Type> typeEnvironment) throws TypeErrorException {
-        if (exp instanceof BooleanLiteralExp) {
+        if (exp instanceof BooleanExp) {
             return new BoolType();
-        } else if (exp instanceof IntegerLiteralExp) {
+        } else if (exp instanceof IntExp) {
             return new IntType();
         } else if (exp instanceof VarExp) {
             // needed: some way to track variables in scope,
@@ -142,17 +141,17 @@ public class TypeChecker {
 
     // addToMap: O(n) - to add one key/value pair
     // with immutable data structures: O(log(n))
-    public static Map<Variable, Type> addToMap(final Map<Variable, Type> typeEnvironment,
-            final Variable key,
+    public static Map<Var, Type> addToMap(final Map<Var, Type> typeEnvironment,
+            final Var key,
             final Type value) {
-        final Map<Variable, Type> retval = new HashMap<Variable, Type>();
+        final Map<Var, Type> retval = new HashMap<Var, Type>();
         retval.putAll(typeEnvironment);
         retval.put(key, value);
         return retval;
     }
 
-    public Map<Variable, Type> typecheckVardec(final VardecStmt asDec,
-            final Map<Variable, Type> typeEnvironment,
+    public Map<Var, Type> typecheckVardec(final VarDecStatement asDec,
+            final Map<Var, Type> typeEnvironment,
             final Type returnType) throws TypeErrorException {
         final Type expectedType = asDec.vardec.type;
         final Type receivedType = typeof(asDec.exp, typeEnvironment);
@@ -166,10 +165,9 @@ public class TypeChecker {
         }
     }
 
-    public Map<Variable, Type> typecheckIf(final IfStmt asIf,
-            final Map<Variable, Type> typeEnvironment,
+    public Map<Var, Type> typecheckIf(final IfStatement asIf,
+            final Map<Var, Type> typeEnvironment,
             final Type returnType) throws TypeErrorException {
-        final IfStmt asIf = (IfStmt) stmt;
         final Type receivedType = typeof(asIf.guard, typeEnvironment);
         if (receivedType.equals(new BoolType())) {
             // if (...) {
@@ -185,21 +183,21 @@ public class TypeChecker {
         }
     }
 
-    public Map<Variable, Type> typecheckWhile(final WhileStmt asWhile,
-            final Map<Variable, Type> typeEnvironment,
+    public Map<Var, Type> typecheckWhile(final WhileStatement asWhile,
+            final Map<Var, Type> typeEnvironment,
             final Type returnType) throws TypeErrorException {
         // while (...) { ... }
         final Type receivedType = typeof(asWhile.guard, typeEnvironment);
         if (receivedType.equals(new BoolType())) {
-            typecheckStmt(asWhile.body, typeEnvironment, returnType);
+            typecheckStmt(asWhile.trueBranch, typeEnvironment, returnType);
             return typeEnvironment;
         } else {
             throw new TypeErrorException("guard should be bool; received: " + receivedType);
         }
     }
 
-    public Map<Variable, Type> typecheckReturn(final ReturnStmt asReturn,
-            final Map<Variable, Type> typeEnvironment,
+    public Map<Var, Type> typecheckReturn(final ReturnStmt asReturn,
+            final Map<Var, Type> typeEnvironment,
             final Type returnType) throws TypeErrorException {
         final ReturnStmt asReturn = (ReturnStmt) stmt;
         final Type receivedType = typeof(asReturn.exp, typeEnvironment);
@@ -210,16 +208,16 @@ public class TypeChecker {
         }
     }
 
-    public Map<Variable, Type> typecheckBlock(final BlockStmt asBlock,
-            final Map<Variable, Type> originalTypeEnvironment,
+    public Map<Var, Type> typecheckBlock(final BlockStatement asBlock,
+            final Map<Var, Type> originalTypeEnvironment,
             final Type returnType) throws TypeErrorException {
-        Map<Variable, Type> typeEnvironment = originalTypeEnvironment;
+        Map<Var, Type> typeEnvironment = originalTypeEnvironment;
         // {
         // int x = 17;
         // int y = x + x;
         // if (...) { return y; } else { ... } // maybe returns
         // }
-        for (final Stmt stmt : asBlock.body) {
+        for (final typechecker.parser.Statement stmt : asBlock.stmts) {
             typeEnvironment = typecheckStmt(stmt, typeEnvironment, returnType);
         }
 
@@ -233,25 +231,25 @@ public class TypeChecker {
     // // remember: reinstate x as an integer
     // }
     // // only the integer available here
-    public Map<Variable, Type> typecheckStmt(final Stmt stmt,
-            final Map<Variable, Type> typeEnvironment,
+    public Map<Var, Type> typecheckStmt(final typechecker.parser.Statement stmt,
+            final Map<Var, Type> typeEnvironment,
             final Type returnType) throws TypeErrorException {
-        if (stmt instanceof VardecStmt) {
+        if (stmt instanceof VarDecStatement) {
             // vardec = exp;
             // int x = 17; // initialized type should be compatible with provided type
-            return typecheckVardec((VardecStmt) stmt, typeEnvironment, returnType);
-        } else if (stmt instanceof IfStmt) {
+            return typecheckVardec((VarDecStatement) stmt, typeEnvironment, returnType);
+        } else if (stmt instanceof IfStatement) {
             // if (exp) stmt else stmt
             // exp: bool
             // possible other check: returning
-            return typecheckIf((IfStmt) stmt, typeEnvironment, returnType);
-        } else if (stmt instanceof WhileStmt) {
-            return typecheckWhile((WhileStmt) stmt, typeEnvironment, returnType);
+            return typecheckIf((IfStatement) stmt, typeEnvironment, returnType);
+        } else if (stmt instanceof WhileStatement) {
+            return typecheckWhile((WhileStatement) stmt, typeEnvironment, returnType);
         } else if (stmt instanceof ReturnStmt) {
             // return exp;
             return typecheckReturn((ReturnStmt) stmt, typeEnvironment, returnType);
-        } else if (stmt instanceof BlockStmt) {
-            return typecheckBlock((BlockStmt) stmt, typeEnvironment, returnType);
+        } else if (stmt instanceof BlockStatement) {
+            return typecheckBlock((BlockStatement) stmt, typeEnvironment, returnType);
         } else {
             throw new TypeErrorException("Unsupported statement: " + stmt);
         }
@@ -259,8 +257,8 @@ public class TypeChecker {
 
     // fdef ::= type fname(vardec*) stmt
     public void typecheckFunction(final Fdef fdef) throws TypeErrorException {
-        final Map<Variable, Type> typeEnvironment = new HashMap<Variable, Type>();
-        for (final Vardec vardec : fdef.arguments) {
+        final Map<Var, Type> typeEnvironment = new HashMap<Var, Type>();
+        for (final VarDec vardec : fdef.arguments) {
             // int foo(int x, bool x)
             if (!typeEnvironment.containsKey(vardec.variable)) {
                 throw new TypeErrorException("Duplicate variable name: " + vardec.variable);
