@@ -473,6 +473,17 @@ public class ParserTest {
             Arrays.asList(new BooleanToken(), new VarToken("Test")));
         assertEquals("ParseResult(VarDecStatement(Bool, Test), 1)", parser.parserStatement(0).toString());
     }
+    @Test
+    public void testParseReturn() throws ParseException{
+        final Parser parser= new Parser(
+            Arrays.asList(new ReturnToken(), new VarToken("Test")));
+        assertEquals("ParseResult(Return(VarExp(Var(Test))), 3)", parser.parserStatement(0).toString());
+    } @Test
+    public void testParseClassDec() throws ParseException{
+        final Parser parser= new Parser(
+            Arrays.asList(new ClassToken(), new LeftParenToken(), new VarToken("Test")));
+        assertEquals("ParseResult(ClassDecStatement(VarExp(Var(Test))), 4)", parser.parserStatement(0).toString());
+    }
     // -----------------------------------REUSING TOKEN TESTS ----------------------------------------------------
 
     @Test

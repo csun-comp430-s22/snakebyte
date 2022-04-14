@@ -24,4 +24,3 @@ public class BlockStatement implements Statement {
         return (stmts.hashCode());
     }
 }
-// need to implement equals and to string and hash code
