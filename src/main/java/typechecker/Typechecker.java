@@ -321,12 +321,14 @@ public class Typechecker {
                                                final ClassName classWeAreIn,
                                                final Type functionReturnType) throws TypeErrorException {
         if (stmt instanceof ExpStmt) {
-            //this line is not compile
-            typeof(((ExpStmt)stmt).expression, typeEnvironment, classWeAreIn, functionReturnType);
+            //it was:
+            //typeof(((ExpStmt)stmt).expression, typeEnvironment, classWeAreIn, functionReturnType);
+            typeof(((ExpStmt)stmt).expression, typeEnvironment, classWeAreIn);
             return typeEnvironment;
         } else if (stmt instanceof VariableInitializationStmt) {
-            //this line is not compile
-            return isWellTypedVar((VariableInitializationStmt)stmt, typeEnvironment, classWeAreIn, functionReturnType);
+            //it was:
+            //return isWellTypedVar((VariableInitializationStmt)stmt, typeEnvironment, classWeAreIn, functionReturnType);
+            return isWellTypedVar((VariableInitializationStmt)stmt, typeEnvironment, classWeAreIn);
         } else if (stmt instanceof IfStatement) {
             return isWellTypedIf((IfStatement)stmt, typeEnvironment, classWeAreIn, functionReturnType);
         } else if (stmt instanceof WhileStmt) {
@@ -336,8 +338,9 @@ public class Typechecker {
         } else if (stmt instanceof ReturnVoidStmt) {
             return isWellTypedReturnVoid(typeEnvironment, classWeAreIn, functionReturnType);
         } else if (stmt instanceof PrintlnStmt) {
-            //this line is not compile
-            typeof(((PrintlnStmt)stmt).expression, typeEnvironment, classWeAreIn, functionReturnType);
+            //it was: 
+            //typeof(((PrintlnStmt)stmt).expression, typeEnvironment, classWeAreIn, functionReturnType);
+            typeof(((PrintlnStmt)stmt).expression, typeEnvironment, classWeAreIn);
             return typeEnvironment;
         } else if (stmt instanceof BlockStmt) {
             return isWellTypedBlock((BlockStmt)stmt, typeEnvironment, classWeAreIn, functionReturnType);
