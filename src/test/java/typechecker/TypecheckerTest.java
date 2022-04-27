@@ -221,4 +221,5 @@ public class TypecheckerTest {
                                                             typeEnvironment, new ClassName("foo"));
         assertEquals(expected,new IntType());
     }
+    
 }
