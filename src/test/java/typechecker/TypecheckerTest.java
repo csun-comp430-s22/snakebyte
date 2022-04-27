@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import java.util.Map;
 import java.util.HashMap;
+import java.util.List;
 import java.util.ArrayList;
 public class TypecheckerTest {
     // the following code is not working for some reason
@@ -156,5 +157,44 @@ public class TypecheckerTest {
                                             new EqualsOp(),
                                             new IntLiteralExp(1)),
                                   typeEnvironment,new ClassName("foo"));
+    }
+    @Test(expected = TypeErrorException.class)
+    public void testUnspportedOp() throws TypeErrorException{
+        final Typechecker emptyTypechecker =
+        new Typechecker(new Program(new ArrayList<ClassDef>(),
+                                    new ExpStmt(new IntLiteralExp(0))));
+        final Map<Var, Type> typeEnvironment = new HashMap<Var, Type>();
+        Type expected =  emptyTypechecker.typeofOp(new OpExp(new IntLiteralExp(1),
+                                            null,
+                                            new IntLiteralExp(0)),
+                                  typeEnvironment,new ClassName("foo"));
+    }
+    // @Test(expected = TypeErrorException.class)
+    // public void testClassException() throws TypeErrorException{
+    //     final Typechecker emptyTypechecker =
+    //     new Typechecker(new Program(new ArrayList<ClassDef>(),
+    //                                 new ExpStmt(new IntLiteralExp(0))));
+    //     final Map<Var, Type> typeEnvironment = new HashMap<Var, Type>();
+    //     final ClassName className = new ClassName("foo");
+    //     Type expected = emptyTypechecker.typeofNew(new NewExp(className,new ArrayList<Expression>()),
+    //                                                             typeEnvironment,className);
+    // }
+    @Test(expected = TypeErrorException.class)
+    public void testTypeof() throws TypeErrorException{
+        final Typechecker emptyTypechecker =
+        new Typechecker(new Program(new ArrayList<ClassDef>(),
+                                    new ExpStmt(new IntLiteralExp(0))));
+        final Map<Var, Type> typeEnvironment = new HashMap<Var, Type>();
+        Type expected =  emptyTypechecker.typeof(null,typeEnvironment, new ClassName("foo"));
+    }
+    @Test
+    public void testTypeofvarexp() throws TypeErrorException{
+        final Typechecker emptyTypechecker =
+        new Typechecker(new Program(new ArrayList<ClassDef>(),
+                                    new ExpStmt(new IntLiteralExp(0))));
+        final Map<Var, Type> typeEnvironment = new HashMap<Var, Type>();
+        typeEnvironment.put(new Var("x"), new IntType());
+        Type expected =  emptyTypechecker.typeof(new VarExp(new Var("x")),typeEnvironment, new ClassName("foo"));
+        assertEquals(expected,new IntType());
     }
 }
