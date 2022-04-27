@@ -221,5 +221,11 @@ public class TypecheckerTest {
                                                             typeEnvironment, new ClassName("foo"));
         assertEquals(expected,new IntType());
     }
-    
+    @Test
+    public void testTypeofmethodcall() throws TypeErrorException{
+        final Typechecker emptyTypechecker =
+        new Typechecker(new Program(new ArrayList<ClassDef>(),
+                                    new ExpStmt(new IntLiteralExp(0))));
+        final Map<Var, Type> typeEnvironment = new HashMap<Var, Type>();
+    }
 }
