@@ -197,4 +197,28 @@ public class TypecheckerTest {
         Type expected =  emptyTypechecker.typeof(new VarExp(new Var("x")),typeEnvironment, new ClassName("foo"));
         assertEquals(expected,new IntType());
     }
+    @Test
+    public void testTypeofthis() throws TypeErrorException{
+        final Typechecker emptyTypechecker =
+        new Typechecker(new Program(new ArrayList<ClassDef>(),
+                                    new ExpStmt(new IntLiteralExp(0))));
+
+        final Map<Var, Type> typeEnvironment = new HashMap<Var, Type>();
+        typeEnvironment.put(new Var("x"), new ClassNameType(new ClassName("foo")));
+        Type expected =  emptyTypechecker.typeof(new ThisExp(),typeEnvironment, new ClassName("foo"));
+        assertEquals(expected,new ClassNameType(new ClassName("foo")));
+    }
+    @Test
+    public void testTypeofopexp() throws TypeErrorException{
+        final Typechecker emptyTypechecker =
+        new Typechecker(new Program(new ArrayList<ClassDef>(),
+                                    new ExpStmt(new IntLiteralExp(0))));
+        final Map<Var, Type> typeEnvironment = new HashMap<Var, Type>();
+        typeEnvironment.put(new Var("x"), new IntType());
+        Type expected =  emptyTypechecker.typeof(new OpExp(new VarExp(new Var("x")),
+                                                            new PlusOp(),
+                                                            new IntLiteralExp(1)),
+                                                            typeEnvironment, new ClassName("foo"));
+        assertEquals(expected,new IntType());
+    }
 }
