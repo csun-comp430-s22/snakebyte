@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Arrays;
 public class TypecheckerTest {
     // the following code is not working for some reason
     // public static final Typechecker emptyTypechecker =
@@ -227,5 +228,25 @@ public class TypecheckerTest {
         new Typechecker(new Program(new ArrayList<ClassDef>(),
                                     new ExpStmt(new IntLiteralExp(0))));
         final Map<Var, Type> typeEnvironment = new HashMap<Var, Type>();
+    }
+    @Test
+    public void testTypeofNew() throws TypeErrorException{
+        ArrayList<ClassDef> tester = new ArrayList<ClassDef>();
+        tester.add(new ClassDef(new ClassName("foo2"), new ClassName("foo3"),new ArrayList<VarDec>(), new ArrayList<VarDec>(), new ArrayList<Expression>(), new ArrayList<Statement>(), new ArrayList<MethodDef>()));
+        final Typechecker emptyTypechecker =
+        new Typechecker(new Program(tester,
+                                    new ExpStmt(new IntLiteralExp(0))));
+        final Map<Var, Type> typeEnvironment = new HashMap<Var, Type>();
+        /*System.out.println("            ");
+        System.out.println("            ");
+        System.out.println("            ");
+        System.out.println(emptyTypechecker.program.classes);
+        System.out.println("            ");
+        System.out.println("            ");
+        */
+        typeEnvironment.put(new Var("x"), new IntType());
+        Type expected =  emptyTypechecker.typeof(new NewExp(new ClassName("foo2"), Arrays.asList(new IntLiteralExp(0))),typeEnvironment, new ClassName("foo2"));
+       assertEquals(new ClassNameType(new ClassName("foo2")), expected);
+
     }
 }

@@ -109,8 +109,14 @@ public class Typechecker {
             if (retval.containsKey(classDef.className)) {
                 throw new TypeErrorException("Duplicate class name: " + className);
             }
-        }
-
+            System.out.println(classes.get(0));
+       
+        System.out.println("Made it here!!!");
+        retval.put(className,classes.get(0));
+        System.out.println(retval);
+        } 
+        
+        
         assertInheritanceNonCyclical(retval);
 
         return retval;
@@ -278,7 +284,7 @@ public class Typechecker {
         return new ClassNameType(exp.className);
     }
     
-    // classWeAreIn is null if we are in the entry point
+    // classWeAreIn is null if we are in the entry pointm
     public Type typeof(final Expression exp,
                        final Map<Var, Type> typeEnvironment,
                        final ClassName classWeAreIn) throws TypeErrorException {
