@@ -1,4 +1,5 @@
 package typechecker;
+
 import typechecker.parser.*;
 import java.util.List;
 import java.util.ArrayList;
@@ -19,13 +20,15 @@ public class Typechecker {
     public final Map<ClassName, Map<MethodName, MethodDef>> methods;
 
     public final Program program;
+
     public Typechecker(final Program program) throws TypeErrorException {
         this.program = program;
         classes = makeClassMap(program.classes);
         methods = makeMethodMap(classes);
     }
+
     public static ClassDef getClass(final ClassName className,
-                                    final Map<ClassName, ClassDef> classes) throws TypeErrorException {
+            final Map<ClassName, ClassDef> classes) throws TypeErrorException {
         if (className.name.equals(BASE_CLASS_NAME)) {
             return null;
         } else {
@@ -43,7 +46,7 @@ public class Typechecker {
     }
 
     public static ClassDef getParent(final ClassName className,
-                                     final Map<ClassName, ClassDef> classes) throws TypeErrorException {
+            final Map<ClassName, ClassDef> classes) throws TypeErrorException {
         final ClassDef classDef = getClass(className, classes);
         return getClass(classDef.extendsClassName, classes);
     }
@@ -51,8 +54,9 @@ public class Typechecker {
     public ClassDef getParent(final ClassName className) throws TypeErrorException {
         return getParent(className, classes);
     }
+
     public static void assertInheritanceNonCyclicalForClass(final ClassDef classDef,
-                                                            final Map<ClassName, ClassDef> classes) throws TypeErrorException {
+            final Map<ClassName, ClassDef> classes) throws TypeErrorException {
         final Set<ClassName> seenClasses = new HashSet<ClassName>();
         seenClasses.add(classDef.className);
         ClassDef parentClassDef = getParent(classDef.className, classes);
@@ -65,16 +69,18 @@ public class Typechecker {
             parentClassDef = getParent(parentClassName, classes);
         }
     }
-        
+
     public static void assertInheritanceNonCyclical(final Map<ClassName, ClassDef> classes) throws TypeErrorException {
         for (final ClassDef classDef : classes.values()) {
             assertInheritanceNonCyclicalForClass(classDef, classes);
         }
     }
-     // includes inherited methods
-    // duplicates are not permitted within the same class, but it's ok to override a superclass' method
+
+    // includes inherited methods
+    // duplicates are not permitted within the same class, but it's ok to override a
+    // superclass' method
     public static Map<MethodName, MethodDef> methodsForClass(final ClassName className,
-                                                             final Map<ClassName, ClassDef> classes) throws TypeErrorException {
+            final Map<ClassName, ClassDef> classes) throws TypeErrorException {
         final ClassDef classDef = getClass(className, classes);
         if (classDef == null) {
             return new HashMap<MethodName, MethodDef>();
@@ -93,14 +99,15 @@ public class Typechecker {
         }
     }
 
-    public static Map<ClassName, Map<MethodName, MethodDef>> makeMethodMap(final Map<ClassName, ClassDef> classes) throws TypeErrorException {
+    public static Map<ClassName, Map<MethodName, MethodDef>> makeMethodMap(final Map<ClassName, ClassDef> classes)
+            throws TypeErrorException {
         final Map<ClassName, Map<MethodName, MethodDef>> retval = new HashMap<ClassName, Map<MethodName, MethodDef>>();
         for (final ClassName className : classes.keySet()) {
             retval.put(className, methodsForClass(className, classes));
         }
         return retval;
     }
-    
+
     // also makes sure inheritance hierarchies aren't cyclical
     public static Map<ClassName, ClassDef> makeClassMap(final List<ClassDef> classes) throws TypeErrorException {
         final Map<ClassName, ClassDef> retval = new HashMap<ClassName, ClassDef>();
@@ -110,20 +117,19 @@ public class Typechecker {
                 throw new TypeErrorException("Duplicate class name: " + className);
             }
             System.out.println(classes.get(0));
-       
-        System.out.println("Made it here!!!");
-        retval.put(className,classes.get(0));
-        System.out.println(retval);
-        } 
-        
-        
+
+            System.out.println("Made it here!!!");
+            retval.put(className, classes.get(0));
+            System.out.println(retval);
+        }
+
         assertInheritanceNonCyclical(retval);
 
         return retval;
     }
 
-     public MethodDef getMethodDef(final ClassName className,
-                                  final MethodName methodName) throws TypeErrorException {
+    public MethodDef getMethodDef(final ClassName className,
+            final MethodName methodName) throws TypeErrorException {
         final Map<MethodName, MethodDef> methodMap = methods.get(className);
         if (methodMap == null) {
             throw new TypeErrorException("Unknown class name: " + className);
@@ -136,10 +142,10 @@ public class Typechecker {
             }
         }
     }
-    //*******************************Old code************ */
-    
+    // *******************************Old code************ */
+
     public Type typeofVariable(final VarExp exp,
-                               final Map<Var, Type> typeEnvironment) throws TypeErrorException {
+            final Map<Var, Type> typeEnvironment) throws TypeErrorException {
         final Type mapType = typeEnvironment.get(exp.variable);
         if (mapType == null) {
             throw new TypeErrorException("Used variable not in scope: " + exp.variable.name);
@@ -147,6 +153,7 @@ public class Typechecker {
             return mapType;
         }
     }
+
     public Type typeofThis(final ClassName classWeAreIn) throws TypeErrorException {
         if (classWeAreIn == null) {
             throw new TypeErrorException("this used in the entry point");
@@ -165,18 +172,56 @@ public class Typechecker {
         //   case (IntType, LessThanOp | EqualsOp, IntType) => Booltype
         //   case _ => throw new TypeErrorException("Operator mismatch")
         // }
+
+
+        /********************************************************arithmetic types************************************************* */
         if (exp.operator instanceof PlusOp) {
             if (leftType instanceof IntType && rightType instanceof IntType) {
                 return new IntType();
             } else {
                 throw new TypeErrorException("Operand type mismatch for +");
             }
+        }
+        else if (exp.operator instanceof MinusOP) {
+            if (leftType instanceof IntType && rightType instanceof IntType) {
+                 return new IntType();
+            } else {
+                    throw new TypeErrorException("Operand type mismatch for -");
+            }
+        else if (exp.operator instanceof TimesOp) {
+            if (leftType instanceof IntType && rightType instanceof IntType) {
+                 return new IntType();
+            } else {
+                    throw new TypeErrorException("Operand type mismatch for *");
+            }
+        else if (exp.operator instanceof DivideOp) {
+            if (leftType instanceof IntType && rightType instanceof IntType) {
+                 return new IntType();
+            } else {
+                    throw new TypeErrorException("Operand type mismatch for /");
+            }
+
+
+
+        /*****************************************************************comparison types *****************************************/
         } else if (exp.operator instanceof LessThanOp) {
             if (leftType instanceof IntType && rightType instanceof IntType) {
                 return new BoolType();
             } else {
                 throw new TypeErrorException("Operand type mismatch for <");
             }
+
+
+
+
+
+
+
+
+
+
+
+
         } else if (exp.operator instanceof EqualsOp) {
             if (leftType instanceof IntType && rightType instanceof IntType) {
                 return new BoolType();
@@ -189,13 +234,13 @@ public class Typechecker {
     }
 
     public Type expectedReturnTypeForClassAndMethod(final ClassName className,
-                                                    final MethodName methodName) throws TypeErrorException {
+            final MethodName methodName) throws TypeErrorException {
         return getMethodDef(className, methodName).returnType;
     }
 
     public List<Type> expectedParameterTypesForClassAndMethod(final ClassName className,
-                                                              final MethodName methodName)
-        throws TypeErrorException {
+            final MethodName methodName)
+            throws TypeErrorException {
         final MethodDef methodDef = getMethodDef(className, methodName);
         final List<Type> retval = new ArrayList<Type>();
         for (final VarDec vardec : methodDef.arguments) {
@@ -204,13 +249,12 @@ public class Typechecker {
         return retval;
     }
 
-    
     public void assertEqualOrSubtypeOf(final Type first, final Type second) throws TypeErrorException {
         if (first.equals(second)) {
             return;
         } else if (first instanceof ClassNameType &&
-                   second instanceof ClassNameType) {
-            final ClassDef parentClassDef = getParent(((ClassNameType)first).className);
+                second instanceof ClassNameType) {
+            final ClassDef parentClassDef = getParent(((ClassNameType) first).className);
             assertEqualOrSubtypeOf(new ClassNameType(parentClassDef.className), second);
         } else {
             throw new TypeErrorException("incompatible types: " + first + ", " + second);
@@ -220,9 +264,9 @@ public class Typechecker {
     // List<Type> - expected types
     // List<Exp> - received expressions
     public void expressionsOk(final List<Type> expectedTypes,
-                              final List<Expression> receivedExpressions,
-                              final Map<Var, Type> typeEnvironment,
-                              final ClassName classWeAreIn) throws TypeErrorException {
+            final List<Expression> receivedExpressions,
+            final Map<Var, Type> typeEnvironment,
+            final ClassName classWeAreIn) throws TypeErrorException {
         if (expectedTypes.size() != receivedExpressions.size()) {
             throw new TypeErrorException("Wrong number of parameters");
         }
@@ -230,14 +274,14 @@ public class Typechecker {
             final Type paramType = typeof(receivedExpressions.get(index), typeEnvironment, classWeAreIn);
             final Type expectedType = expectedTypes.get(index);
             // myMethod(int, bool, int)
-            // myMethod(  2, true,   3)
+            // myMethod( 2, true, 3)
             //
             // myMethod2(BaseClass)
             // myMethod2(new SubClass())
             assertEqualOrSubtypeOf(paramType, expectedType);
         }
     }
-    
+
     // 1.) target should be a class.
     // 2.) target needs to have the methodname method
     // 3.) need to know the expected parameter types for the method
@@ -245,13 +289,12 @@ public class Typechecker {
     // exp.methodname(exp*)
     // target.methodName(params)
     public Type typeofMethodCall(final MethodCallExp exp,
-                                 final Map<Var, Type> typeEnvironment,
-                                 final ClassName classWeAreIn) throws TypeErrorException {
+            final Map<Var, Type> typeEnvironment,
+            final ClassName classWeAreIn) throws TypeErrorException {
         final Type targetType = typeof(exp.target, typeEnvironment, classWeAreIn);
         if (targetType instanceof ClassNameType) {
-            final ClassName className = ((ClassNameType)targetType).className;
-            final List<Type> expectedTypes =
-                expectedParameterTypesForClassAndMethod(className, exp.methodName);
+            final ClassName className = ((ClassNameType) targetType).className;
+            final List<Type> expectedTypes = expectedParameterTypesForClassAndMethod(className, exp.methodName);
             expressionsOk(expectedTypes, exp.params, typeEnvironment, classWeAreIn);
             return expectedReturnTypeForClassAndMethod(className, exp.methodName);
         } else {
@@ -260,7 +303,7 @@ public class Typechecker {
     }
 
     public List<Type> expectedConstructorTypesForClass(final ClassName className)
-        throws TypeErrorException {
+            throws TypeErrorException {
         final ClassDef classDef = getClass(className);
         final List<Type> retval = new ArrayList<Type>();
         if (classDef == null) { // Object
@@ -272,44 +315,44 @@ public class Typechecker {
             return retval;
         }
     }
-    
+
     // new classname(exp*)
     // new className(params)
     public Type typeofNew(final NewExp exp,
-                          final Map<Var, Type> typeEnvironment,
-                          final ClassName classWeAreIn) throws TypeErrorException {
+            final Map<Var, Type> typeEnvironment,
+            final ClassName classWeAreIn) throws TypeErrorException {
         // need to know what the constructor arguments for this class are
         final List<Type> expectedTypes = expectedConstructorTypesForClass(exp.className);
         expressionsOk(expectedTypes, exp.params, typeEnvironment, classWeAreIn);
         return new ClassNameType(exp.className);
     }
-    
+
     // classWeAreIn is null if we are in the entry pointm
     public Type typeof(final Expression exp,
-                       final Map<Var, Type> typeEnvironment,
-                       final ClassName classWeAreIn) throws TypeErrorException {
+            final Map<Var, Type> typeEnvironment,
+            final ClassName classWeAreIn) throws TypeErrorException {
         if (exp instanceof IntLiteralExp) {
             return new IntType();
         } else if (exp instanceof VarExp) {
-            return typeofVariable((VarExp)exp, typeEnvironment);
+            return typeofVariable((VarExp) exp, typeEnvironment);
         } else if (exp instanceof BoolLiteralExp) {
             return new BoolType();
         } else if (exp instanceof ThisExp) {
             return typeofThis(classWeAreIn);
         } else if (exp instanceof OpExp) {
-            return typeofOp((OpExp)exp, typeEnvironment, classWeAreIn);
+            return typeofOp((OpExp) exp, typeEnvironment, classWeAreIn);
         } else if (exp instanceof MethodCallExp) {
-            return typeofMethodCall((MethodCallExp)exp, typeEnvironment, classWeAreIn);
+            return typeofMethodCall((MethodCallExp) exp, typeEnvironment, classWeAreIn);
         } else if (exp instanceof NewExp) {
-            return typeofNew((NewExp)exp, typeEnvironment, classWeAreIn);
+            return typeofNew((NewExp) exp, typeEnvironment, classWeAreIn);
         } else {
             throw new TypeErrorException("Unrecognized expression: " + exp);
         }
     }
 
     public static Map<Var, Type> addToMap(final Map<Var, Type> map,
-                                               final Var variable,
-                                               final Type type) {
+            final Var variable,
+            final Type type) {
         final Map<Var, Type> result = new HashMap<Var, Type>();
         result.putAll(map);
         result.put(variable, type);
@@ -317,17 +360,17 @@ public class Typechecker {
     }
 
     public Map<Var, Type> isWellTypedVar(final VariableInitializationStmt stmt,
-                                              final Map<Var, Type> typeEnvironment,
-                                              final ClassName classWeAreIn) throws TypeErrorException {
+            final Map<Var, Type> typeEnvironment,
+            final ClassName classWeAreIn) throws TypeErrorException {
         final Type expType = typeof(stmt.expression, typeEnvironment, classWeAreIn);
         assertEqualOrSubtypeOf(expType, stmt.vardec.type);
         return addToMap(typeEnvironment, stmt.vardec.var, stmt.vardec.type);
     }
 
     public Map<Var, Type> isWellTypedIf(final IfStatement stmt,
-                                             final Map<Var, Type> typeEnvironment,
-                                             final ClassName classWeAreIn,
-                                             final Type functionReturnType) throws TypeErrorException {
+            final Map<Var, Type> typeEnvironment,
+            final ClassName classWeAreIn,
+            final Type functionReturnType) throws TypeErrorException {
         if (typeof(stmt.guard, typeEnvironment, classWeAreIn) instanceof BoolType) {
             isWellTypedStmt(stmt.trueBranch, typeEnvironment, classWeAreIn, functionReturnType);
             isWellTypedStmt(stmt.falseBranch, typeEnvironment, classWeAreIn, functionReturnType);
@@ -338,9 +381,9 @@ public class Typechecker {
     }
 
     public Map<Var, Type> isWellTypedWhile(final WhileStmt stmt,
-                                                final Map<Var, Type> typeEnvironment,
-                                                final ClassName classWeAreIn,
-                                                final Type functionReturnType) throws TypeErrorException {
+            final Map<Var, Type> typeEnvironment,
+            final ClassName classWeAreIn,
+            final Type functionReturnType) throws TypeErrorException {
         if (typeof(stmt.guard, typeEnvironment, classWeAreIn) instanceof BoolType) {
             isWellTypedStmt(stmt.body, typeEnvironment, classWeAreIn, functionReturnType);
             return typeEnvironment;
@@ -350,20 +393,20 @@ public class Typechecker {
     }
 
     public Map<Var, Type> isWellTypedBlock(final BlockStmt stmt,
-                                                Map<Var, Type> typeEnvironment,
-                                                final ClassName classWeAreIn,
-                                                final Type functionReturnType) throws TypeErrorException {
+            Map<Var, Type> typeEnvironment,
+            final ClassName classWeAreIn,
+            final Type functionReturnType) throws TypeErrorException {
         for (final Statement bodyStmt : stmt.body) {
             typeEnvironment = isWellTypedStmt(bodyStmt, typeEnvironment, classWeAreIn, functionReturnType);
         }
         return typeEnvironment;
     }
-    
+
     // return exp;
     public Map<Var, Type> isWellTypedReturnNonVoid(final ReturnNonVoidStmt stmt,
-                                                        final Map<Var, Type> typeEnvironment,
-                                                        final ClassName classWeAreIn,
-                                                        final Type functionReturnType) throws TypeErrorException {
+            final Map<Var, Type> typeEnvironment,
+            final ClassName classWeAreIn,
+            final Type functionReturnType) throws TypeErrorException {
         if (functionReturnType == null) {
             throw new TypeErrorException("return in program entry point");
         } else {
@@ -374,8 +417,8 @@ public class Typechecker {
     }
 
     public Map<Var, Type> isWellTypedReturnVoid(final Map<Var, Type> typeEnvironment,
-                                                     final ClassName classWeAreIn,
-                                                     final Type functionReturnType) throws TypeErrorException {
+            final ClassName classWeAreIn,
+            final Type functionReturnType) throws TypeErrorException {
         if (functionReturnType == null) {
             throw new TypeErrorException("return in program entry point");
         } else if (!functionReturnType.equals(new VoidType())) {
@@ -384,40 +427,44 @@ public class Typechecker {
             return typeEnvironment;
         }
     }
-    
+
     // bool x = true;
     // while (true) {
-    //   int x = 17;
-    //   break;
+    // int x = 17;
+    // break;
     // }
     public Map<Var, Type> isWellTypedStmt(final Statement stmt,
-                                               final Map<Var, Type> typeEnvironment,
-                                               final ClassName classWeAreIn,
-                                               final Type functionReturnType) throws TypeErrorException {
+            final Map<Var, Type> typeEnvironment,
+            final ClassName classWeAreIn,
+            final Type functionReturnType) throws TypeErrorException {
         if (stmt instanceof ExpStmt) {
-            //it was:
-            //typeof(((ExpStmt)stmt).expression, typeEnvironment, classWeAreIn, functionReturnType);
-            typeof(((ExpStmt)stmt).expression, typeEnvironment, classWeAreIn);
+            // it was:
+            // typeof(((ExpStmt)stmt).expression, typeEnvironment, classWeAreIn,
+            // functionReturnType);
+            typeof(((ExpStmt) stmt).expression, typeEnvironment, classWeAreIn);
             return typeEnvironment;
         } else if (stmt instanceof VariableInitializationStmt) {
-            //it was:
-            //return isWellTypedVar((VariableInitializationStmt)stmt, typeEnvironment, classWeAreIn, functionReturnType);
-            return isWellTypedVar((VariableInitializationStmt)stmt, typeEnvironment, classWeAreIn);
+            // it was:
+            // return isWellTypedVar((VariableInitializationStmt)stmt, typeEnvironment,
+            // classWeAreIn, functionReturnType);
+            return isWellTypedVar((VariableInitializationStmt) stmt, typeEnvironment, classWeAreIn);
         } else if (stmt instanceof IfStatement) {
-            return isWellTypedIf((IfStatement)stmt, typeEnvironment, classWeAreIn, functionReturnType);
+            return isWellTypedIf((IfStatement) stmt, typeEnvironment, classWeAreIn, functionReturnType);
         } else if (stmt instanceof WhileStmt) {
-            return isWellTypedWhile((WhileStmt)stmt, typeEnvironment, classWeAreIn, functionReturnType);
+            return isWellTypedWhile((WhileStmt) stmt, typeEnvironment, classWeAreIn, functionReturnType);
         } else if (stmt instanceof ReturnNonVoidStmt) {
-            return isWellTypedReturnNonVoid((ReturnNonVoidStmt)stmt, typeEnvironment, classWeAreIn, functionReturnType);
+            return isWellTypedReturnNonVoid((ReturnNonVoidStmt) stmt, typeEnvironment, classWeAreIn,
+                    functionReturnType);
         } else if (stmt instanceof ReturnVoidStmt) {
             return isWellTypedReturnVoid(typeEnvironment, classWeAreIn, functionReturnType);
         } else if (stmt instanceof PrintlnStmt) {
-            //it was: 
-            //typeof(((PrintlnStmt)stmt).expression, typeEnvironment, classWeAreIn, functionReturnType);
-            typeof(((PrintlnStmt)stmt).expression, typeEnvironment, classWeAreIn);
+            // it was:
+            // typeof(((PrintlnStmt)stmt).expression, typeEnvironment, classWeAreIn,
+            // functionReturnType);
+            typeof(((PrintlnStmt) stmt).expression, typeEnvironment, classWeAreIn);
             return typeEnvironment;
         } else if (stmt instanceof BlockStmt) {
-            return isWellTypedBlock((BlockStmt)stmt, typeEnvironment, classWeAreIn, functionReturnType);
+            return isWellTypedBlock((BlockStmt) stmt, typeEnvironment, classWeAreIn, functionReturnType);
         } else {
             throw new TypeErrorException("Unsupported statement: " + stmt);
         }
@@ -426,8 +473,8 @@ public class Typechecker {
 
     // methoddef ::= type methodname(vardec*) stmt
     public void isWellTypedMethodDef(final MethodDef method,
-                                     Map<Var, Type> typeEnvironment, // instance variables
-                                     final ClassName classWeAreIn) throws TypeErrorException {
+            Map<Var, Type> typeEnvironment, // instance variables
+            final ClassName classWeAreIn) throws TypeErrorException {
         // starting type environment: just instance variables
         // int addTwo(int x, int y) { return x + y; }
         //
@@ -437,14 +484,14 @@ public class Typechecker {
             // odd semantics: last variable declaration shadows prior one
             typeEnvironment = addToMap(typeEnvironment, vardec.var, vardec.type);
         }
-        
+
         isWellTypedStmt(method.body,
-                        typeEnvironment, // instance variables + parameters
-                        classWeAreIn,
-                        method.returnType);
+                typeEnvironment, // instance variables + parameters
+                classWeAreIn,
+                method.returnType);
     }
 
-     public Map<Var, Type> baseTypeEnvironmentForClass(final ClassName className) throws TypeErrorException {
+    public Map<Var, Type> baseTypeEnvironmentForClass(final ClassName className) throws TypeErrorException {
         final ClassDef classDef = getClass(className);
         if (classDef == null) {
             return new HashMap<Var, Type>();
@@ -476,19 +523,19 @@ public class Typechecker {
         }
         // check call to super
         expressionsOk(expectedConstructorTypesForClass(classDef.extendsClassName),
-                      classDef.superParams,
-                      constructorTypeEnvironment,
-                      classDef.className);
+                classDef.superParams,
+                constructorTypeEnvironment,
+                classDef.className);
         isWellTypedBlock(new BlockStmt(classDef.constructorBody),
-                         constructorTypeEnvironment,
-                         classDef.className,
-                         new VoidType());
+                constructorTypeEnvironment,
+                classDef.className,
+                new VoidType());
 
         // check methods
         for (final MethodDef method : classDef.methods) {
             isWellTypedMethodDef(method,
-                                 typeEnvironment,
-                                 classDef.className);
+                    typeEnvironment,
+                    classDef.className);
         }
     }
 
@@ -499,8 +546,8 @@ public class Typechecker {
         }
 
         isWellTypedStmt(program.entryPoint,
-                        new HashMap<Var, Type>(),
-                        null,
-                        null);
+                new HashMap<Var, Type>(),
+                null,
+                null);
     }
 }
