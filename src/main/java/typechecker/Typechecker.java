@@ -201,26 +201,32 @@ public class Typechecker {
                     throw new TypeErrorException("Operand type mismatch for /");
             }
 
-        /*****************************************************************comparison types *****************************************/
+        /*****************************************************************comparitor types *****************************************/
         } else if (exp.operator instanceof LessThanOp) {
             if (leftType instanceof IntType && rightType instanceof IntType) {
                 return new BoolType();
             } else {
                 throw new TypeErrorException("Operand type mismatch for <");
             }
-
-
-
-
-
-
-
-
-
-
-
-
-        } else if (exp.operator instanceof EqualsOp) {
+        else if (exp.operator instanceof LessThanEqualOp) {
+            if (leftType instanceof IntType && rightType instanceof IntType) {
+                return new BoolType();
+            } else {
+                throw new TypeErrorException("Operand type mismatch for <=");
+            }
+        else if (exp.operator instanceof GreaterThanOp) {
+            if (leftType instanceof IntType && rightType instanceof IntType) {
+                return new BoolType();
+            } else {
+                throw new TypeErrorException("Operand type mismatch for >");
+            }
+        else if (exp.operator instanceof GreaterThanEqualOp) {
+            if (leftType instanceof IntType && rightType instanceof IntType) {
+                return new BoolType();
+            } else {
+                throw new TypeErrorException("Operand type mismatch for >=");
+            }
+        } else if (exp.operator instanceof EqualsEqualsOp) {
             if (leftType instanceof IntType && rightType instanceof IntType) {
                 return new BoolType();
             } else {
