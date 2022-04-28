@@ -201,8 +201,6 @@ public class Typechecker {
                     throw new TypeErrorException("Operand type mismatch for /");
             }
 
-
-
         /*****************************************************************comparison types *****************************************/
         } else if (exp.operator instanceof LessThanOp) {
             if (leftType instanceof IntType && rightType instanceof IntType) {
