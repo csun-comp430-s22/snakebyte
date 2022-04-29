@@ -332,11 +332,21 @@ public class Typechecker {
     }
 
     // classWeAreIn is null if we are in the entry pointm
+
+    /***************************
+     * need to change these to match our parser code such as IntExp rather than
+     * IntLiteralExp ect
+     ********/
+    // or conversly we can add the literals to the lexer and parser
+    // add string literals
+
     public Type typeof(final Expression exp,
             final Map<Var, Type> typeEnvironment,
             final ClassName classWeAreIn) throws TypeErrorException {
         if (exp instanceof IntLiteralExp) {
             return new IntType();
+        } else if (exp instanceof StringLiteralExp) {
+            return new StringType();
         } else if (exp instanceof VarExp) {
             return typeofVariable((VarExp) exp, typeEnvironment);
         } else if (exp instanceof BoolLiteralExp) {
