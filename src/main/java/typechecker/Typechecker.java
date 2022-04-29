@@ -163,64 +163,66 @@ public class Typechecker {
     }
 
     public Type typeofOp(final OpExp exp,
-                         final Map<Var, Type> typeEnvironment,
-                         final ClassName classWeAreIn) throws TypeErrorException {
+            final Map<Var, Type> typeEnvironment,
+            final ClassName classWeAreIn) throws TypeErrorException {
         final Type leftType = typeof(exp.left, typeEnvironment, classWeAreIn);
         final Type rightType = typeof(exp.right, typeEnvironment, classWeAreIn);
         // (leftType, exp.op, rightType) match {
-        //   case (IntType, PlusOp, IntType) => IntType
-        //   case (IntType, LessThanOp | EqualsOp, IntType) => Booltype
-        //   case _ => throw new TypeErrorException("Operator mismatch")
+        // case (IntType, PlusOp, IntType) => IntType
+        // case (IntType, LessThanOp | EqualsOp, IntType) => Booltype
+        // case _ => throw new TypeErrorException("Operator mismatch")
         // }
 
-
-        /********************************************************arithmetic types************************************************* */
+        /********************************************************
+         * arithmetic types*************************************************
+         */
         if (exp.operator instanceof PlusOp) {
             if (leftType instanceof IntType && rightType instanceof IntType) {
                 return new IntType();
             } else {
                 throw new TypeErrorException("Operand type mismatch for +");
             }
-        }
-        else if (exp.operator instanceof MinusOP) {
+        } else if (exp.operator instanceof MinusOP) {
             if (leftType instanceof IntType && rightType instanceof IntType) {
-                 return new IntType();
+                return new IntType();
             } else {
-                    throw new TypeErrorException("Operand type mismatch for -");
+                throw new TypeErrorException("Operand type mismatch for -");
             }
-        else if (exp.operator instanceof TimesOp) {
+        } else if (exp.operator instanceof TimesOp) {
             if (leftType instanceof IntType && rightType instanceof IntType) {
-                 return new IntType();
+                return new IntType();
             } else {
-                    throw new TypeErrorException("Operand type mismatch for *");
+                throw new TypeErrorException("Operand type mismatch for *");
             }
-        else if (exp.operator instanceof DivideOp) {
+        } else if (exp.operator instanceof DivideOp) {
             if (leftType instanceof IntType && rightType instanceof IntType) {
-                 return new IntType();
+                return new IntType();
             } else {
-                    throw new TypeErrorException("Operand type mismatch for /");
+                throw new TypeErrorException("Operand type mismatch for /");
             }
 
-        /*****************************************************************comparitor types *****************************************/
+            /*****************************************************************
+             * comparitor types
+             *****************************************/
         } else if (exp.operator instanceof LessThanOp) {
             if (leftType instanceof IntType && rightType instanceof IntType) {
                 return new BoolType();
             } else {
                 throw new TypeErrorException("Operand type mismatch for <");
             }
-        else if (exp.operator instanceof LessThanEqualOp) {
+        } else if (exp.operator instanceof LessThanEqualOp) {
             if (leftType instanceof IntType && rightType instanceof IntType) {
                 return new BoolType();
             } else {
                 throw new TypeErrorException("Operand type mismatch for <=");
             }
-        else if (exp.operator instanceof GreaterThanOp) {
+        } else if (exp.operator instanceof GreaterThanOp) {
             if (leftType instanceof IntType && rightType instanceof IntType) {
                 return new BoolType();
             } else {
                 throw new TypeErrorException("Operand type mismatch for >");
             }
-        else if (exp.operator instanceof GreaterThanEqualOp) {
+        } else if (exp.operator instanceof GreaterThanEqualOp) {
             if (leftType instanceof IntType && rightType instanceof IntType) {
                 return new BoolType();
             } else {
