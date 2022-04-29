@@ -88,7 +88,7 @@ public class TypecheckerTest {
                                     new ExpStmt(new IntLiteralExp(0))));
         final Map<Var, Type> typeEnvironment = new HashMap<Var, Type>();
         Type expected =  emptyTypechecker.typeofOp(new OpExp(new IntLiteralExp(1),
-                                            new EqualsOp(),
+                                            new EqualsEqualsOp(),
                                             new IntLiteralExp(0)),
                                   typeEnvironment,new ClassName("foo"));
         assertEquals(expected, new BoolType());
