@@ -21,43 +21,46 @@ Str test2 = (Str)test1;
 ### Define method not use Python class
 
 ## SYNTAX<br>
-<code>
-var<span style="color:red;"> variable name</span><br>
-classname <span style="color:red;"> custom object </span><br>
-functionname <span style="color:red;">is a name of a function</span><br>
-Str <span style="color:red;">is string type</span><br>
-Boolean ::= <span style="color:red;"> true | false</span><br>
-i <span style="color:red"> is an integer</span><br>
-s <span style="color:red"> is a string</span><br>
-b <span style="color:red"> is Boolean</span><br>
-Int <span style="color:red"> Integers</span><br>
-type ::= <span style="color:red"> IntegersInt | Boolean | Str | type[ ] </span><br>  
-exp  <span style="color:red">is an expression</span><br>  
-vardec ::= type var  <span style="color:red">variable declaration</span><br>
-Op::= +| - | * | / | > | < | = | == | >= | <=<span style="color:red">arithmetic, assignment & comparison operators </span><br>
-exp ::= exp Op exp | exp.functionname(exp*) <span style="color:red">method call</span><br>
+```  
+var variable name  
+classname custom object  
+functionname is a name of a function  
+Str is string  
+Boolean ::= true | false  
+boolean_value ::= `true` | `false`  
+i is an integer  
+s is a String  
+b is Boolean  
+Int Integers   
+type ::= Int | Boolean | Str | type[ ]   
+exp  is an expression  
+vardec ::= type var  variable declaration     
+Op::= +| - | * | / | > | < | = | == | >= | <=    arithmetic, assignment & comparison operators  
+exp ::= exp Op exp | exp.functionname(exp*) method call  
+	
 exp ::= i | s| b | var  
-        |this | <span style="color:red">Refers to my instance</span>
-|super <span style="color:red">refers to superclass (parent) objects</span>
+|this | Refers to my instance  
+|super refers to superclass (parent) objects
 |var=exp  
-| new classname(exp*)  <span style="color:red">new instance of a class</span> 
-| (type)exp <span style="color:red">Casts an expression as a type</span> 
-| new type [exp] | exp[exp] | exp[exp]   = exp  Variables, strings, arrays and integers<br>
-statement ::= type var ‘=’ exp ‘;’| <span style="color:red">variable assignment</span><br>
-while (exp) statement | <span style="color:red">while loops</span><br>
-{ statement * } | <span style="color:red">block</span><br>
-break; | <span style="color:red">break</span><br>
-if (exp) statement else statement | <span style="color:red">if/else conditional</span><br>
-return exp; | <span style="color:red">return an expression</span><br>
-print(exp) | <span style="color:red">Prints something to the terminal</span><br>
-methoddef ::= type methodname (vardec*) statement | <span style="color:red">zero or more parameter</span>  
-extension ::= epsilon | <span style="color:red">`extends` classname</span>  
+| new classname(exp*)  new instance of a class  
+| (type)exp Casts an expression as a type   
+| new type [exp] | exp[exp] | exp[exp]   = exp  Variables, strings, arrays and integers  
+statement ::= type var ‘=’ exp ‘;’| variable assignment   
+while (exp) statement | while loops   
+{ statement * } | block  
+break; | break  
+ if (exp) statement else statement | if/else conditional  
+ 		return exp; | return an expression  
+		print(exp) | Prints something to the terminal   
+methoddef ::= type methodname (vardec*) statement | zero or more parameter   
+extension ::= epsilon | `extends` classname   
 classdef ::= `class` classname extension {   
-vardec*  
-methoddef * | <span style="color:red">method zero or more</span>  
-classname(vardec*){ statement*  }   <span style="color:red">refers to more than one,           
-use comma to separate different variable</span>   
-}
+		vardec*  
+methoddef * | method zero or more  
+classname(vardec*){ statement*  }   refers to more than one,           
+             use comma to separate different variable   
+}   
 
-program ::= classdef * exp | program
-</code>
+program ::= classdef * exp | program  
+```  
+

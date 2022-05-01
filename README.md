@@ -2,7 +2,7 @@
 Compiler written in Java targeting Python  
 ---
 ## Encountered issuses  
-
+## [Documentation](https://github.com/csun-comp430-s22/snakebyte/blob/main/documentation.md)
 ---  
 ## Syntax  
 ```  
