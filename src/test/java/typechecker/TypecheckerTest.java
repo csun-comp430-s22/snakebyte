@@ -94,6 +94,30 @@ public class TypecheckerTest {
         assertEquals(expected, new BoolType());
     }
     @Test(expected = TypeErrorException.class)
+    public void testEqualsEqualsOPOne() throws TypeErrorException{
+        final Typechecker emptyTypechecker =
+        new Typechecker(new Program(new ArrayList<ClassDef>(),
+                                    new ExpStmt(new IntLiteralExp(0))));
+        final Map<Var, Type> typeEnvironment = new HashMap<Var, Type>();
+        Type expected =  emptyTypechecker.typeofOp(new OpExp(new BoolLiteralExp(true),
+                                            new EqualsEqualsOp(),
+                                            new IntLiteralExp(0)),
+                                  typeEnvironment,new ClassName("foo"));
+        assertEquals(expected, new BoolType());
+    }
+    @Test(expected = TypeErrorException.class)
+    public void testEqualsEqualsOPTwo() throws TypeErrorException{
+        final Typechecker emptyTypechecker =
+        new Typechecker(new Program(new ArrayList<ClassDef>(),
+                                    new ExpStmt(new IntLiteralExp(0))));
+        final Map<Var, Type> typeEnvironment = new HashMap<Var, Type>();
+        Type expected =  emptyTypechecker.typeofOp(new OpExp(new IntLiteralExp(0),
+                                            new EqualsEqualsOp(),
+                                            new BoolLiteralExp(true)),
+                                  typeEnvironment,new ClassName("foo"));
+        assertEquals(expected, new BoolType());
+    }
+    @Test(expected = TypeErrorException.class)
     public void testBoolTypeLessThanTwo() throws TypeErrorException{
         final Typechecker emptyTypechecker =
         new Typechecker(new Program(new ArrayList<ClassDef>(),
@@ -229,10 +253,10 @@ public class TypecheckerTest {
                                     new ExpStmt(new IntLiteralExp(0))));
         final Map<Var, Type> typeEnvironment = new HashMap<Var, Type>();
     }
-    @Test
-    public void testTypeofNew() throws TypeErrorException{
+    @Test(expected = TypeErrorException.class)
+    public void testTypeofNewCyclicException() throws TypeErrorException{
         ArrayList<ClassDef> tester = new ArrayList<ClassDef>();
-        tester.add(new ClassDef(new ClassName("foo2"), new ClassName("foo3"),new ArrayList<VarDec>(), new ArrayList<VarDec>(), new ArrayList<Expression>(), new ArrayList<Statement>(), new ArrayList<MethodDef>()));
+        tester.add(new ClassDef(new ClassName("foo2"), new ClassName("foo2"),new ArrayList<VarDec>(), new ArrayList<VarDec>(), new ArrayList<Expression>(), new ArrayList<Statement>(), new ArrayList<MethodDef>()));
         final Typechecker emptyTypechecker =
         new Typechecker(new Program(tester,
                                     new ExpStmt(new IntLiteralExp(0))));
@@ -244,9 +268,230 @@ public class TypecheckerTest {
         System.out.println("            ");
         System.out.println("            ");
         */
-        typeEnvironment.put(new Var("x"), new IntType());
+        typeEnvironment.put(new Var("foo2"), new ClassNameType(new ClassName("foo2")));
         Type expected =  emptyTypechecker.typeof(new NewExp(new ClassName("foo2"), Arrays.asList(new IntLiteralExp(0))),typeEnvironment, new ClassName("foo2"));
-       assertEquals(new ClassNameType(new ClassName("foo2")), expected);
+       //assertEquals(new ClassNameType(new ClassName("foo2")), expected);
 
+    }
+    //new op tests: <=,>=,==
+    @Test
+    public void testLessThanEqual() throws TypeErrorException{
+        final Typechecker emptyTypechecker =
+        new Typechecker(new Program(new ArrayList<ClassDef>(),
+                                    new ExpStmt(new IntLiteralExp(0))));
+        final Map<Var, Type> typeEnvironment = new HashMap<Var, Type>();
+        Type expected =  emptyTypechecker.typeofOp(new OpExp(new IntLiteralExp(1),
+                                            new LessThanEqualOp(),
+                                            new IntLiteralExp(0)),
+                                  typeEnvironment,new ClassName("foo"));
+        assertEquals(expected, new BoolType());
+    }
+    @Test(expected = TypeErrorException.class)
+    public void testLessThanEqualException() throws TypeErrorException{
+        final Typechecker emptyTypechecker =
+        new Typechecker(new Program(new ArrayList<ClassDef>(),
+                                    new ExpStmt(new IntLiteralExp(0))));
+        final Map<Var, Type> typeEnvironment = new HashMap<Var, Type>();
+        Type expected =  emptyTypechecker.typeofOp(new OpExp(new BoolLiteralExp(true),
+                                            new LessThanEqualOp(),
+                                            new IntLiteralExp(0)),
+                                  typeEnvironment,new ClassName("foo"));
+    }
+    @Test(expected = TypeErrorException.class)
+    public void testLessThanEqualExceptionTwo() throws TypeErrorException{
+        final Typechecker emptyTypechecker =
+        new Typechecker(new Program(new ArrayList<ClassDef>(),
+                                    new ExpStmt(new IntLiteralExp(0))));
+        final Map<Var, Type> typeEnvironment = new HashMap<Var, Type>();
+        Type expected =  emptyTypechecker.typeofOp(new OpExp(new IntLiteralExp(0),
+                                            new LessThanEqualOp(),
+                                            new BoolLiteralExp(true)),
+                                  typeEnvironment,new ClassName("foo"));
+    }
+    @Test
+    public void testGreaterThan() throws TypeErrorException{
+        final Typechecker emptyTypechecker =
+        new Typechecker(new Program(new ArrayList<ClassDef>(),
+                                    new ExpStmt(new IntLiteralExp(0))));
+        final Map<Var, Type> typeEnvironment = new HashMap<Var, Type>();
+        Type expected =  emptyTypechecker.typeofOp(new OpExp(new IntLiteralExp(1),
+                                            new GreaterThanOp(),
+                                            new IntLiteralExp(0)),
+                                  typeEnvironment,new ClassName("foo"));
+    }
+    @Test(expected = TypeErrorException.class)
+    public void testGreaterThanException() throws TypeErrorException{
+        final Typechecker emptyTypechecker =
+        new Typechecker(new Program(new ArrayList<ClassDef>(),
+                                    new ExpStmt(new IntLiteralExp(0))));
+        final Map<Var, Type> typeEnvironment = new HashMap<Var, Type>();
+        Type expected =  emptyTypechecker.typeofOp(new OpExp(new BoolLiteralExp(true),
+                                            new GreaterThanOp(),
+                                            new IntLiteralExp(0)),
+                                  typeEnvironment,new ClassName("foo"));
+    }
+    @Test(expected = TypeErrorException.class)
+    public void testGreaterThanExceptionTwo() throws TypeErrorException{
+        final Typechecker emptyTypechecker =
+        new Typechecker(new Program(new ArrayList<ClassDef>(),
+                                    new ExpStmt(new IntLiteralExp(0))));
+        final Map<Var, Type> typeEnvironment = new HashMap<Var, Type>();
+        Type expected =  emptyTypechecker.typeofOp(new OpExp(new IntLiteralExp(0),
+                                            new GreaterThanOp(),
+                                            new BoolLiteralExp(true)),
+                                  typeEnvironment,new ClassName("foo"));
+    }
+    @Test
+    public void testGreaterThanEqual () throws TypeErrorException{
+         final Typechecker emptyTypechecker =
+        new Typechecker(new Program(new ArrayList<ClassDef>(),
+                                    new ExpStmt(new IntLiteralExp(0))));
+        final Map<Var, Type> typeEnvironment = new HashMap<Var, Type>();
+        Type expected =  emptyTypechecker.typeofOp(new OpExp(new IntLiteralExp(1),
+                                            new GreaterThanEqualOp(),
+                                            new IntLiteralExp(0)),
+                                  typeEnvironment,new ClassName("foo"));
+    }
+    @Test(expected = TypeErrorException.class)
+    public void testGreaterThanEqualException() throws TypeErrorException{
+        final Typechecker emptyTypechecker =
+        new Typechecker(new Program(new ArrayList<ClassDef>(),
+                                    new ExpStmt(new IntLiteralExp(0))));
+        final Map<Var, Type> typeEnvironment = new HashMap<Var, Type>();
+        Type expected =  emptyTypechecker.typeofOp(new OpExp(new BoolLiteralExp(true),
+                                            new GreaterThanEqualOp(),
+                                            new IntLiteralExp(0)),
+                                  typeEnvironment,new ClassName("foo"));
+    }
+    @Test(expected = TypeErrorException.class)
+    public void testGreaterThanEqualExceptionOne() throws TypeErrorException{
+        final Typechecker emptyTypechecker =
+        new Typechecker(new Program(new ArrayList<ClassDef>(),
+                                    new ExpStmt(new IntLiteralExp(0))));
+        final Map<Var, Type> typeEnvironment = new HashMap<Var, Type>();
+        Type expected =  emptyTypechecker.typeofOp(new OpExp(new IntLiteralExp(0),
+                                            new GreaterThanEqualOp(),
+                                            new BoolLiteralExp(true)),
+                                  typeEnvironment,new ClassName("foo"));
+    }
+    /**
+        @Test(expected = TypeErrorException.class)
+    public void testIntTypePlusThree() throws TypeErrorException{
+        final Typechecker emptyTypechecker =
+        new Typechecker(new Program(new ArrayList<ClassDef>(),
+                                    new ExpStmt(new IntLiteralExp(0))));
+        final Map<Var, Type> typeEnvironment = new HashMap<Var, Type>();
+        Type expected =  emptyTypechecker.typeofOp(new OpExp(new BoolLiteralExp(true),
+                                            new PlusOp(),
+                                            new IntLiteralExp(1)),
+                                  typeEnvironment,new ClassName("foo"));
+    } */
+    @Test
+    public void testMinusOp() throws TypeErrorException{
+        final Typechecker emptyTypechecker =
+        new Typechecker(new Program(new ArrayList<ClassDef>(),
+                                    new ExpStmt(new IntLiteralExp(0))));
+        final Map<Var, Type> typeEnvironment = new HashMap<Var, Type>();
+        Type expected =  emptyTypechecker.typeofOp(new OpExp(new IntLiteralExp(1),
+                                            new MinusOP(),
+                                            new IntLiteralExp(1)),
+                                  typeEnvironment,new ClassName("foo"));
+        assertEquals(expected, new IntType());
+    }
+    @Test(expected = TypeErrorException.class)
+    public void testMinusOpExceptionOne() throws TypeErrorException{
+        final Typechecker emptyTypechecker =
+        new Typechecker(new Program(new ArrayList<ClassDef>(),
+                                    new ExpStmt(new IntLiteralExp(0))));
+        final Map<Var, Type> typeEnvironment = new HashMap<Var, Type>();
+        Type expected =  emptyTypechecker.typeofOp(new OpExp(new BoolLiteralExp(true),
+                                            new MinusOP(),
+                                            new IntLiteralExp(1)),
+                                  typeEnvironment,new ClassName("foo"));
+        // assertEquals(expected, new IntType());
+    }
+     @Test(expected = TypeErrorException.class)
+    public void testMinusOpExceptionTwo() throws TypeErrorException{
+        final Typechecker emptyTypechecker =
+        new Typechecker(new Program(new ArrayList<ClassDef>(),
+                                    new ExpStmt(new IntLiteralExp(0))));
+        final Map<Var, Type> typeEnvironment = new HashMap<Var, Type>();
+        Type expected =  emptyTypechecker.typeofOp(new OpExp(new IntLiteralExp(1),
+                                            new MinusOP(),
+                                            new BoolLiteralExp(true)),
+                                  typeEnvironment,new ClassName("foo"));
+        // assertEquals(expected, new IntType());
+    }
+    @Test
+    public void testTimeOp() throws TypeErrorException{
+        final Typechecker emptyTypechecker =
+        new Typechecker(new Program(new ArrayList<ClassDef>(),
+                                    new ExpStmt(new IntLiteralExp(0))));
+        final Map<Var, Type> typeEnvironment = new HashMap<Var, Type>();
+        Type expected =  emptyTypechecker.typeofOp(new OpExp(new IntLiteralExp(1),
+                                            new TimesOp(),
+                                            new IntLiteralExp(1)),
+                                  typeEnvironment,new ClassName("foo"));
+        assertEquals(expected, new IntType());
+    }
+    @Test(expected = TypeErrorException.class)
+    public void testTimeOpExceptionOne() throws TypeErrorException{
+        final Typechecker emptyTypechecker =
+        new Typechecker(new Program(new ArrayList<ClassDef>(),
+                                    new ExpStmt(new IntLiteralExp(0))));
+        final Map<Var, Type> typeEnvironment = new HashMap<Var, Type>();
+        Type expected =  emptyTypechecker.typeofOp(new OpExp(new BoolLiteralExp(true),
+                                            new TimesOp(),
+                                            new IntLiteralExp(1)),
+                                  typeEnvironment,new ClassName("foo"));
+        assertEquals(expected, new IntType());
+    }
+     @Test(expected = TypeErrorException.class)
+    public void testTimeOpExceptionTwo() throws TypeErrorException{
+        final Typechecker emptyTypechecker =
+        new Typechecker(new Program(new ArrayList<ClassDef>(),
+                                    new ExpStmt(new IntLiteralExp(0))));
+        final Map<Var, Type> typeEnvironment = new HashMap<Var, Type>();
+        Type expected =  emptyTypechecker.typeofOp(new OpExp(new IntLiteralExp(1),
+                                            new TimesOp(),
+                                            new BoolLiteralExp(true)),
+                                  typeEnvironment,new ClassName("foo"));
+        assertEquals(expected, new IntType());
+    }
+    @Test
+    public void testDivideOp() throws TypeErrorException{
+        final Typechecker emptyTypechecker =
+        new Typechecker(new Program(new ArrayList<ClassDef>(),
+                                    new ExpStmt(new IntLiteralExp(0))));
+        final Map<Var, Type> typeEnvironment = new HashMap<Var, Type>();
+        Type expected =  emptyTypechecker.typeofOp(new OpExp(new IntLiteralExp(1),
+                                            new DivideOp(),
+                                            new IntLiteralExp(1)),
+                                  typeEnvironment,new ClassName("foo"));
+        assertEquals(expected, new IntType());
+    }
+    @Test(expected = TypeErrorException.class)
+    public void testDivideOpExceptionOne() throws TypeErrorException{
+        final Typechecker emptyTypechecker =
+        new Typechecker(new Program(new ArrayList<ClassDef>(),
+                                    new ExpStmt(new IntLiteralExp(0))));
+        final Map<Var, Type> typeEnvironment = new HashMap<Var, Type>();
+        Type expected =  emptyTypechecker.typeofOp(new OpExp(new BoolLiteralExp(true),
+                                            new DivideOp(),
+                                            new IntLiteralExp(1)),
+                                  typeEnvironment,new ClassName("foo"));
+        assertEquals(expected, new IntType());
+    }
+    @Test(expected = TypeErrorException.class)
+    public void testDivideOpExceptionTwo() throws TypeErrorException{
+        final Typechecker emptyTypechecker =
+        new Typechecker(new Program(new ArrayList<ClassDef>(),
+                                    new ExpStmt(new IntLiteralExp(0))));
+        final Map<Var, Type> typeEnvironment = new HashMap<Var, Type>();
+        Type expected =  emptyTypechecker.typeofOp(new OpExp(new IntLiteralExp(1),
+                                            new DivideOp(),
+                                            new BoolLiteralExp(true)),
+                                  typeEnvironment,new ClassName("foo"));
+        assertEquals(expected, new IntType());
     }
 }
