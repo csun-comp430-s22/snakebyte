@@ -218,6 +218,16 @@ public class TypecheckerTest {
         new Typechecker(new Program(new ArrayList<ClassDef>(),
                                     new ExpStmt(new IntLiteralExp(0))));
         final Map<Var, Type> typeEnvironment = new HashMap<Var, Type>();
+        typeEnvironment.put(new Var("x"), new StringType());
+        Type expected =  emptyTypechecker.typeof(new StringLiteralExp("x"),typeEnvironment, new ClassName("foo"));
+        assertEquals(expected,new StringType());
+    }
+    @Test
+    public void testTypeofStringType() throws TypeErrorException{
+        final Typechecker emptyTypechecker =
+        new Typechecker(new Program(new ArrayList<ClassDef>(),
+                                    new ExpStmt(new IntLiteralExp(0))));
+        final Map<Var, Type> typeEnvironment = new HashMap<Var, Type>();
         typeEnvironment.put(new Var("x"), new IntType());
         Type expected =  emptyTypechecker.typeof(new VarExp(new Var("x")),typeEnvironment, new ClassName("foo"));
         assertEquals(expected,new IntType());
