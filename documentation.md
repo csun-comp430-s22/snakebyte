@@ -2,10 +2,10 @@
 ## BY Karim Atalla, Jack Konyan, Javier Parra, Ruitao Wu
 ---
 ## TARGET LANGUAGE
-We are targeted Python as our destination because it is object-oriented language and functional programming language. Our group implemented JAVA language because it is the mutual language that we all familiar with. java and python have many similar feature that could save a lot of time during the development. The goal of this project is to help us to understand the mechanism of source-to-source compiler.
+We are targeting Python as our destination language because it is an object-oriented and functional programming language. Our group implemented the compiler in JAVA  because it is a language that we are all familiar with. Java and python have many similar features that could save us time during the development process. The goal of this project is to help us understand the mechanisms of source-to-source compilers.
 ## LIMITATIONS
-1. Not include much built-in method for list/array such as the `append()` method is not supported by our compiler
-2. Third party library also not supported
+1. Not including many built-in methods for list/array such as the `append()` method is not supported by our compiler
+2. Third party librarys also not supported
 ## FEATURES
 ### Subtyping
 The first feature that we have is subtyping an example as shown below
@@ -18,7 +18,7 @@ Second feature that we have is casting which could convert a variable to differe
 Int test1 = 1;
 Str test2 = (Str)test1;
 ```
-### Define method not use Python class
+### Define methods not using Python classes
 
 ## SYNTAX<br>
 ```  
