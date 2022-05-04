@@ -1,12 +1,9 @@
 # SNAKEBYTE
 ## BY Karim Atalla, Jack Konyan, Javier Parra, Ruitao Wu
 ---
-## TARGET LANGUAGE
+## Why this language, and why this language design?
 We are targeting Python as our destination language because it is an object-oriented and functional programming language. Our group implemented the compiler in JAVA  because it is a language that we are all familiar with. Java and python have many similar features that could save us time during the development process. The goal of this project is to help us understand the mechanisms of source-to-source compilers.
-## LIMITATIONS
-1. Not including many built-in methods for list/array such as the `append()` method is not supported by our compiler
-2. Third party librarys also not supported
-## FEATURES
+## Code snippets with relevant explanations
 ### Subtyping
 The first feature that we have is subtyping an example as shown below
 ```
@@ -19,8 +16,13 @@ Int test1 = 1;
 Str test2 = (Str)test1;
 ```
 ### Define methods not using Python classes
-
-## SYNTAX<br>
+## LIMITATIONS
+1. Not including many built-in methods for list/array such as the `append()` method is not supported by our compiler
+2. Third party librarys also not supported
+## Knowing what you know now, what would you do differently?
+## How do I compile your compiler?
+## How do I run your compiler?
+## Formal syntax definition<br>
 ```  
 var variable name  
 classname custom object  
