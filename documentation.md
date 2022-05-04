@@ -15,6 +15,57 @@ Second feature that we have is casting which could convert a variable to differe
 Int test1 = 1;
 Str test2 = (Str)test1;
 ```
+### Define a class
+```python
+# Define a class with default constructor
+class test{
+	Int a;
+	Str b;
+	test(Int a, Str b){
+		this.a = a;
+		this.b = b;
+	}
+	# Define a method with zero argument
+	Int getA(){
+		return this.a;
+	}
+	# Define a method with one argument
+	Str getB(Int a){
+		return this.b;
+	}
+	# Define a method with more than one argument
+	Str getC(Str var1, Str var2){
+		return var1 + var2;
+	}
+	#define a parameter and initialize it
+	Int index = 0;
+	#while loop
+	while(index < 10){
+		#print the value of index with condition
+		if(index / 2 == 0){
+			print(index);
+		}
+		#increment the value of index
+		index = index + 1;
+	}
+}
+# class extends another class
+class test2 extends test{
+	Int c;
+	test2(Int a, Str b, Int c){
+		super(a, b);
+		this.c = c;
+	}
+	#Defien a type array
+	Int[] array = new Int[10];
+	Int index = 0;
+	#add value to the array
+	while(index < 10){
+		array[index] = index;
+		index = index + 1;
+	}
+}
+```
 ### Define methods not using Python classes
 ## LIMITATIONS
 - Not including many built-in methods for list/array such as the `append()` method is not supported by our compiler
