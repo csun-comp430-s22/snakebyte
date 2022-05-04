@@ -17,8 +17,20 @@ Str test2 = (Str)test1;
 ```
 ### Define methods not using Python classes
 ## LIMITATIONS
-1. Not including many built-in methods for list/array such as the `append()` method is not supported by our compiler
-2. Third party librarys also not supported
+- Not including many built-in methods for list/array such as the `append()` method is not supported by our compiler
+- Third party librarys also not supported
+- Our compiler only supports object-oriented programming parsers, not spport for functional programming parsers
+- It is statistic data type not dynamic data type, for example:
+```python
+a = "Hello" # is invalid
+Str a = "Hello" # is valid
+a = 1 # will cause an exception
+```
+- We did not include the generic feature in our compiler, for example:
+```python
+def hello(name: str) -> str: #this is not supported in our compiler
+    return 'Hello ' + name
+```
 ## Knowing what you know now, what would you do differently?
 ## How do I compile your compiler?
 ## How do I run your compiler?
