@@ -66,7 +66,6 @@ class test2 extends test{
 	}
 }
 ```
-### Define methods not using Python classes
 ## LIMITATIONS
 - Not including many built-in methods for list/array such as the `append()` method is not supported by our compiler
 - Third party librarys also not supported
