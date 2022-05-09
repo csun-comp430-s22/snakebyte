@@ -82,8 +82,17 @@ def hello(name: str) -> str: #this is not supported in our compiler
     return 'Hello ' + name
 ```
 ## Knowing what you know now, what would you do differently?
+In the current design, we had focused on the object-oriented programming features. We would had select and aim to functinal programming features.
+We wouldn't selecte different implementate language for the compiler due to the fact that our group all fimilar with Java. We would, might be, selecte different target language for the compiler, because the Python require indent which would require more work on the code generation. Thus, we would select some target language that less sensitive to the indent, such as C/C++, JavaScript, TypeScript, etc.
+We wouldn't use different integrated development environment we have had Visual Studio Code, because it is convenient to use and compile our code, plus it integrates the GitHub version control system.
+The team size is a critical factor in the design of our compiler. It is directly related to the number of features that we have implemented and the workload that we have to do. We wouldn't make any changes to the team size, because we would like to keep the team size as small as possible. In that way, we would be more convinient in communicating with the team as well as discussing the design of our compiler.
 ## How do I compile your compiler?
+No supprise, we have the Visual Studio Code that makes our code could be compile any machine that has Visual Studio Code, JUint, and Apache Maven installed.
 ## How do I run your compiler?
+We have not includ the code generator in current design, but ideally, to run our compiler we would need to execute the following command because we are using Apache Maven so the command is not convenient to use.
+```
+mvn exec:java -Dexec.mainClass="<compiler>" -Dexec.args="<input file> <output file>"
+```
 ## Formal syntax definition<br>
 ```  
 var variable name  
