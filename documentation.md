@@ -5,12 +5,12 @@
 We are targeting Python as our destination language because it is an object-oriented and functional programming language. Our group implemented the compiler in JAVA  because it is a language that we are all familiar with. Java and python have many similar features that could save us time during the development process. The goal of this project is to help us understand the mechanisms of source-to-source compilers.
 ## Code snippets with relevant explanations
 ### Subtyping
-The first feature that we have is subtyping an example as shown below
+The first feature that we have is subtyping, with an example of it shown below:
 ```
 Type type = new Int();
 ```
 ### Casting  
-Second feature that we have is casting which could convert a variable to different type an example as shown below
+The second feature that we have is casting, which could convert a variable to different type. An example is shown below:
 ```
 Int test1 = 1;
 Str test2 = (Str)test1;
@@ -67,10 +67,10 @@ class test2 extends test{
 }
 ```
 ## LIMITATIONS
-- Not including many built-in methods for list/array such as the `append()` method is not supported by our compiler
-- Third party librarys also not supported
-- Our compiler only supports object-oriented programming parsers, not spport for functional programming parsers
-- It is statistic data type not dynamic data type, for example:
+- Many built-in methods for list/array, such as the `append()` method, were not included in our grammar and thus are not supported by our compiler
+- Third party libraries are also not supported
+- Our compiler only supports object-oriented programming parsers, so there is no support for functional programming parsers
+- Our compiler will only accept statically typed code, even though python is dynamically typed. For example,
 ```python
 a = "Hello" # is invalid
 Str a = "Hello" # is valid
@@ -82,14 +82,14 @@ def hello(name: str) -> str: #this is not supported in our compiler
     return 'Hello ' + name
 ```
 ## Knowing what you know now, what would you do differently?
-In the current design, we were focused on the object-oriented programming features. We would had select and aim to functinal programming features if we would do this differently.  
-We wouldn't selecte different implementate language for the compiler due to the fact that our group all fimilar with Java. We would, might be, selecte different target language for the compiler, because the Python require indent which would require more work on the code generation. Thus, we would select some target language that less sensitive to the indent, such as C/C++, JavaScript, TypeScript, etc.  
-We wouldn't use different integrated development environment, we have had Visual Studio Code because it is convenient to use and compile our code, plus it integrates the GitHub version control system.
-The team size is a critical factor in the design of our compiler. It is directly related to the number of features that we have implemented and the workload that we have to do. We wouldn't make any changes to the team size, because we would like to keep the team size as small as possible. In that way, we would be more convinient in communicating with the team as well as discussing the design of our compiler.
+In the current design, we focused primarily on the object-oriented programming features. If we were to do things differently, we would had aimed to implement functional programming features.
+We wouldn't select a different implementation language for the compiler due to the fact that everyone in our group is all fimilar with Java. However, we might have chosen a different target language for the compiler because Python requires specific indentation to read statements, which would require more work on the code generation. With this in mind, we would have selected some target language that is less sensitive to indentation, such as C/C++, JavaScript, TypeScript, etc.  
+We would not change our integrated development environment, Visual Studio Code, as it has proved to be convenient to use and compiles our code with no issues. Plus it integrates the GitHub version control system well enough.
+The team size is a critical factor in the design of our compiler. It is directly related to the number of features that we have implemented and the workload that we have to do. We wouldn't make any changes to the team size, because we would like to keep the team size as small as possible. That way, communicating with the team as well as discussing the design of our compiler is easier to accomplish.
 ## How do I compile your compiler?
-No supprise, we have the Visual Studio Code that makes our code could be compile any machine that has Visual Studio Code, JUint, and Apache Maven installed.
+Your system would need to have a Java 1.8 runtime environment installed to compile, as well as Apache Maven and Junit. We have been using Visual Studio Code to build and compile everything thus far.
 ## How do I run your compiler?
-We have not include the code generator in current design, but ideally, to run our compiler we would need to execute the following command because we are using Apache Maven so the command is not convenient to use.
+We have not included a code generator in our current design, but ideally to run our compiler you would need to execute the following command: (Since we are using Apache Maven, the command is not convenient to use)
 ```
 mvn exec:java -Dexec.mainClass="<compiler>" -Dexec.args="<input file> <output file>"
 ```
