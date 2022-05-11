@@ -220,24 +220,14 @@ public class TypecheckerTest {
     public void testTypeofmethodcall() throws TypeErrorException{
         
         final Map<Var, Type> typeEnvironment = new HashMap<Var, Type>();
+
     }
-    @Test
-    public void testTypeofNewCyclicException() throws TypeErrorException{
-        ArrayList<ClassDef> tester = new ArrayList<ClassDef>();
-        tester.add(new ClassDef(new ClassName("foo2"),new ArrayList<VarDec>(), new ArrayList<VarDec>(), new ArrayList<Expression>(), new ArrayList<Statement>(), new ArrayList<MethodDef>()));
-        final Typechecker emptyTypechecker = new Typechecker(new Program(tester,
-                                    new ExpStmt(new IntLiteralExp(0))));
+    @Test(expected = TypeErrorException.class)
+    public void testgetclassException() throws TypeErrorException{
+        
         final Map<Var, Type> typeEnvironment = new HashMap<Var, Type>();
-        /*System.out.println("            ");
-        System.out.println("            ");
-        System.out.println("            ");
-        System.out.println(emptyTypechecker().program.classes);
-        System.out.println("            ");
-        System.out.println("            ");
-        */
-        typeEnvironment.put(new Var("foo2"), new ClassNameType(new ClassName("foo2")));
-        Type expected =  emptyTypechecker.typeof(new NewExp(new ClassName("foo2"), Arrays.asList(new IntLiteralExp(0))),typeEnvironment, new ClassName("foo2"));
-       assertEquals(new ClassNameType(new ClassName("foo2")), expected);
+        
+        Type expected =  emptyTypechecker().typeof(new NewExp(new ClassName("foo2"), Arrays.asList(new IntLiteralExp(0))),typeEnvironment, new ClassName("foo2"));
 
     }
     //new op tests: <=,>=,==
