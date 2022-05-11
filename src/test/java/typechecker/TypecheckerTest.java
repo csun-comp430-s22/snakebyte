@@ -216,7 +216,7 @@ public class TypecheckerTest {
                                                             typeEnvironment, new ClassName("foo"));
         assertEquals(expected,new IntType());
     }
-       @Test
+    @Test
     public void testTypeofNewCyclicException() throws TypeErrorException{
         ArrayList<ClassDef> tester = new ArrayList<ClassDef>();
         tester.add(new ClassDef(new ClassName("foo2"),new ArrayList<VarDec>(), new ArrayList<VarDec>(), new ArrayList<Expression>(), new ArrayList<Statement>(), new ArrayList<MethodDef>()));
@@ -237,10 +237,12 @@ public class TypecheckerTest {
     @Test
     public void testTypeofmethodcall() throws TypeErrorException{
         final Type expectedType = new StringType();
+        List<MethodDef> methods = new ArrayList<MethodDef>();
         ClassName className = new ClassName("Foo");
         MethodName methodName = new MethodName("foo");
         MethodDef methodDef = new MethodDef(new StringType(),methodName,null,null);
-        ClassDef classDef = new ClassDef(className,null,null,null,null,methodDef);
+        methods.add(methodDef);
+        ClassDef classDef = new ClassDef(className,null,null,null,null,methods);
         final Map<Var, Type> typeEnvironment = new HashMap<Var, Type>();
         typeEnvironment.put(new Var("x"), new ClassNameType(className));
         Expression targetExpression = new VarExp(new Var("x"));
@@ -469,5 +471,54 @@ public class TypecheckerTest {
                                             new BoolLiteralExp(true)),
                                   typeEnvironment,new ClassName("foo"));
         assertEquals(expected, new IntType());
+    }
+    //test while statement:
+    // while (true) {
+    // int x = 17;
+    // }
+    @Test
+    public void testWhileStatement() throws TypeErrorException{
+        final Map<Var, Type> typeEnvironment = new HashMap<Var, Type>();
+        final Map<Var, Type> expectedRes = new HashMap<Var, Type>();
+        Statement body = new VariableInitializationStmt(
+            new VarDec(new IntType(),new Var("x")), new IntLiteralExp(17));
+        WhileStmt whileStmt = new WhileStmt(new BoolLiteralExp(true), body);
+        Map<Var, Type> received =  emptyTypechecker().isWellTypedStmt(whileStmt, 
+                                                            typeEnvironment,
+                                                            new ClassName("foo"),
+                                                            new BoolType());
+        assertEquals(expectedRes, received);
+    }
+    //test if statement:
+    // if (true) {
+    // int x = 1;
+    // }else{
+    // int x = 2;
+    // }
+    @Test
+    public void testIfStatement() throws TypeErrorException{
+        final Map<Var, Type> typeEnvironment = new HashMap<Var, Type>();
+        final Map<Var, Type> expected = new HashMap<Var, Type>();
+        Statement trueBranch = new VariableInitializationStmt(
+            new VarDec(new IntType(),new Var("x")), new IntLiteralExp(1));
+        Statement falseBranch = new VariableInitializationStmt(
+            new VarDec(new IntType(),new Var("x")), new IntLiteralExp(1));
+        IfStatement ifStatement = new IfStatement(new BoolLiteralExp(true), trueBranch, falseBranch);
+        Map<Var, Type> received =  emptyTypechecker().isWellTypedStmt(ifStatement,
+                                                            typeEnvironment,
+                                                            new ClassName("foo"),
+                                                            new IntType());
+        assertEquals(expected,received);
+    }
+    @Test
+    public void testExpStmt() throws TypeErrorException{
+        final Map<Var, Type> typeEnvironment = new HashMap<Var, Type>();
+        final Map<Var, Type> expected = new HashMap<Var, Type>();
+        Statement expStmt = new ExpStmt(new IntLiteralExp(1));
+        Map<Var, Type> received =  emptyTypechecker().isWellTypedStmt(expStmt,
+                                                            typeEnvironment,
+                                                            new ClassName("foo"),
+                                                            new IntType());
+        assertEquals(expected,received);
     }
 }
