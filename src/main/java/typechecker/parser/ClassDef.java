@@ -3,13 +3,28 @@ package typechecker.parser;
 import java.util.List;
 public class ClassDef{
      public final ClassName className;
-    public final ClassName extendsClassName;
+    public  ClassName extendsClassName=null;
     public final List<VarDec> instanceVariables;
     public final List<VarDec> constructorArguments;
     public final List<Expression> superParams;
     public final List<Statement> constructorBody;
     public final List<MethodDef> methods;
+    public ClassDef(final ClassName className,
+                    final List<VarDec> instanceVariables,
+                    final List<VarDec> constructorArguments,
+                    final List<Expression> superParams,
+                    final List<Statement> constructorBody,
+                    final List<MethodDef> methods
 
+    ){
+        this.className = className;
+        this.extendsClassName=new ClassName("Object");
+        this.instanceVariables = instanceVariables;
+        this.constructorArguments = constructorArguments;
+        this.superParams = superParams;
+        this.constructorBody = constructorBody;
+        this.methods = methods;
+    }
     public ClassDef(final ClassName className,
                     final ClassName extendsClassName,
                     final List<VarDec> instanceVariables,
@@ -25,6 +40,7 @@ public class ClassDef{
         this.constructorBody = constructorBody;
         this.methods = methods;
     }
+    
 
     public int hashCode() {
         return (className.hashCode() +

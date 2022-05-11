@@ -263,10 +263,10 @@ public class TypecheckerTest {
                                     new ExpStmt(new IntLiteralExp(0))));
         final Map<Var, Type> typeEnvironment = new HashMap<Var, Type>();
     }
-    @Test(expected = TypeErrorException.class)
+    @Test
     public void testTypeofNewCyclicException() throws TypeErrorException{
         ArrayList<ClassDef> tester = new ArrayList<ClassDef>();
-        tester.add(new ClassDef(new ClassName("foo2"), new ClassName("foo2"),new ArrayList<VarDec>(), new ArrayList<VarDec>(), new ArrayList<Expression>(), new ArrayList<Statement>(), new ArrayList<MethodDef>()));
+        tester.add(new ClassDef(new ClassName("foo2"),new ArrayList<VarDec>(), new ArrayList<VarDec>(), new ArrayList<Expression>(), new ArrayList<Statement>(), new ArrayList<MethodDef>()));
         final Typechecker emptyTypechecker =
         new Typechecker(new Program(tester,
                                     new ExpStmt(new IntLiteralExp(0))));
@@ -280,7 +280,7 @@ public class TypecheckerTest {
         */
         typeEnvironment.put(new Var("foo2"), new ClassNameType(new ClassName("foo2")));
         Type expected =  emptyTypechecker.typeof(new NewExp(new ClassName("foo2"), Arrays.asList(new IntLiteralExp(0))),typeEnvironment, new ClassName("foo2"));
-       //assertEquals(new ClassNameType(new ClassName("foo2")), expected);
+       assertEquals(new ClassNameType(new ClassName("foo2")), expected);
 
     }
     //new op tests: <=,>=,==
