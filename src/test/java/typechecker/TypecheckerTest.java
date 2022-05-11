@@ -489,6 +489,25 @@ public class TypecheckerTest {
                                                             new BoolType());
         assertEquals(expectedRes, received);
     }
+    //test while with non-bool condition:
+    // while (1+1) {
+    // int x = 17;
+    // }
+    @Test(expected = TypeErrorException.class)
+    public void testWhileStatementException() throws TypeErrorException{
+        final Map<Var, Type> typeEnvironment = new HashMap<Var, Type>();
+        final Map<Var, Type> expectedRes = new HashMap<Var, Type>();
+        Statement body = new VariableInitializationStmt(
+            new VarDec(new IntType(),new Var("x")), new IntLiteralExp(17));
+        WhileStmt whileStmt = new WhileStmt(new OpExp(new IntLiteralExp(1),
+                                            new PlusOp(),
+                                            new IntLiteralExp(1)), body);
+        Map<Var, Type> received =  emptyTypechecker().isWellTypedStmt(whileStmt, 
+                                                            typeEnvironment,
+                                                            new ClassName("foo"),
+                                                            new BoolType());
+        assertEquals(expectedRes, received);
+    }
     //test if statement:
     // if (true) {
     // int x = 1;
@@ -504,6 +523,30 @@ public class TypecheckerTest {
         Statement falseBranch = new VariableInitializationStmt(
             new VarDec(new IntType(),new Var("x")), new IntLiteralExp(1));
         IfStatement ifStatement = new IfStatement(new BoolLiteralExp(true), trueBranch, falseBranch);
+        Map<Var, Type> received =  emptyTypechecker().isWellTypedStmt(ifStatement,
+                                                            typeEnvironment,
+                                                            new ClassName("foo"),
+                                                            new IntType());
+        // assertEquals(expected,received);
+    }
+    //test if statement with non-bool condition:
+    // if (1+1) {
+    // int x = 1;
+    // }else{
+    // int x = 2;
+    // }
+    @Test(expected = TypeErrorException.class)
+    public void testIfStatementException() throws TypeErrorException{
+        final Map<Var, Type> typeEnvironment = new HashMap<Var, Type>();
+        final Map<Var, Type> expected = new HashMap<Var, Type>();
+        Statement trueBranch = new VariableInitializationStmt(
+            new VarDec(new IntType(),new Var("x")), new IntLiteralExp(1));
+        Statement falseBranch = new VariableInitializationStmt(
+            new VarDec(new IntType(),new Var("x")), new IntLiteralExp(1));
+        Expression guard = new OpExp(new IntLiteralExp(1),
+                                            new PlusOp(),
+                                            new IntLiteralExp(1));
+        IfStatement ifStatement = new IfStatement(guard,trueBranch, falseBranch);
         Map<Var, Type> received =  emptyTypechecker().isWellTypedStmt(ifStatement,
                                                             typeEnvironment,
                                                             new ClassName("foo"),
