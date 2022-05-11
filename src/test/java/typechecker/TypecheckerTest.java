@@ -216,12 +216,20 @@ public class TypecheckerTest {
                                                             typeEnvironment, new ClassName("foo"));
         assertEquals(expected,new IntType());
     }
-    @Test
-    public void testTypeofmethodcall() throws TypeErrorException{
-        
+    @Test(expected = TypeErrorException.class)
+    public void testTypeofmethodcallException() throws TypeErrorException{
+        final Type expectedType = new StringType();
         final Map<Var, Type> typeEnvironment = new HashMap<Var, Type>();
-
+        typeEnvironment.put(new Var("x"), new ClassNameType(new ClassName("foo")));
+        Expression targetExpression = new VarExp(new Var("x"));
+        MethodName methodName = new MethodName("foo");
+        List<Expression> arguments = new ArrayList<Expression>();
+        final Type actualType = emptyTypechecker().typeofMethodCall(new MethodCallExp(targetExpression,methodName,arguments),
+                                                        typeEnvironment,
+                                                         new ClassName(""));
+        // assertEquals(actualType,expectedType);
     }
+
     @Test(expected = TypeErrorException.class)
     public void testgetclassException() throws TypeErrorException{
         
