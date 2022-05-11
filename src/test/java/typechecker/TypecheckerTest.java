@@ -216,6 +216,56 @@ public class TypecheckerTest {
                                                             typeEnvironment, new ClassName("foo"));
         assertEquals(expected,new IntType());
     }
+       @Test
+    public void testTypeofNewCyclicException() throws TypeErrorException{
+        ArrayList<ClassDef> tester = new ArrayList<ClassDef>();
+        tester.add(new ClassDef(new ClassName("foo2"),new ArrayList<VarDec>(), new ArrayList<VarDec>(), new ArrayList<Expression>(), new ArrayList<Statement>(), new ArrayList<MethodDef>()));
+        final Typechecker emptyTypechecker = new Typechecker(new Program(tester,
+                                    new ExpStmt(new IntLiteralExp(0))));
+        final Map<Var, Type> typeEnvironment = new HashMap<Var, Type>();
+        /*System.out.println("            ");
+        System.out.println("            ");
+        System.out.println("            ");
+        System.out.println(emptyTypechecker().program.classes);
+        System.out.println("            ");
+        System.out.println("            ");
+        */
+        typeEnvironment.put(new Var("foo2"), new ClassNameType(new ClassName("foo2")));
+        Type expected =  emptyTypechecker.typeof(new NewExp(new ClassName("foo2"), Arrays.asList(new IntLiteralExp(0))),typeEnvironment, new ClassName("foo2"));
+       assertEquals(new ClassNameType(new ClassName("foo2")), expected);
+    }
+    @Test
+    public void testTypeofmethodcall() throws TypeErrorException{
+        final Type expectedType = new StringType();
+        ClassName className = new ClassName("Foo");
+        MethodName methodName = new MethodName("foo");
+        MethodDef methodDef = new MethodDef(new StringType(),methodName,null,null);
+        ClassDef classDef = new ClassDef(className,null,null,null,null,methodDef);
+        final Map<Var, Type> typeEnvironment = new HashMap<Var, Type>();
+        typeEnvironment.put(new Var("x"), new ClassNameType(className));
+        Expression targetExpression = new VarExp(new Var("x"));
+        
+        List<Expression> arguments = new ArrayList<Expression>();
+        final Type actualType = emptyTypechecker().typeof(new MethodCallExp(targetExpression,methodName,arguments),
+                                                        typeEnvironment,
+                                                         new ClassName(""));
+        assertEquals(actualType,expectedType);
+    }
+    //Called method on non-class type
+    @Test(expected = TypeErrorException.class)
+    public void testTypeofmethodcallExceptionNonClass() throws TypeErrorException{
+        final Type expectedType = new StringType();
+        final Map<Var, Type> typeEnvironment = new HashMap<Var, Type>();
+        typeEnvironment.put(new Var("x"), expectedType);
+        Expression targetExpression = new VarExp(new Var("x"));
+        MethodName methodName = new MethodName("foo");
+        List<Expression> arguments = new ArrayList<Expression>();
+        final Type actualType = emptyTypechecker().typeof(new MethodCallExp(targetExpression,methodName,arguments),
+                                                        typeEnvironment,
+                                                         new ClassName("foo"));
+        assertEquals(actualType,expectedType);
+    }
+    // no class name
     @Test(expected = TypeErrorException.class)
     public void testTypeofmethodcallException() throws TypeErrorException{
         final Type expectedType = new StringType();
@@ -227,7 +277,6 @@ public class TypecheckerTest {
         final Type actualType = emptyTypechecker().typeofMethodCall(new MethodCallExp(targetExpression,methodName,arguments),
                                                         typeEnvironment,
                                                          new ClassName(""));
-        // assertEquals(actualType,expectedType);
     }
 
     @Test(expected = TypeErrorException.class)
