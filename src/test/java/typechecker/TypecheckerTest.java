@@ -521,4 +521,73 @@ public class TypecheckerTest {
                                                             new IntType());
         assertEquals(expected,received);
     }
+    @Test
+    public void testReturnNonVoid() throws TypeErrorException{
+        final Map<Var, Type> typeEnvironment = new HashMap<Var, Type>();
+        final Map<Var, Type> expected = new HashMap<Var, Type>();
+        ReturnNonVoidStmt returnNonVoidStmt = new ReturnNonVoidStmt(new IntLiteralExp(1));
+        Map<Var, Type> received =  emptyTypechecker().isWellTypedStmt(returnNonVoidStmt,
+                                                            typeEnvironment,
+                                                            new ClassName("foo"),
+                                                            new IntType());
+        assertEquals(expected,received);
+    }
+    @Test
+    public void testPrintStatement() throws TypeErrorException{
+        final Map<Var, Type> typeEnvironment = new HashMap<Var, Type>();
+        final Map<Var, Type> expected = new HashMap<Var, Type>();
+        PrintlnStmt printStmt = new PrintlnStmt(new IntLiteralExp(1));
+        Map<Var, Type> received =  emptyTypechecker().isWellTypedStmt(printStmt,
+                                                            typeEnvironment,
+                                                            new ClassName("foo"),
+                                                            new IntType());
+        assertEquals(expected,received);
+    }
+    @Test
+    public void testReturnVoid() throws TypeErrorException{
+        final Map<Var, Type> typeEnvironment = new HashMap<Var, Type>();
+        final Map<Var, Type> expected = new HashMap<Var, Type>();
+        ReturnVoidStmt returnVoidStmt = new ReturnVoidStmt();
+        Map<Var, Type> received =  emptyTypechecker().isWellTypedStmt(returnVoidStmt,
+                                                            typeEnvironment,
+                                                            new ClassName("foo"),
+                                                            new VoidType());
+        assertEquals(expected,received);
+    }
+    //test block statement:
+    // {
+    // int x = 1;
+    // }
+    @Test
+    public void testBlockStatement() throws TypeErrorException{
+        final Map<Var, Type> typeEnvironment = new HashMap<Var, Type>();
+        final Map<Var, Type> expected = new HashMap<Var, Type>();
+        List<Statement> body = new ArrayList<Statement>();
+        body.add(new PrintlnStmt(new IntLiteralExp(1)));
+        BlockStmt blockStmt = new BlockStmt(body);
+        Map<Var, Type> received =  emptyTypechecker().isWellTypedStmt(blockStmt,
+                                                            typeEnvironment,
+                                                            new ClassName("foo"),
+                                                            new VoidType());
+        assertEquals(expected,received);
+    }
+    @Test(expected = TypeErrorException.class)
+    public void testReturnInProgramEntryPointException() throws TypeErrorException{
+        final Map<Var, Type> typeEnvironment = new HashMap<Var, Type>();
+        final Map<Var, Type> expected = new HashMap<Var, Type>();
+        ReturnVoidStmt returnVoidStmt = new ReturnVoidStmt();
+        Map<Var, Type> received =  emptyTypechecker().isWellTypedStmt(returnVoidStmt,
+                                                            typeEnvironment,
+                                                            new ClassName("foo"),
+                                                            null);
+        //assertEquals(expected,received);
+    }
+    @Test(expected = TypeErrorException.class)
+    public void testUnspportStatement() throws TypeErrorException{
+        final Map<Var, Type> typeEnvironment = new HashMap<Var, Type>();
+        Map<Var, Type> received =  emptyTypechecker().isWellTypedStmt(null,
+                                                            typeEnvironment,
+                                                            new ClassName("foo"),
+                                                            null);
+    }
 }
