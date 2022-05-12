@@ -13,7 +13,7 @@ import parser.IntExp;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
-import java.beans.Expression;
+// import java.beans.Expression;
 import java.util.ArrayList;
 import java.util.Arrays;
 public class TypecheckerTest {
