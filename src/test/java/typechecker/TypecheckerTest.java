@@ -864,4 +864,8 @@ public class TypecheckerTest {
                                                         typeEnvironment,
                                                          new ClassName("bar"));
     }
+    @Test(expected = TypeErrorException.class)
+    public void testIsWellProgram() throws TypeErrorException{
+        nonEmptyTypechecker().isWellTypedProgram();
+    }
 }
