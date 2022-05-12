@@ -758,4 +758,14 @@ public class TypecheckerTest {
                                                             new BoolType());
         assertEquals(expected,received);
     }
+    @Test(expected = TypeErrorException.class)
+    public void testNonVoidReturnInProgramEntryPointException() throws TypeErrorException{
+        final Map<Var, Type> typeEnvironment = new HashMap<Var, Type>();
+        final Map<Var, Type> expected = new HashMap<Var, Type>();
+        ReturnNonVoidStmt returnVoidStmt = new ReturnNonVoidStmt(new IntLiteralExp(1));
+        Map<Var, Type> received =  emptyTypechecker().isWellTypedStmt(returnVoidStmt,
+                                                            typeEnvironment,
+                                                            new ClassName("foo"),
+                                                            null);
+    }
 }
