@@ -715,4 +715,47 @@ public class TypecheckerTest {
                                                         typeEnvironment,
                                                          new ClassName("Foo"));
     }
+    @Test
+    public void testTypeofnewExp() throws TypeErrorException{
+        final Map<Var, Type> typeEnvironment = new HashMap<Var, Type>();
+        ClassName className = new ClassName("Foo");
+        List<Expression> arguments = new ArrayList<Expression>();
+        final Type actualType = nonEmptyTypechecker().typeof(new NewExp(className,arguments),
+                                                        typeEnvironment,
+                                                         new ClassName("foo"));
+        assertEquals(new ClassNameType(className),actualType);
+    }
+    @Test(expected = TypeErrorException.class)
+    public void testWrongNumParamException() throws TypeErrorException{
+       final Map<Var, Type> typeEnvironment = new HashMap<Var, Type>();
+        ClassName className = new ClassName("Foo");
+        List<Expression> arguments = new ArrayList<Expression>();
+        typeEnvironment.put(new Var("x"), new ClassNameType(className));
+        arguments.add(new VarExp(new Var("x")));
+        final Type actualType = nonEmptyTypechecker().typeof(new NewExp(className,arguments),
+                                                        typeEnvironment,
+                                                         new ClassName("foo"));
+    }
+    @Test(expected = TypeErrorException.class)
+    public void testincompatibletypesException() throws TypeErrorException{
+        final Map<Var, Type> typeEnvironment = new HashMap<Var, Type>();
+        final Map<Var, Type> expected = new HashMap<Var, Type>();
+        ReturnNonVoidStmt returnNonVoidStmt = new ReturnNonVoidStmt(new IntLiteralExp(1));
+        Map<Var, Type> received =  emptyTypechecker().isWellTypedStmt(returnNonVoidStmt,
+                                                            typeEnvironment,
+                                                            new ClassName("foo"),
+                                                            new VoidType());
+        // assertEquals(expected,received);
+    }
+    @Test(expected = TypeErrorException.class)
+    public void testReturnVoidInNonVoidContext() throws TypeErrorException{
+        final Map<Var, Type> typeEnvironment = new HashMap<Var, Type>();
+        final Map<Var, Type> expected = new HashMap<Var, Type>();
+        ReturnVoidStmt returnVoidStmt = new ReturnVoidStmt();
+        Map<Var, Type> received =  emptyTypechecker().isWellTypedStmt(returnVoidStmt,
+                                                            typeEnvironment,
+                                                            new ClassName("foo"),
+                                                            new BoolType());
+        assertEquals(expected,received);
+    }
 }
