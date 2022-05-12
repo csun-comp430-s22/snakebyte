@@ -768,4 +768,100 @@ public class TypecheckerTest {
                                                             new ClassName("foo"),
                                                             null);
     }
+    //create new class
+    //class Foo(){
+    //    void foo(){
+    //        println("x");
+    //    }
+    //    void foo(){
+    //        println("x");
+    //    }
+    //}
+   public static Typechecker nonEmptyTypecheckerIdenticalClassName() throws TypeErrorException {
+        List<ClassDef> classes = new ArrayList<ClassDef>();
+        ClassName className = new ClassName("Foo");
+        List<VarDec> instanceVariables = new ArrayList<VarDec>();
+        List<VarDec> constructorArguments = new ArrayList<VarDec>();
+        List<Expression> superParams = new ArrayList<Expression>();
+        List<Statement> constructorBody = new ArrayList<Statement>();
+        List<MethodDef> methods = new ArrayList<MethodDef>();
+        Statement printStmt = new PrintlnStmt(new VarExp(new Var("x")));
+        MethodName methodName = new MethodName("foo");
+        methods.add(new MethodDef(
+            new VoidType(),methodName,new ArrayList<VarDec>(),printStmt
+        ));
+        classes.add(new ClassDef(className,
+                                    instanceVariables,
+                                    constructorArguments,
+                                    superParams,
+                                    constructorBody,
+                                    methods));
+        classes.add(new ClassDef(className,
+                                    instanceVariables,
+                                    constructorArguments,
+                                    superParams,
+                                    constructorBody,
+                                    methods));                           
+        return new Typechecker(new Program(classes,
+                                             new ExpStmt(new IntLiteralExp(0)))); 
+    }
+    @Test(expected = TypeErrorException.class)
+    public void testIdenticalNameException() throws TypeErrorException{
+        final Type expectedType = new VoidType();
+        List<MethodDef> methods = new ArrayList<MethodDef>();
+        ClassName className = new ClassName("Foo");
+        MethodName methodName = new MethodName("foo");
+        MethodDef methodDef = new MethodDef(new StringType(),methodName,null,null);
+        methods.add(methodDef);
+        ClassDef classDef = new ClassDef(className,null,null,null,null,methods);
+        final Map<Var, Type> typeEnvironment = new HashMap<Var, Type>();
+        typeEnvironment.put(new Var("x"), new ClassNameType(className));
+        Expression targetExpression = new VarExp(new Var("x"));
+        List<Expression> arguments = new ArrayList<Expression>();
+        final Type actualType = nonEmptyTypecheckerIdenticalClassName().typeof(new MethodCallExp(targetExpression,methodName,arguments),
+                                                        typeEnvironment,
+                                                         new ClassName("Foo"));
+    }
+     public static Typechecker nonEmptyTypecheckerIdenticalMethodName() throws TypeErrorException {
+        List<ClassDef> classes = new ArrayList<ClassDef>();
+        ClassName className = new ClassName("Foo");
+        List<VarDec> instanceVariables = new ArrayList<VarDec>();
+        List<VarDec> constructorArguments = new ArrayList<VarDec>();
+        List<Expression> superParams = new ArrayList<Expression>();
+        List<Statement> constructorBody = new ArrayList<Statement>();
+        List<MethodDef> methods = new ArrayList<MethodDef>();
+        Statement printStmt = new PrintlnStmt(new VarExp(new Var("x")));
+        MethodName methodName = new MethodName("foo");
+        methods.add(new MethodDef(
+            new VoidType(),methodName,new ArrayList<VarDec>(),printStmt
+        ));
+        methods.add(new MethodDef(
+            new VoidType(),methodName,new ArrayList<VarDec>(),printStmt
+        ));
+        classes.add(new ClassDef(className,
+                                    instanceVariables,
+                                    constructorArguments,
+                                    superParams,
+                                    constructorBody,
+                                    methods));                          
+        return new Typechecker(new Program(classes,
+                                             new ExpStmt(new IntLiteralExp(0)))); 
+    }
+    @Test(expected = TypeErrorException.class)
+    public void testIdenticalMethodNameException() throws TypeErrorException{
+        final Type expectedType = new VoidType();
+        List<MethodDef> methods = new ArrayList<MethodDef>();
+        ClassName className = new ClassName("Foo");
+        MethodName methodName = new MethodName("foo");
+        MethodDef methodDef = new MethodDef(new StringType(),methodName,null,null);
+        methods.add(methodDef);
+        ClassDef classDef = new ClassDef(className,null,null,null,null,methods);
+        final Map<Var, Type> typeEnvironment = new HashMap<Var, Type>();
+        typeEnvironment.put(new Var("x"), new ClassNameType(className));
+        Expression targetExpression = new VarExp(new Var("x"));
+        List<Expression> arguments = new ArrayList<Expression>();
+        final Type actualType = nonEmptyTypecheckerIdenticalMethodName().typeof(new MethodCallExp(targetExpression,methodName,arguments),
+                                                        typeEnvironment,
+                                                         new ClassName("bar"));
+    }
 }
