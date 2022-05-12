@@ -698,4 +698,21 @@ public class TypecheckerTest {
                                                             new ClassName("foo"),
                                                             null);
     }
+    @Test(expected = TypeErrorException.class)
+    public void testUnknowMethodNameForClass() throws TypeErrorException{
+        final Type expectedType = new VoidType();
+        List<MethodDef> methods = new ArrayList<MethodDef>();
+        ClassName className = new ClassName("Foo");
+        MethodName methodName = new MethodName("bar");
+        MethodDef methodDef = new MethodDef(new StringType(),methodName,null,null);
+        methods.add(methodDef);
+        ClassDef classDef = new ClassDef(className,null,null,null,null,methods);
+        final Map<Var, Type> typeEnvironment = new HashMap<Var, Type>();
+        typeEnvironment.put(new Var("x"), new ClassNameType(className));
+        Expression targetExpression = new VarExp(new Var("x"));
+        List<Expression> arguments = new ArrayList<Expression>();
+        final Type actualType = nonEmptyTypechecker().typeof(new MethodCallExp(targetExpression,methodName,arguments),
+                                                        typeEnvironment,
+                                                         new ClassName("Foo"));
+    }
 }
