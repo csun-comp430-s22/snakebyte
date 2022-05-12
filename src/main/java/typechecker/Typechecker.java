@@ -29,11 +29,13 @@ public class Typechecker {
 
     public static ClassDef getClass(final ClassName className,
             final Map<ClassName, ClassDef> classes) throws TypeErrorException {
+
         if (className.name.equals(BASE_CLASS_NAME)) {
             return null;
         } else {
             final ClassDef classDef = classes.get(className);
             if (classDef == null) {
+                //System.out.println(classes.get(0).className+" space here ");
                 throw new TypeErrorException("no such class: " + className);
             } else {
                 return classDef;
@@ -116,11 +118,11 @@ public class Typechecker {
             if (retval.containsKey(classDef.className)) {
                 throw new TypeErrorException("Duplicate class name: " + className);
             }
-            System.out.println(classes.get(0));
+          
 
-            System.out.println("Made it here!!!");
+           
             retval.put(className, classes.get(0));
-            System.out.println(retval);
+           
         }
 
         assertInheritanceNonCyclical(retval);
@@ -553,12 +555,14 @@ public class Typechecker {
                     typeEnvironment,
                     classDef.className);
         }
+       
     }
 
     // program ::= classdef* stmt
     public void isWellTypedProgram() throws TypeErrorException {
+        int teststorage;
         for (final ClassDef classDef : program.classes) {
-            isWellTypedClassDef(classDef);
+           isWellTypedClassDef(classDef);
         }
 
         isWellTypedStmt(program.entryPoint,
