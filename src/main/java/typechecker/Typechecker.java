@@ -7,18 +7,12 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.HashSet;
-// typechecks: well-typed: no type errors
-// doesn't typecheck: ill-typed: some number of type errors (>0)
 
 public class Typechecker {
     public static final String BASE_CLASS_NAME = "Object";
-    // public final List<ClassDef> classes;
-    // public final Program program;
     public final Map<ClassName, ClassDef> classes;
-
     // includes inherited methods
     public final Map<ClassName, Map<MethodName, MethodDef>> methods;
-
     public final Program program;
 
     public Typechecker(final Program program) throws TypeErrorException {
@@ -27,125 +21,9 @@ public class Typechecker {
         methods = makeMethodMap(classes);
     }
 
-    public static ClassDef getClass(final ClassName className,
-            final Map<ClassName, ClassDef> classes) throws TypeErrorException {
-
-        if (className.name.equals(BASE_CLASS_NAME)) {
-            return null;
-        } else {
-            final ClassDef classDef = classes.get(className);
-            if (classDef == null) {
-                //System.out.println(classes.get(0).className+" space here ");
-                throw new TypeErrorException("no such class: " + className);
-            } else {
-                return classDef;
-            }
-        }
-    }
-
-    public ClassDef getClass(final ClassName className) throws TypeErrorException {
-        return getClass(className, classes);
-    }
-
-    public static ClassDef getParent(final ClassName className,
-            final Map<ClassName, ClassDef> classes) throws TypeErrorException {
-        final ClassDef classDef = getClass(className, classes);
-        return getClass(classDef.extendsClassName, classes);
-    }
-
-    public ClassDef getParent(final ClassName className) throws TypeErrorException {
-        return getParent(className, classes);
-    }
-
-    public static void assertInheritanceNonCyclicalForClass(final ClassDef classDef,
-            final Map<ClassName, ClassDef> classes) throws TypeErrorException {
-        final Set<ClassName> seenClasses = new HashSet<ClassName>();
-        seenClasses.add(classDef.className);
-        ClassDef parentClassDef = getParent(classDef.className, classes);
-        while (parentClassDef != null) {
-            final ClassName parentClassName = parentClassDef.className;
-            if (seenClasses.contains(parentClassName)) {
-                throw new TypeErrorException("cyclic inheritance involving: " + parentClassName);
-            }
-            seenClasses.add(parentClassName);
-            parentClassDef = getParent(parentClassName, classes);
-        }
-    }
-
-    public static void assertInheritanceNonCyclical(final Map<ClassName, ClassDef> classes) throws TypeErrorException {
-        for (final ClassDef classDef : classes.values()) {
-            assertInheritanceNonCyclicalForClass(classDef, classes);
-        }
-    }
-
-    // includes inherited methods
-    // duplicates are not permitted within the same class, but it's ok to override a
-    // superclass' method
-    public static Map<MethodName, MethodDef> methodsForClass(final ClassName className,
-            final Map<ClassName, ClassDef> classes) throws TypeErrorException {
-        final ClassDef classDef = getClass(className, classes);
-        if (classDef == null) {
-            return new HashMap<MethodName, MethodDef>();
-        } else {
-            final Map<MethodName, MethodDef> retval = methodsForClass(classDef.extendsClassName, classes);
-            final Set<MethodName> methodsOnThisClass = new HashSet<MethodName>();
-            for (final MethodDef methodDef : classDef.methods) {
-                final MethodName methodName = methodDef.methodName;
-                if (methodsOnThisClass.contains(methodName)) {
-                    throw new TypeErrorException("duplicate method: " + methodName);
-                }
-                methodsOnThisClass.add(methodName);
-                retval.put(methodName, methodDef);
-            }
-            return retval;
-        }
-    }
-
-    public static Map<ClassName, Map<MethodName, MethodDef>> makeMethodMap(final Map<ClassName, ClassDef> classes)
-            throws TypeErrorException {
-        final Map<ClassName, Map<MethodName, MethodDef>> retval = new HashMap<ClassName, Map<MethodName, MethodDef>>();
-        for (final ClassName className : classes.keySet()) {
-            retval.put(className, methodsForClass(className, classes));
-        }
-        return retval;
-    }
-
-    // also makes sure inheritance hierarchies aren't cyclical
-    public static Map<ClassName, ClassDef> makeClassMap(final List<ClassDef> classes) throws TypeErrorException {
-        final Map<ClassName, ClassDef> retval = new HashMap<ClassName, ClassDef>();
-        for (final ClassDef classDef : classes) {
-            final ClassName className = classDef.className;
-            if (retval.containsKey(classDef.className)) {
-                throw new TypeErrorException("Duplicate class name: " + className);
-            }
-          
-
-           
-            retval.put(className, classes.get(0));
-           
-        }
-
-        assertInheritanceNonCyclical(retval);
-
-        return retval;
-    }
-
-    public MethodDef getMethodDef(final ClassName className,
-            final MethodName methodName) throws TypeErrorException {
-        final Map<MethodName, MethodDef> methodMap = methods.get(className);
-        if (methodMap == null) {
-            throw new TypeErrorException("Unknown class name: " + className);
-        } else {
-            final MethodDef methodDef = methodMap.get(methodName);
-            if (methodDef == null) {
-                throw new TypeErrorException("Unknown method name " + methodName + " for class " + className);
-            } else {
-                return methodDef;
-            }
-        }
-    }
-    // *******************************Old code************ */
-
+    /*****************************************************************************************************
+     * Type Of
+     ******************************************************************************/
     public Type typeofVariable(final VarExp exp,
             final Map<Var, Type> typeEnvironment) throws TypeErrorException {
         final Type mapType = typeEnvironment.get(exp.variable);
@@ -241,55 +119,6 @@ public class Typechecker {
         }
     }
 
-    public Type expectedReturnTypeForClassAndMethod(final ClassName className,
-            final MethodName methodName) throws TypeErrorException {
-        return getMethodDef(className, methodName).returnType;
-    }
-
-    public List<Type> expectedParameterTypesForClassAndMethod(final ClassName className,
-            final MethodName methodName)
-            throws TypeErrorException {
-        final MethodDef methodDef = getMethodDef(className, methodName);
-        final List<Type> retval = new ArrayList<Type>();
-        for (final VarDec vardec : methodDef.arguments) {
-            retval.add(vardec.type);
-        }
-        return retval;
-    }
-
-    public void assertEqualOrSubtypeOf(final Type first, final Type second) throws TypeErrorException {
-        if (first.equals(second)) {
-            return;
-        } else if (first instanceof ClassNameType &&
-                second instanceof ClassNameType) {
-            final ClassDef parentClassDef = getParent(((ClassNameType) first).className);
-            assertEqualOrSubtypeOf(new ClassNameType(parentClassDef.className), second);
-        } else {
-            throw new TypeErrorException("incompatible types: " + first + ", " + second);
-        }
-    }
-
-    // List<Type> - expected types
-    // List<Exp> - received expressions
-    public void expressionsOk(final List<Type> expectedTypes,
-            final List<Expression> receivedExpressions,
-            final Map<Var, Type> typeEnvironment,
-            final ClassName classWeAreIn) throws TypeErrorException {
-        if (expectedTypes.size() != receivedExpressions.size()) {
-            throw new TypeErrorException("Wrong number of parameters");
-        }
-        for (int index = 0; index < expectedTypes.size(); index++) {
-            final Type paramType = typeof(receivedExpressions.get(index), typeEnvironment, classWeAreIn);
-            final Type expectedType = expectedTypes.get(index);
-            // myMethod(int, bool, int)
-            // myMethod( 2, true, 3)
-            //
-            // myMethod2(BaseClass)
-            // myMethod2(new SubClass())
-            assertEqualOrSubtypeOf(paramType, expectedType);
-        }
-    }
-
     // 1.) target should be a class.
     // 2.) target needs to have the methodname method
     // 3.) need to know the expected parameter types for the method
@@ -310,20 +139,6 @@ public class Typechecker {
         }
     }
 
-    public List<Type> expectedConstructorTypesForClass(final ClassName className)
-            throws TypeErrorException {
-        final ClassDef classDef = getClass(className);
-        final List<Type> retval = new ArrayList<Type>();
-        if (classDef == null) { // Object
-            return retval;
-        } else {
-            for (final VarDec vardec : classDef.constructorArguments) {
-                retval.add(vardec.type);
-            }
-            return retval;
-        }
-    }
-
     // new classname(exp*)
     // new className(params)
     public Type typeofNew(final NewExp exp,
@@ -336,13 +151,6 @@ public class Typechecker {
     }
 
     // classWeAreIn is null if we are in the entry pointm
-
-    /***************************
-     * need to change these to match our parser code such as IntExp rather than
-     * IntLiteralExp ect
-     ********/
-    // or conversly we can add the literals to the lexer and parser
-    // add string literals
 
     public Type typeof(final Expression exp,
             final Map<Var, Type> typeEnvironment,
@@ -368,14 +176,9 @@ public class Typechecker {
         }
     }
 
-    public static Map<Var, Type> addToMap(final Map<Var, Type> map,
-            final Var variable,
-            final Type type) {
-        final Map<Var, Type> result = new HashMap<Var, Type>();
-        result.putAll(map);
-        result.put(variable, type);
-        return result;
-    }
+    /*******************************************************************************************
+     * Is Well Typed
+     **********************************************************************/
 
     public Map<Var, Type> isWellTypedVar(final VariableInitializationStmt stmt,
             final Map<Var, Type> typeEnvironment,
@@ -446,11 +249,6 @@ public class Typechecker {
         }
     }
 
-    // bool x = true;
-    // while (true) {
-    // int x = 17;
-    // break;
-    // }
     public Map<Var, Type> isWellTypedStmt(final Statement stmt,
             final Map<Var, Type> typeEnvironment,
             final ClassName classWeAreIn,
@@ -494,10 +292,6 @@ public class Typechecker {
             Map<Var, Type> typeEnvironment, // instance variables
             final ClassName classWeAreIn) throws TypeErrorException {
         // starting type environment: just instance variables
-        // int addTwo(int x, int y) { return x + y; }
-        //
-        // int x;
-        // int addTwo(bool x, int x) { return x; }
         for (final VarDec vardec : method.arguments) {
             // odd semantics: last variable declaration shadows prior one
             typeEnvironment = addToMap(typeEnvironment, vardec.var, vardec.type);
@@ -507,23 +301,6 @@ public class Typechecker {
                 typeEnvironment, // instance variables + parameters
                 classWeAreIn,
                 method.returnType);
-    }
-
-    public Map<Var, Type> baseTypeEnvironmentForClass(final ClassName className) throws TypeErrorException {
-        final ClassDef classDef = getClass(className);
-        if (classDef == null) {
-            return new HashMap<Var, Type>();
-        } else {
-            final Map<Var, Type> retval = baseTypeEnvironmentForClass(classDef.extendsClassName);
-            for (final VarDec instanceVariable : classDef.instanceVariables) {
-                final Var variable = instanceVariable.var;
-                if (retval.containsKey(variable)) {
-                    throw new TypeErrorException("Duplicate instance variable (possibly inherited): " + variable);
-                }
-                retval.put(variable, instanceVariable.type);
-            }
-            return retval;
-        }
     }
 
     public void isWellTypedClassDef(final ClassDef classDef) throws TypeErrorException {
@@ -555,14 +332,14 @@ public class Typechecker {
                     typeEnvironment,
                     classDef.className);
         }
-       
+
     }
 
     // program ::= classdef* stmt
     public void isWellTypedProgram() throws TypeErrorException {
         int teststorage;
         for (final ClassDef classDef : program.classes) {
-           isWellTypedClassDef(classDef);
+            isWellTypedClassDef(classDef);
         }
 
         isWellTypedStmt(program.entryPoint,
@@ -570,4 +347,218 @@ public class Typechecker {
                 null,
                 null);
     }
+
+    /******************************************************************************
+     * helpers******************************************************************
+     */
+    public Map<Var, Type> baseTypeEnvironmentForClass(final ClassName className) throws TypeErrorException {
+        final ClassDef classDef = getClass(className);
+        if (classDef == null) {
+            return new HashMap<Var, Type>();
+        } else {
+            final Map<Var, Type> retval = baseTypeEnvironmentForClass(classDef.extendsClassName);
+            for (final VarDec instanceVariable : classDef.instanceVariables) {
+                final Var variable = instanceVariable.var;
+                if (retval.containsKey(variable)) {
+                    throw new TypeErrorException("Duplicate instance variable (possibly inherited): " + variable);
+                }
+                retval.put(variable, instanceVariable.type);
+            }
+            return retval;
+        }
+
+    }
+
+    public static Map<MethodName, MethodDef> methodsForClass(final ClassName className,
+            final Map<ClassName, ClassDef> classes) throws TypeErrorException {
+        final ClassDef classDef = getClass(className, classes);
+        if (classDef == null) {
+            return new HashMap<MethodName, MethodDef>();
+        } else {
+            final Map<MethodName, MethodDef> retval = methodsForClass(classDef.extendsClassName, classes);
+            final Set<MethodName> methodsOnThisClass = new HashSet<MethodName>();
+            for (final MethodDef methodDef : classDef.methods) {
+                final MethodName methodName = methodDef.methodName;
+                if (methodsOnThisClass.contains(methodName)) {
+                    throw new TypeErrorException("duplicate method: " + methodName);
+                }
+                methodsOnThisClass.add(methodName);
+                retval.put(methodName, methodDef);
+            }
+            return retval;
+        }
+    }
+
+    public MethodDef getMethodDef(final ClassName className,
+            final MethodName methodName) throws TypeErrorException {
+        final Map<MethodName, MethodDef> methodMap = methods.get(className);
+        if (methodMap == null) {
+            throw new TypeErrorException("Unknown class name: " + className);
+        } else {
+            final MethodDef methodDef = methodMap.get(methodName);
+            if (methodDef == null) {
+                throw new TypeErrorException("Unknown method name " + methodName + " for class " + className);
+            } else {
+                return methodDef;
+            }
+        }
+    }
+
+    /*************************************************************
+     * Expectations and Assertions
+     ******************************************************************************************************/
+    // List<Type> - expected types
+    // List<Exp> - received expressions
+    public void expressionsOk(final List<Type> expectedTypes,
+            final List<Expression> receivedExpressions,
+            final Map<Var, Type> typeEnvironment,
+            final ClassName classWeAreIn) throws TypeErrorException {
+        if (expectedTypes.size() != receivedExpressions.size()) {
+            throw new TypeErrorException("Wrong number of parameters");
+        }
+        for (int index = 0; index < expectedTypes.size(); index++) {
+            final Type paramType = typeof(receivedExpressions.get(index), typeEnvironment, classWeAreIn);
+            final Type expectedType = expectedTypes.get(index);
+            assertEqualOrSubtypeOf(paramType, expectedType);
+        }
+    }
+
+    public List<Type> expectedConstructorTypesForClass(final ClassName className)
+            throws TypeErrorException {
+        final ClassDef classDef = getClass(className);
+        final List<Type> retval = new ArrayList<Type>();
+        if (classDef == null) { // Object
+            return retval;
+        } else {
+            for (final VarDec vardec : classDef.constructorArguments) {
+                retval.add(vardec.type);
+            }
+            return retval;
+        }
+    }
+
+    public void assertEqualOrSubtypeOf(final Type first, final Type second) throws TypeErrorException {
+        if (first.equals(second)) {
+            return;
+        } else if (first instanceof ClassNameType &&
+                second instanceof ClassNameType) {
+            final ClassDef parentClassDef = getParent(((ClassNameType) first).className);
+            assertEqualOrSubtypeOf(new ClassNameType(parentClassDef.className), second);
+        } else {
+            throw new TypeErrorException("incompatible types: " + first + ", " + second);
+        }
+    }
+
+    public Type expectedReturnTypeForClassAndMethod(final ClassName className,
+            final MethodName methodName) throws TypeErrorException {
+        return getMethodDef(className, methodName).returnType;
+    }
+
+    public List<Type> expectedParameterTypesForClassAndMethod(final ClassName className,
+            final MethodName methodName)
+            throws TypeErrorException {
+        final MethodDef methodDef = getMethodDef(className, methodName);
+        final List<Type> retval = new ArrayList<Type>();
+        for (final VarDec vardec : methodDef.arguments) {
+            retval.add(vardec.type);
+        }
+        return retval;
+    }
+
+    public static void assertInheritanceNonCyclicalForClass(final ClassDef classDef,
+            final Map<ClassName, ClassDef> classes) throws TypeErrorException {
+        final Set<ClassName> seenClasses = new HashSet<ClassName>();
+        seenClasses.add(classDef.className);
+        ClassDef parentClassDef = getParent(classDef.className, classes);
+        while (parentClassDef != null) {
+            final ClassName parentClassName = parentClassDef.className;
+            if (seenClasses.contains(parentClassName)) {
+                throw new TypeErrorException("cyclic inheritance involving: " + parentClassName);
+            }
+            seenClasses.add(parentClassName);
+            parentClassDef = getParent(parentClassName, classes);
+        }
+    }
+
+    public static void assertInheritanceNonCyclical(final Map<ClassName, ClassDef> classes) throws TypeErrorException {
+        for (final ClassDef classDef : classes.values()) {
+            assertInheritanceNonCyclicalForClass(classDef, classes);
+        }
+    }
+    // includes inherited methods
+    // duplicates are not permitted within the same class, but it's ok to override a
+    // superclass' method
+
+    /************************************************
+     * Mapping
+     *******************************************************************************************/
+    public static Map<Var, Type> addToMap(final Map<Var, Type> map,
+            final Var variable,
+            final Type type) {
+        final Map<Var, Type> result = new HashMap<Var, Type>();
+        result.putAll(map);
+        result.put(variable, type);
+        return result;
+    }
+
+    public static Map<ClassName, Map<MethodName, MethodDef>> makeMethodMap(final Map<ClassName, ClassDef> classes)
+            throws TypeErrorException {
+        final Map<ClassName, Map<MethodName, MethodDef>> retval = new HashMap<ClassName, Map<MethodName, MethodDef>>();
+        for (final ClassName className : classes.keySet()) {
+            retval.put(className, methodsForClass(className, classes));
+        }
+        return retval;
+    }
+
+    // also makes sure inheritance hierarchies aren't cyclical
+    public static Map<ClassName, ClassDef> makeClassMap(final List<ClassDef> classes) throws TypeErrorException {
+        final Map<ClassName, ClassDef> retval = new HashMap<ClassName, ClassDef>();
+        for (final ClassDef classDef : classes) {
+            final ClassName className = classDef.className;
+            if (retval.containsKey(classDef.className)) {
+                throw new TypeErrorException("Duplicate class name: " + className);
+            }
+
+            retval.put(className, classes.get(0));
+
+        }
+
+        assertInheritanceNonCyclical(retval);
+
+        return retval;
+    }
+
+    /*******************************************************
+     * Getters
+     ************************************************************************************************/
+    public static ClassDef getClass(final ClassName className,
+            final Map<ClassName, ClassDef> classes) throws TypeErrorException {
+
+        if (className.name.equals(BASE_CLASS_NAME)) {
+            return null;
+        } else {
+            final ClassDef classDef = classes.get(className);
+            if (classDef == null) {
+                // System.out.println(classes.get(0).className+" space here ");
+                throw new TypeErrorException("no such class: " + className);
+            } else {
+                return classDef;
+            }
+        }
+    }
+
+    public ClassDef getClass(final ClassName className) throws TypeErrorException {
+        return getClass(className, classes);
+    }
+
+    public static ClassDef getParent(final ClassName className,
+            final Map<ClassName, ClassDef> classes) throws TypeErrorException {
+        final ClassDef classDef = getClass(className, classes);
+        return getClass(classDef.extendsClassName, classes);
+    }
+
+    public ClassDef getParent(final ClassName className) throws TypeErrorException {
+        return getParent(className, classes);
+    }
+
 }
