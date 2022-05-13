@@ -389,21 +389,6 @@ public class Typechecker {
         }
     }
 
-    public MethodDef getMethodDef(final ClassName className,
-            final MethodName methodName) throws TypeErrorException {
-        final Map<MethodName, MethodDef> methodMap = methods.get(className);
-        if (methodMap == null) {
-            throw new TypeErrorException("Unknown class name: " + className);
-        } else {
-            final MethodDef methodDef = methodMap.get(methodName);
-            if (methodDef == null) {
-                throw new TypeErrorException("Unknown method name " + methodName + " for class " + className);
-            } else {
-                return methodDef;
-            }
-        }
-    }
-
     /*************************************************************
      * Expectations and Assertions
      ******************************************************************************************************/
@@ -531,6 +516,21 @@ public class Typechecker {
     /*******************************************************
      * Getters
      ************************************************************************************************/
+    public MethodDef getMethodDef(final ClassName className,
+            final MethodName methodName) throws TypeErrorException {
+        final Map<MethodName, MethodDef> methodMap = methods.get(className);
+        if (methodMap == null) {
+            throw new TypeErrorException("Unknown class name: " + className);
+        } else {
+            final MethodDef methodDef = methodMap.get(methodName);
+            if (methodDef == null) {
+                throw new TypeErrorException("Unknown method name " + methodName + " for class " + className);
+            } else {
+                return methodDef;
+            }
+        }
+    }
+
     public static ClassDef getClass(final ClassName className,
             final Map<ClassName, ClassDef> classes) throws TypeErrorException {
 
