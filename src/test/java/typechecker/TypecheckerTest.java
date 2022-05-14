@@ -979,4 +979,38 @@ public class TypecheckerTest {
     public void testIsWellProgram() throws TypeErrorException {
         nonEmptyTypechecker().isWellTypedProgram();
     }
+
+    @Test(expected = TypeErrorException.class)
+    public void testCyclicInheritanceError() throws TypeErrorException {
+        ClassName className = new ClassName("Foo");
+        List<VarDec> instanceVariables1 = new ArrayList<VarDec>();
+        List<VarDec> instanceVariables2 = new ArrayList<VarDec>();
+        List<VarDec> constructorArguments = new ArrayList<VarDec>();
+        VarDec firstParam = new VarDec(new BoolType(), new Var("name1"));
+        VarDec seconParam = new VarDec(new BoolType(), new Var("name2"));
+        VarDec thirdParam = new VarDec(new BoolType(), new Var("name3"));
+        constructorArguments.add(firstParam);
+        instanceVariables1.add(seconParam);
+        instanceVariables2.add(thirdParam);
+        List<Expression> superParams = new ArrayList<Expression>();
+        superParams.add(new BoolLiteralExp(false));
+        List<MethodDef> methods = new ArrayList<MethodDef>();
+        Statement printStmt = new PrintlnStmt(new VarExp(new Var("x")));
+        List<Statement> constructorBody = new ArrayList<Statement>();
+        constructorBody.add(printStmt);
+        MethodName methodName = new MethodName("foo");
+        methods.add(new MethodDef(
+                new VoidType(), methodName, instanceVariables1, printStmt));
+        ClassDef classToTest = new ClassDef(className, className,
+                instanceVariables2,
+                constructorArguments,
+                superParams,
+                constructorBody,
+                methods);
+        List<ClassDef> classes = new ArrayList<ClassDef>();
+        classes.add(classToTest);
+        Program programToTest = new Program(classes, printStmt);
+        final Typechecker tester = new Typechecker(programToTest);
+        tester.isWellTypedProgram();
+    }
 }
