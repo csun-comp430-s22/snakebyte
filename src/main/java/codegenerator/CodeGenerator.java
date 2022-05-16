@@ -284,6 +284,86 @@ public class CodeGenerator  {
         }else{
             throw new CodeGeneratorException("Unknown statement: "+ statement.toString());
         }
+    }
+    public void writeFormalParams(final List<VarDec> varDecs) throws IOException{
+        final int numParams = varDecs.size();
+        final Iterator<VarDec> varDecsIterator = varDecs.iterator();
+        for(int index = 1; varDecsIterator.hasNext() && index < numParams;index++){
+            outputWriter.print(varDecsIterator.next().var.name);
+            outputWriter.print(", ");
+        }
+        if(varDecsIterator.hasNext()){
+            outputWriter.print(varDecsIterator.next().var.name);
+        }
+    }
+    public static Set<Var> initializeVar(final List<VarDec> varDecs){
+        final Set<Var> returnValue = new HashSet<Var>();
+        for(final VarDec var : varDecs){
+            returnValue.add(var.var);
+        }
+        return returnValue;
+    }
+    public void writeMethod(final ClassName forClass, final MethodDef methodDef)
+    throws IOException, CodeGeneratorException{
+        outputWriter.print("def ");
+        outputWriter.print(nameManglFunctionName(forClass, methodDef.methodName).name);
+        outputWriter.print("(");
+        if(!methodDef.arguments.isEmpty()){
+            outputWriter.print(",");
+            writeFormalParams(methodDef.arguments);
+        }
+        outputWriter.print("){");
+        writeStmt(methodDef.body, initializeVar(methodDef.arguments));
+        outputWriter.print("}");
+    }
+    public void writeConstructor(final ClassDef classDef) throws CodeGeneratorException, IOException{
+        outputWriter.print("def ");
+        outputWriter.print(nameMangleConstructor(classDef.className).name);
+        outputWriter.print("(");
+        outputWriter.print(SELF_NAME);
+        if(! classDef.constructorArguments.isEmpty()){
+            outputWriter.print(",");
+            writeFormalParams(classDef.constructorArguments);
+        }
+        outputWriter.print("){");
+        //inheritance constructor
+        final Set<Var> localVars = initializeVar(classDef.constructorArguments);
+        outputWriter.print(nameMangleConstructor(classDef.extendsClassName).name);
+        outputWriter.print("(");
+        outputWriter.print(SELF_NAME);
+        if(!classDef.superParams.isEmpty()){
+            outputWriter.print(",");
+            writeExpWithComma(classDef.superParams, localVars);
+        }
+        outputWriter.print(");");
+        writeNestStmt(classDef.constructorBody.iterator(), localVars);
+        outputWriter.print("}");
+    }
+    public void writeClass(final ClassDef classDef) throws CodeGeneratorException, IOException{
+        writeConstructor(classDef);
+        for(final MethodDef methodDef : classDef.methods){
+            writeMethod(classDef.className, methodDef);
+        }
 
+    }
+    //run time
+    public void writeRunTime() throws IOException{
+        outputWriter.print(MAKE_OBJ);
+        outputWriter.print(DOCALHELPER);
+        outputWriter.print(OBJCONSTRUCTOR);
+    }
+    public void generateCode() throws IOException, CodeGeneratorException{
+        writeRunTime();
+        for(final VTable vt : vtables.values()){
+            vt.printTable(outputWriter);
+        }
+        for(final ClassDef classDef : program.classes){
+            writeClass(classDef);
+        }
+        writeStmt(program.entryPoint, new HashSet<Var>());
+    }
+    public void generateCode(final Program program, final PrintWriter output) 
+                throws IOException, CodeGeneratorException, TypeErrorException{
+        new CodeGenerator(program, outputWriter).generateCode();
     }
 }
