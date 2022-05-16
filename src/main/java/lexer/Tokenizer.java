@@ -330,4 +330,9 @@ public class Tokenizer {
 
         return tokens;
     }
+
+    public static List<Token> tokenize(final String input) throws TokenizerException {
+        final List<Token> tokens = new Tokenizer(input).tokenize();
+        return tokens;
+    }
 }

@@ -21,6 +21,17 @@ public class Typechecker {
         methods = makeMethodMap(classes);
     }
 
+    /****************************************************
+     * this function runs the typechecker on a selected program
+     * ************************************************
+     * 
+     * @param program
+     * @throws TypeErrorException
+     */
+    public static void typecheck(final Program program) throws TypeErrorException {
+        new Typechecker(program).isWellTypedProgram();
+    }
+
     /*****************************************************************************************************
      * Type Of
      ******************************************************************************/
