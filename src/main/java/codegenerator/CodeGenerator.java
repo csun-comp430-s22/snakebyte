@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Set;
 
-import codegenerator.parser.MethodCallExpCodeGeneratorModified;
+import codegenerator.parser.*;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Iterator;
@@ -203,13 +203,87 @@ public class CodeGenerator  {
         outputWriter.print(";");
         return addVar(localVar, var);
     }
-    public Set<Var> writeStmt(final Statement statement,final Set<Var> localVar) throws CodeGeneratorException,IOException{
-        if(statement instanceof ExpStmt){
-            writeStmt((ExpStmt)statement, localVar);
-        }else if(statement instanceof VariableInitializationStmt){
-            return writeVarInitialStmt((VariableInitializationStmt)statement, localVar);
-        }
+    public Set<Var> writeAssignStmt(final AssignStmt stmt, final Set<Var> localVar) throws CodeGeneratorException,IOException{
+        writeVar(stmt.variable, localVar);
+        outputWriter.print(" = ");
+        writeExp(stmt.exp, localVar);
+        outputWriter.print(";");
         return localVar;
     }
-}
+    public Set<Var> writeIfStmt(final IfStatement  stmt, final Set<Var> localVar) throws CodeGeneratorException,IOException{
+        outputWriter.print("if(");
+        writeExp(stmt.guard, localVar);
+        outputWriter.print("){");
+        writeStmt(stmt.trueBranch, localVar);
+        outputWriter.print("else{");
+        writeStmt(stmt.falseBranch, localVar);
+        outputWriter.print("}");
+        return localVar;
+    }
+    public Set<Var> writeWhileStmt(final WhileStmt stmt, final Set<Var> localVar) throws CodeGeneratorException,IOException{
+        outputWriter.print("while(");
+        writeExp(stmt.guard, localVar);
+        outputWriter.print("){");
+        writeStmt(stmt.body, localVar);
+        outputWriter.print("}");
+        return localVar;
+    }
+    public Set<Var> writeReturnNonVoidStmt(final ReturnNonVoidStmt stmt, final Set<Var> localVar) throws CodeGeneratorException,IOException{
+        outputWriter.print("return ");
+        writeExp(stmt.exp, localVar);
+        outputWriter.print(";");
+        return localVar;
+    }
+    public Set<Var> writeReturnVoidStmt(final ReturnVoidStmt stmt, final Set<Var> localVar) throws CodeGeneratorException,IOException{
+        outputWriter.print("return;");
+        return localVar;
+    }
+    //original Python not support println() method
+    //added \n after print()
+    public Set<Var> writePrintlnStmt(final PrintlnStmt stmt, final Set<Var> localVar) throws CodeGeneratorException,IOException{
+        outputWriter.print("print(");
+        writeExp(stmt.expression, localVar);
+        outputWriter.print(");");
+        outputWriter.print("print(\"\n\")");
+        return localVar;
+    }
+    public Set<Var> writeBlockStmt(final BlockStmt stmt, final Set<Var> localVar) throws CodeGeneratorException,IOException{
+        outputWriter.print("{");
+        writeNestStmt(stmt.body.iterator(), localVar);
+        outputWriter.print("}");
+        return localVar;
+    }
+    public void writeNestStmt(final Iterator<Statement> stmt, Set<Var> localVar) throws CodeGeneratorException,IOException{
+        if(stmt.hasNext()){
+            localVar = writeStmt(stmt.next(), localVar);
+            outputWriter.print("{");
+            writeNestStmt(stmt, localVar);
+            outputWriter.print("}");
+        }
+    }
+    public Set<Var> writeStmt(final Statement statement,final Set<Var> localVar) 
+                        throws CodeGeneratorException,IOException{
+        if(statement instanceof ExpStmt){
+            return writeStmt((ExpStmt)statement, localVar);
+        }else if(statement instanceof VariableInitializationStmt){
+            return writeVarInitialStmt((VariableInitializationStmt)statement, localVar);
+        }else if(statement instanceof AssignStmt){
+            return writeAssignStmt((AssignStmt)statement, localVar);
+        }else if(statement instanceof IfStatement ){
+            return writeIfStmt((IfStatement )statement, localVar);
+        }else if(statement instanceof WhileStmt){
+            return writeWhileStmt((WhileStmt)statement, localVar);
+        }else if(statement instanceof ReturnNonVoidStmt){
+            return writeReturnNonVoidStmt((ReturnNonVoidStmt)statement, localVar);
+        }else if(statement instanceof ReturnVoidStmt){
+            return writeReturnVoidStmt((ReturnVoidStmt)statement, localVar);
+        }else if(statement instanceof PrintlnStmt){
+            return writePrintlnStmt((PrintlnStmt)statement, localVar);
+        }else if(statement instanceof BlockStmt){
+            return writeBlockStmt((BlockStmt)statement, localVar);
+        }else{
+            throw new CodeGeneratorException("Unknown statement: "+ statement.toString());
+        }
 
+    }
+}
