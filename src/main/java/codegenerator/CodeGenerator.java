@@ -1,50 +1,19 @@
 package codegenerator;
-<<<<<<< HEAD
-// import typechecker.TypeErrorException;
+import typechecker.TypeErrorException;
 import typechecker.*;
-// import typechecker.parser.BoolLiteralExp;
-// import typechecker.parser.ClassDef;
-// import typechecker.parser.ClassName;
-// import typechecker.parser.IntLiteralExp;
-// import typechecker.parser.MethodDef;
-// import typechecker.parser.MethodName;
-// import typechecker.parser.NewExp;
-// import typechecker.parser.OpExp;
-// import typechecker.parser.PlusOp;
-// import typechecker.parser.Program;
-// import typechecker.parser.Statement;
-// import typechecker.parser.ThisExp;
-// import typechecker.parser.Operator;
-// import typechecker.parser.Expression;
+
 import typechecker.parser.*;
-// import parser.*;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Set;
 
 import codegenerator.parser.MethodCallExpCodeGeneratorModified;
-
-=======
-
-import typechecker.*;
-import typechecker.parser.ClassName;
-import typechecker.parser.MethodName;
-import typechecker.parser.ClassDef;
-import typechecker.parser.MethodDef;
-import typechecker.parser.Program;
-import lexer.*;
-import parser.*;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Set;
->>>>>>> 5a0765b205534a4078ac1036645fb9aef75e6307
 import java.util.HashSet;
 import java.util.List;
 import java.util.Iterator;
 
 import java.io.PrintWriter;
 import java.io.IOException;
-<<<<<<< HEAD
 public class CodeGenerator  {
     //the following code could change according to the language
     public static final String SELF_NAME = "this";
@@ -216,7 +185,7 @@ public class CodeGenerator  {
         returnValue.add(var);
         return returnValue;
     }
-    pubic Set<Var> writeVarInitialStmt(final VariableInitializationStmt stmt, final Set<Var> localVar)
+    public Set<Var> writeVarInitialStmt(final VariableInitializationStmt stmt, final Set<Var> localVar)
     throws CodeGeneratorException,IOException{
         final typechecker.parser.Var var = stmt.vardec.var;
         if(stmt.vardec.type instanceof IntType){
@@ -228,63 +197,19 @@ public class CodeGenerator  {
         }else{
             throw new CodeGeneratorException("Unknown type");
         }
+        outputWriter.print(var.name);
+        outputWriter.print(" = ");
+        writeExp(stmt.expression, localVar);
+        outputWriter.print(";");
+        return addVar(localVar, var);
     }
     public Set<Var> writeStmt(final Statement statement,final Set<Var> localVar) throws CodeGeneratorException,IOException{
         if(statement instanceof ExpStmt){
             writeStmt((ExpStmt)statement, localVar);
         }else if(statement instanceof VariableInitializationStmt){
-
+            return writeVarInitialStmt((VariableInitializationStmt)statement, localVar);
         }
+        return localVar;
     }
-=======
-
-public class CodeGenerator {
-
-    public final Program program;
-    public final PrintWriter output;
-
-    public final Map<ClassName, ClassDef> classes;
-    public final Map<ClassName, Map<MethodName, MethodDef>> methods;
-    public final Map<ClassName, VTable> vtables;
-
-    public CodeGenerator(final Program program,
-            final PrintWriter output) throws TypeErrorException {
-        this.program = program;
-        this.output = output;
-        classes = Typechecker.makeClassMap(program.classes);
-        methods = Typechecker.makeMethodMap(classes);
-        vtables = new HashMap<ClassName, VTable>();
-        for (final ClassName className : classes.keySet()) {
-            makeVTableForClass(className);
-        }
-    }
-
-    private VTable makeVTableForClass(final ClassName className) throws TypeErrorException {
-        VTable vtable = vtables.get(className);
-        // save vtables as we create them, and only compute if needed
-        if (vtable == null) {
-            if (className.name.equals(Typechecker.BASE_CLASS_NAME)) {
-                // object's vtable is empty
-                vtable = new VTable(className);
-            } else {
-                // some class with a parent class
-                // get a copy of the parent's vtable, and extend off of that
-                final ClassDef classDef = Typechecker.getClass(className, classes);
-                vtable = makeVTableForClass(classDef.extendsClassName).copyTable(className);
-                for (final MethodDef methodDef : classDef.methods) {
-                    vtable.addOrUpdateMethod(methodDef.methodName);
-                }
-            }
-            vtables.put(className, vtable);
-        }
-        return vtable;
-    }
-
-    public static FunctionName nameManglFunctionName(final ClassName className,
-            final MethodName methodName) {
-        return new FunctionName(className.name + "" + methodName.name);
-
-    }
-
->>>>>>> 5a0765b205534a4078ac1036645fb9aef75e6307
 }
+
