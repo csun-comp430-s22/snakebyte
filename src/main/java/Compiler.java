@@ -18,10 +18,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class Compiler {
+    //read test.snakebyte file ouput test.py file
     public static void printUsage() {
         System.out.println("Takes the following params:");
-        System.out.println("-Input filename (.oop)");
-        System.out.println("-Output filename (.js)");
+        System.out.println("-Input filename (.snakebyte)");
+        System.out.println("-Output filename (.py)");
     }
 
     public static String fileContentsAsString(final String inputFilename) throws IOException {
