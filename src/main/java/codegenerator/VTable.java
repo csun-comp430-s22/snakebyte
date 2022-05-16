@@ -52,11 +52,7 @@ public class VTable {
     }
     //print table
     //we expected the following format:
-    // Type test = new Int();
-    //or such as: Int a, Bool a, Str a, etc.
-    // we don't have keyword such as: let, var, const, thus we use Type instead of them
-    //we actually have the following format:
-    // Type test = something;
+    // Int a = 1;
     public void printTable(final PrintWriter outputWriter) throws IOException{
         outputWriter.print("Type ");
         outputWriter.print(targetVariable().name);
