@@ -9,6 +9,7 @@ public class Parser {
     public Parser(final List<Token> tokens) {
         this.tokens = tokens;
     }
+
     // **************************************************************************Helpers*****************************************************************************
     // */
 
@@ -265,20 +266,18 @@ public class Parser {
             return new ParseResult<Statement>(new VarDecStatement<BooleanToken>(name, new BooleanToken()),
                     position + 1);
 
-        }  else if (token instanceof ReturnToken) {
-            final ParseResult<Expression> exps = parseExp(position+1);
-           
-           
-            return new ParseResult<Statement>(new ReturnStatement(exps.result),exps.position+1);
+        } else if (token instanceof ReturnToken) {
+            final ParseResult<Expression> exps = parseExp(position + 1);
 
-        }  else if (token instanceof ClassToken) {
-            assertTokenHereIs(position+1, new LeftParenToken());
-            final ParseResult<Expression> exps = parseExp(position+2);
-           
-           
-            return new ParseResult<Statement>(new ClassDecStatement(exps.result),exps.position+1);
+            return new ParseResult<Statement>(new ReturnStatement(exps.result), exps.position + 1);
 
-        }else {
+        } else if (token instanceof ClassToken) {
+            assertTokenHereIs(position + 1, new LeftParenToken());
+            final ParseResult<Expression> exps = parseExp(position + 2);
+
+            return new ParseResult<Statement>(new ClassDecStatement(exps.result), exps.position + 1);
+
+        } else {
             throw new ParseException("expected statement; received: " + token);
         }
     }
@@ -306,6 +305,10 @@ public class Parser {
     } // parseProgram
       // parse operator: <,==
       // parseLessThanExp
+
+    public static Program parse(final List<Token> tokens) throws ParseException {
+        return new Parser(tokens).parseProgram();
+    }
 
 }
 
