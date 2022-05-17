@@ -5,9 +5,9 @@ Compiler written in Java targeting Python
 ## [Documentation](https://github.com/csun-comp430-s22/snakebyte/blob/main/documentation.md)
 ## Run Compiler
 
-It compiles but no result return
+It compiles but no result return, unfortunately we could run it with absolute path to the arguments.
 ```
-mvn exec:java -Dexec.mainClass="Compiler" -Dexec.args="arg1 arg2"
+mvn exec:java -Dexec.mainClass="Compiler" -Dexec.args="absolute address\arg1 arg2"
 ```
 the following command for runtime but also no result return
 
