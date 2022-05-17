@@ -21,7 +21,7 @@ public class CodeGenerator  {
     public static final String DOCALHELPER = "void method(){println(\"hello\");}";
     public static final String OBJCONSTRUCTOR = "void Test(Int a){this.a = a}";
     public final Program program;
-    public final static PrintWriter outputWriter;
+    public final PrintWriter outputWriter;
     public final Map<ClassName,ClassDef> classesMap;
     public final Map<ClassName, Map<MethodName,MethodDef>> methods;
     public final Map<ClassName, VTable> vtables;
@@ -364,6 +364,6 @@ public class CodeGenerator  {
     }
     public static void generateCode(final Program program, final PrintWriter output) 
                 throws IOException, CodeGeneratorException, TypeErrorException{
-        new CodeGenerator(program, outputWriter).generateCode();
+        new CodeGenerator(program, output).generateCode();
     }
 }

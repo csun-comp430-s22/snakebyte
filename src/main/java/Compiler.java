@@ -1,14 +1,14 @@
 
 import typechecker.*;
-import lexer.*;
-import parser.*;
+// import lexer.*;
+// import parser.*;
 import codegenerator.*;
 import codegenerator.parser.PaserCodeGen;
-import lexer.Tokenizer;
 import lexer.TokenizerException;
 import parser.ParseException;
 import typechecker.TypeErrorException;
 import codegenerator.CodeGeneratorException;
+import codegenerator.lexer.TokenizerCodeGen;
 import typechecker.parser.Program;
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -49,12 +49,13 @@ public class Compiler {
             CodeGeneratorException {
         final String input = fileContentsAsString(inputFilename);
         //compile error, confusion between lexer.Token and Parser.Token
-        final Program program = PaserCodeGen.parse(Tokenizer.tokenize(input));
+        final Program program = PaserCodeGen.parse(TokenizerCodeGen.tokenize(input));
 
-        // Typechecker.typecheck(program);
+        Typechecker.typecheck(program);
         final PrintWriter output = new PrintWriter(new BufferedWriter(new FileWriter(outputFilename)));
         try {
-            // CodeGenerator.generateCode(program, output); this is not ready to run yet
+            // this is not ready to run yet
+            CodeGenerator.generateCode(program, output);
 
         } finally {
             output.close();
