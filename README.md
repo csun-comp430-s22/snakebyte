@@ -3,6 +3,18 @@ Compiler written in Java targeting Python
 ---
 ## Encountered issuses  
 ## [Documentation](https://github.com/csun-comp430-s22/snakebyte/blob/main/documentation.md)
+## Run Compiler
+```
+It compiles but no result return
+```
+mvn exec:java -Dexec.mainClass="Compiler" -Dexec.args="arg1 arg2"
+```
+the following command for runtime but also no result return
+```
+```
+mvn exec:java -Dexec.mainClass="Compiler" -Dexec.classpathScope=runtime
+```
+```
 ---  
 ## Syntax  
 ```  
