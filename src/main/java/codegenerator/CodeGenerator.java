@@ -362,7 +362,7 @@ public class CodeGenerator  {
         }
         writeStmt(program.entryPoint, new HashSet<Var>());
     }
-    public void generateCode(final Program program, final PrintWriter output) 
+    public static void generateCode(final Program program, final PrintWriter output) 
                 throws IOException, CodeGeneratorException, TypeErrorException{
         new CodeGenerator(program, outputWriter).generateCode();
     }
