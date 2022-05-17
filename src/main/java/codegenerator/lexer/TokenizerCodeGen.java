@@ -14,7 +14,7 @@ public class TokenizerCodeGen  {
         RESERVED_WORDS = new HashMap<String, Token>();
         RESERVED_WORDS.put("int", new IntegerToken());
         RESERVED_WORDS.put("bool", new BooleanToken());
-        RESERVED_WORDS.put("void", (Token) new VoidToken());
+        RESERVED_WORDS.put("void", new VoidToken());
         RESERVED_WORDS.put("true", new TrueToken());
         RESERVED_WORDS.put("false", new FalseToken());
         RESERVED_WORDS.put("this", new ThisToken());
