@@ -651,13 +651,13 @@ public class TypecheckerTest {
         Statement trueBranch = new VariableInitializationStmt(
                 new VarDec(new IntType(), new Var("x")), new IntLiteralExp(1));
         Statement falseBranch = new VariableInitializationStmt(
-                new VarDec(new IntType(), new Var("x")), new IntLiteralExp(1));
+                new VarDec(new IntType(), new Var("x")), new IntLiteralExp(2));
         IfStatement ifStatement = new IfStatement(new BoolLiteralExp(true), trueBranch, falseBranch);
         Map<Var, Type> received = emptyTypechecker().isWellTypedStmt(ifStatement,
                 typeEnvironment,
                 new ClassName("foo"),
                 new IntType());
-        // assertEquals(expected,received);
+        assertEquals(expected,received);
     }
 
     // test if statement with non-bool condition:
