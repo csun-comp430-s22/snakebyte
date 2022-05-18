@@ -1,0 +1,1 @@
+class Test{}void method(){println("hello");}void Test(Int a){this.a = a}{}
