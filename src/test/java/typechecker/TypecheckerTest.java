@@ -3,6 +3,7 @@ package typechecker;
 import typechecker.parser.*;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
@@ -1035,6 +1036,144 @@ public class TypecheckerTest {
                 classes.add(classToTest);
                 final Typechecker tester = new Typechecker(new Program(classes, new ExpStmt(new IntLiteralExp(0))));
                 tester.isWellTypedProgram();
+
+        }
+        @Test(expected = TypeErrorException.class)
+        public void testbaseTypeEnviromentForClass2() throws TypeErrorException {
+                ClassName className = new ClassName("Foo");
+                List<VarDec> instanceVariables = new ArrayList<VarDec>();
+                List<VarDec> constructorArguments = new ArrayList<VarDec>();
+                VarDec firstParam = new VarDec(new BoolType(), new Var("w"));
+                VarDec secondParam = new VarDec(new StringType(), new Var("x"));
+                constructorArguments.add(firstParam);
+                constructorArguments.add(secondParam);
+                List<Expression> superParams = new ArrayList<Expression>();
+                List<Statement> constructorBody = new ArrayList<Statement>();
+                List<MethodDef> methods = new ArrayList<MethodDef>();
+                Statement printStmt = new PrintlnStmt(new VarExp(new Var("w")));
+                MethodName methodName = new MethodName("foo");
+                VarDec variables = new VarDec(new StringType(), new Var("w"));
+                ArrayList<VarDec> decList = new ArrayList<VarDec>();
+                decList.add(variables);
+                VarDec variables_copy= variables;
+                instanceVariables.add(variables);
+                instanceVariables.add(variables_copy);
+                methods.add(new MethodDef(
+                                new VoidType(), methodName, decList, printStmt));
+                ClassDef classToTest = new ClassDef(className,
+                                instanceVariables,
+                                constructorArguments,
+                                superParams,
+                                constructorBody,
+                                methods);
+                List<ClassDef> classes = new ArrayList<ClassDef>();
+                classes.add(classToTest);
+                final Typechecker tester = new Typechecker(new Program(classes, new ExpStmt(new IntLiteralExp(0))));
+                tester.baseTypeEnvironmentForClass(className);
+                
+        }
+        @Test
+        public void testexpectedConstructorTypes() throws TypeErrorException {
+                ClassName className = new ClassName("Foo");
+                List<VarDec> instanceVariables = new ArrayList<VarDec>();
+                List<VarDec> constructorArguments = new ArrayList<VarDec>();
+                VarDec firstParam = new VarDec(new BoolType(), new Var("w"));
+                VarDec secondParam = new VarDec(new StringType(), new Var("x"));
+                constructorArguments.add(firstParam);
+                constructorArguments.add(secondParam);
+                List<Expression> superParams = new ArrayList<Expression>();
+                List<Statement> constructorBody = new ArrayList<Statement>();
+                List<MethodDef> methods = new ArrayList<MethodDef>();
+                Statement printStmt = new PrintlnStmt(new VarExp(new Var("w")));
+                MethodName methodName = new MethodName("foo");
+                VarDec variables = new VarDec(new StringType(), new Var("w"));
+                ArrayList<VarDec> decList = new ArrayList<VarDec>();
+                decList.add(variables);
+                VarDec variables_copy= variables;
+                instanceVariables.add(variables);
+                instanceVariables.add(variables_copy);
+                methods.add(new MethodDef(
+                                new VoidType(), methodName, decList, printStmt));
+                ClassDef classToTest = new ClassDef(className,
+                                instanceVariables,
+                                constructorArguments,
+                                superParams,
+                                constructorBody,
+                                methods);
+                List<ClassDef> classes = new ArrayList<ClassDef>();
+                classes.add(classToTest);
+                final Typechecker tester = new Typechecker(new Program(classes, new ExpStmt(new IntLiteralExp(0))));
+                tester.expectedConstructorTypesForClass(className);
+                
+        }
+        @Test
+        public void testParamterTypesForClassAndMethod() throws TypeErrorException {
+                ClassName className = new ClassName("Foo");
+                List<VarDec> instanceVariables = new ArrayList<VarDec>();
+                List<VarDec> constructorArguments = new ArrayList<VarDec>();
+                VarDec firstParam = new VarDec(new BoolType(), new Var("w"));
+                VarDec secondParam = new VarDec(new StringType(), new Var("x"));
+                constructorArguments.add(firstParam);
+                constructorArguments.add(secondParam);
+                List<Expression> superParams = new ArrayList<Expression>();
+                List<Statement> constructorBody = new ArrayList<Statement>();
+                List<MethodDef> methods = new ArrayList<MethodDef>();
+                Statement printStmt = new PrintlnStmt(new VarExp(new Var("w")));
+                MethodName methodName = new MethodName("foo");
+                VarDec variables = new VarDec(new StringType(), new Var("w"));
+                ArrayList<VarDec> decList = new ArrayList<VarDec>();
+                decList.add(variables);
+                VarDec variables_copy= variables;
+                instanceVariables.add(variables);
+                instanceVariables.add(variables_copy);
+                methods.add(new MethodDef(
+                                new VoidType(), methodName, decList, printStmt));
+                ClassDef classToTest = new ClassDef(className,
+                                instanceVariables,
+                                constructorArguments,
+                                superParams,
+                                constructorBody,
+                                methods);
+                List<ClassDef> classes = new ArrayList<ClassDef>();
+                classes.add(classToTest);
+                final Typechecker tester = new Typechecker(new Program(classes, new ExpStmt(new IntLiteralExp(0))));
+                tester.expectedParameterTypesForClassAndMethod(className,methodName);
+                
+        }
+        @Test(expected = TypeErrorException.class)
+        public void testgetmethodDef2() throws TypeErrorException {
+                ClassName className = new ClassName("Foo");
+                List<VarDec> instanceVariables = new ArrayList<VarDec>();
+                List<VarDec> constructorArguments = new ArrayList<VarDec>();
+                VarDec firstParam = new VarDec(new BoolType(), new Var("w"));
+                VarDec secondParam = new VarDec(new StringType(), new Var("x"));
+                constructorArguments.add(firstParam);
+                constructorArguments.add(secondParam);
+                List<Expression> superParams = new ArrayList<Expression>();
+                List<Statement> constructorBody = new ArrayList<Statement>();
+                List<MethodDef> methods = new ArrayList<MethodDef>();
+                Statement printStmt = new PrintlnStmt(new VarExp(new Var("w")));
+                MethodName methodName = new MethodName("foo");
+                MethodName testerName= null;
+                VarDec variables = new VarDec(new StringType(), new Var("w"));
+                ArrayList<VarDec> decList = new ArrayList<VarDec>();
+                decList.add(variables);
+                VarDec variables_copy= variables;
+                instanceVariables.add(variables);
+                instanceVariables.add(variables_copy);
+                methods.add(new MethodDef(
+                                new VoidType(), methodName, decList, printStmt));
+                ClassDef classToTest = new ClassDef(className,
+                                instanceVariables,
+                                constructorArguments,
+                                superParams,
+                                constructorBody,
+                                methods);
+                List<ClassDef> classes = new ArrayList<ClassDef>();
+                classes.add(classToTest);
+                final Typechecker tester = new Typechecker(new Program(classes, new ExpStmt(new IntLiteralExp(0))));
+                tester.getMethodDef(className,testerName);
+                
         }
 
 }
