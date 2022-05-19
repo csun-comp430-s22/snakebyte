@@ -303,11 +303,13 @@ public class Typechecker {
             Map<Var, Type> typeEnvironment, // instance variables
             final ClassName classWeAreIn) throws TypeErrorException {
         // starting type environment: just instance variables
+        System.out.println(method);
         for (final VarDec vardec : method.arguments) {
             // odd semantics: last variable declaration shadows prior one
+            System.out.println("65"+classWeAreIn);
             typeEnvironment = addToMap(typeEnvironment, vardec.var, vardec.type);
         }
-
+        System.out.println("in method def");
         isWellTypedStmt(method.body,
                 typeEnvironment, // instance variables + parameters
                 classWeAreIn,
@@ -321,6 +323,7 @@ public class Typechecker {
         final Set<Var> variablesInConstructor = new HashSet<Var>();
         for (final VarDec vardec : classDef.constructorArguments) {
             final Var variable = vardec.var;
+            System.out.println("2");
             if (variablesInConstructor.contains(variable)) {
                 throw new TypeErrorException("Duplicate variable in constructor param: " + variable);
             }
@@ -339,6 +342,7 @@ public class Typechecker {
 
         // check methods
         for (final MethodDef method : classDef.methods) {
+            System.out.println("3");
             isWellTypedMethodDef(method,
                     typeEnvironment,
                     classDef.className);
@@ -350,6 +354,7 @@ public class Typechecker {
     public void isWellTypedProgram() throws TypeErrorException {
         int teststorage;
         for (final ClassDef classDef : program.classes) {
+            System.out.println("1");
             isWellTypedClassDef(classDef);
         }
 
@@ -549,6 +554,7 @@ public class Typechecker {
             return null;
         } else {
             final ClassDef classDef = classes.get(className);
+           
             if (classDef == null) {
                 // System.out.println(classes.get(0).className+" space here ");
                 throw new TypeErrorException("no such class: " + className);

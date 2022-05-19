@@ -39,10 +39,10 @@ public class TypecheckerTest {
         List<Expression> superParams = new ArrayList<Expression>();
         List<Statement> constructorBody = new ArrayList<Statement>();
         List<MethodDef> methods = new ArrayList<MethodDef>();
-        Statement printStmt = new PrintlnStmt(new VarExp(new Var("x")));
+        Statement printStmt = new PrintlnStmt(new VarExp(new Var("a")));
         MethodName methodName = new MethodName("foo");
         methods.add(new MethodDef(
-                new VoidType(), methodName, new ArrayList<VarDec>(), printStmt));
+                new VoidType(), methodName, new ArrayList<>(), printStmt));
         classes.add(new ClassDef(className,
                 instanceVariables,
                 constructorArguments,
@@ -222,8 +222,8 @@ public class TypecheckerTest {
     public void testTypeofvarexp() throws TypeErrorException {
 
         final Map<Var, Type> typeEnvironment = new HashMap<Var, Type>();
-        typeEnvironment.put(new Var("x"), new StringType());
-        Type expected = emptyTypechecker().typeof(new StringLiteralExp("x"), typeEnvironment, new ClassName("foo"));
+        typeEnvironment.put(new Var("xasd"), new StringType());
+        Type expected = emptyTypechecker().typeof(new StringLiteralExp("qdqdx"), typeEnvironment, new ClassName("foo"));
         assertEquals(expected, new StringType());
     }
 
@@ -240,7 +240,7 @@ public class TypecheckerTest {
     public void testTypeofthis() throws TypeErrorException {
 
         final Map<Var, Type> typeEnvironment = new HashMap<Var, Type>();
-        typeEnvironment.put(new Var("x"), new ClassNameType(new ClassName("foo")));
+        typeEnvironment.put(new Var("xqw"), new ClassNameType(new ClassName("foo")));
         Type expected = emptyTypechecker().typeof(new ThisExp(), typeEnvironment, new ClassName("foo"));
         assertEquals(expected, new ClassNameType(new ClassName("foo")));
     }
@@ -273,7 +273,9 @@ public class TypecheckerTest {
      * Arrays.asList(new IntLiteralExp(0))),typeEnvironment, new ClassName("foo2"));
      * //assertEquals(new ClassNameType(new ClassName("foo2")), expected);
      * }
+     * 
      */
+    
     @Test
     public void testTypeofmethodcall() throws TypeErrorException {
         final Type expectedType = new VoidType();
@@ -296,32 +298,11 @@ public class TypecheckerTest {
         assertEquals(actualType, expectedType);
     }
 
-    /*
-     * @Test
-     * public void testiWellTypedClassDef() throws TypeErrorException{
-     * List<MethodDef> methods = new ArrayList<MethodDef>();
-     * ClassName className = new ClassName("foo");
-     * MethodName methodName = new MethodName("foo");
-     * MethodDef methodDef = new MethodDef(new StringType(),methodName,null,null);
-     * methods.add(methodDef);
-     * List<VarDec>instanceVars= Arrays.asList(new VarDec(new StringType(), new
-     * Var("string text")));
-     * List<VarDec>Args= Arrays.asList(new VarDec(new StringType(), new
-     * Var("string text2")));
-     * List<Expression>Superpara= new ArrayList<Expression>();
-     * Expression expressions= new Expression(new, methodName, arguments)
-     * Superpara.add(expressions);
-     * ClassDef classDef = new
-     * ClassDef(className,instanceVars,Args,Superpara,null,methods);
-     * final Typechecker fulltype= new Typechecker(new
-     * Program(Arrays.asList(classDef), new ExpStmt(new IntLiteralExp(0))));
-     * fulltype.isWellTypedClassDef(classDef);
-     * //assertEquals(1,emptyTypechecker().isWellTypedClassDef(classDef));
-     * 
-     * 
-     * }
-     */
-    @Test
+    
+ 
+    
+
+@Test
     public void testGetClass() throws TypeErrorException {
         final ClassDef TesterType = nonEmptyTypechecker().getClass(new ClassName("Object"));
         assertEquals(null, TesterType);
@@ -360,8 +341,8 @@ public class TypecheckerTest {
     public void testTypeofmethodcallExceptionNonClass() throws TypeErrorException {
         final Type expectedType = new StringType();
         final Map<Var, Type> typeEnvironment = new HashMap<Var, Type>();
-        typeEnvironment.put(new Var("x"), expectedType);
-        Expression targetExpression = new VarExp(new Var("x"));
+        typeEnvironment.put(new Var("xw"), expectedType);
+        Expression targetExpression = new VarExp(new Var("xc"));
         MethodName methodName = new MethodName("foo");
         List<Expression> arguments = new ArrayList<Expression>();
         final Type actualType = emptyTypechecker().typeof(new MethodCallExp(targetExpression, methodName, arguments),
@@ -609,7 +590,7 @@ public class TypecheckerTest {
         final Map<Var, Type> typeEnvironment = new HashMap<Var, Type>();
         final Map<Var, Type> expectedRes = new HashMap<Var, Type>();
         Statement body = new VariableInitializationStmt(
-                new VarDec(new IntType(), new Var("x")), new IntLiteralExp(17));
+                new VarDec(new IntType(), new Var("xd")), new IntLiteralExp(17));
         WhileStmt whileStmt = new WhileStmt(new BoolLiteralExp(true), body);
         Map<Var, Type> received = emptyTypechecker().isWellTypedStmt(whileStmt,
                 typeEnvironment,
@@ -627,7 +608,7 @@ public class TypecheckerTest {
         final Map<Var, Type> typeEnvironment = new HashMap<Var, Type>();
         final Map<Var, Type> expectedRes = new HashMap<Var, Type>();
         Statement body = new VariableInitializationStmt(
-                new VarDec(new IntType(), new Var("x")), new IntLiteralExp(17));
+                new VarDec(new IntType(), new Var("as")), new IntLiteralExp(17));
         WhileStmt whileStmt = new WhileStmt(new OpExp(new IntLiteralExp(1),
                 new PlusOp(),
                 new IntLiteralExp(1)), body);
@@ -649,9 +630,9 @@ public class TypecheckerTest {
         final Map<Var, Type> typeEnvironment = new HashMap<Var, Type>();
         final Map<Var, Type> expected = new HashMap<Var, Type>();
         Statement trueBranch = new VariableInitializationStmt(
-                new VarDec(new IntType(), new Var("x")), new IntLiteralExp(1));
+                new VarDec(new IntType(), new Var("ds")), new IntLiteralExp(1));
         Statement falseBranch = new VariableInitializationStmt(
-                new VarDec(new IntType(), new Var("x")), new IntLiteralExp(2));
+                new VarDec(new IntType(), new Var("jk")), new IntLiteralExp(2));
         IfStatement ifStatement = new IfStatement(new BoolLiteralExp(true), trueBranch, falseBranch);
         Map<Var, Type> received = emptyTypechecker().isWellTypedStmt(ifStatement,
                 typeEnvironment,
@@ -783,7 +764,7 @@ public class TypecheckerTest {
         ClassDef classDef = new ClassDef(className, null, null, null, null, methods);
         final Map<Var, Type> typeEnvironment = new HashMap<Var, Type>();
         typeEnvironment.put(new Var("x"), new ClassNameType(className));
-        Expression targetExpression = new VarExp(new Var("x"));
+        Expression targetExpression = new VarExp(new Var("qa"));
         List<Expression> arguments = new ArrayList<Expression>();
         final Type actualType = nonEmptyTypechecker().typeof(new MethodCallExp(targetExpression, methodName, arguments),
                 typeEnvironment,
@@ -807,7 +788,7 @@ public class TypecheckerTest {
         ClassName className = new ClassName("Foo");
         List<Expression> arguments = new ArrayList<Expression>();
         typeEnvironment.put(new Var("x"), new ClassNameType(className));
-        arguments.add(new VarExp(new Var("x")));
+        arguments.add(new VarExp(new Var("g")));
         final Type actualType = nonEmptyTypechecker().typeof(new NewExp(className, arguments),
                 typeEnvironment,
                 new ClassName("foo"));
@@ -865,7 +846,7 @@ public class TypecheckerTest {
         List<Expression> superParams = new ArrayList<Expression>();
         List<Statement> constructorBody = new ArrayList<Statement>();
         List<MethodDef> methods = new ArrayList<MethodDef>();
-        Statement printStmt = new PrintlnStmt(new VarExp(new Var("x")));
+        Statement printStmt = new PrintlnStmt(new VarExp(new Var("q")));
         MethodName methodName = new MethodName("foo");
         methods.add(new MethodDef(
                 new VoidType(), methodName, new ArrayList<VarDec>(), printStmt));
@@ -897,7 +878,7 @@ public class TypecheckerTest {
         List<Expression> superParams = new ArrayList<Expression>();
         List<Statement> constructorBody = new ArrayList<Statement>();
         List<MethodDef> methods = new ArrayList<MethodDef>();
-        Statement printStmt = new PrintlnStmt(new VarExp(new Var("x")));
+        Statement printStmt = new PrintlnStmt(new VarExp(new Var("w")));
         MethodName methodName = new MethodName("foo");
         methods.add(new MethodDef(
                 new VoidType(), methodName, new ArrayList<VarDec>(), printStmt));
@@ -923,7 +904,7 @@ public class TypecheckerTest {
         methods.add(methodDef);
         ClassDef classDef = new ClassDef(className, null, null, null, null, methods);
         final Map<Var, Type> typeEnvironment = new HashMap<Var, Type>();
-        typeEnvironment.put(new Var("x"), new ClassNameType(className));
+        typeEnvironment.put(new Var("p"), new ClassNameType(className));
         Expression targetExpression = new VarExp(new Var("x"));
         List<Expression> arguments = new ArrayList<Expression>();
         final Type actualType = nonEmptyTypecheckerIdenticalClassName().typeof(
@@ -940,7 +921,7 @@ public class TypecheckerTest {
         List<Expression> superParams = new ArrayList<Expression>();
         List<Statement> constructorBody = new ArrayList<Statement>();
         List<MethodDef> methods = new ArrayList<MethodDef>();
-        Statement printStmt = new PrintlnStmt(new VarExp(new Var("x")));
+        Statement printStmt = new PrintlnStmt(new VarExp(new Var("f")));
         MethodName methodName = new MethodName("foo");
         methods.add(new MethodDef(
                 new VoidType(), methodName, new ArrayList<VarDec>(), printStmt));
@@ -967,7 +948,7 @@ public class TypecheckerTest {
         ClassDef classDef = new ClassDef(className, null, null, null, null, methods);
         final Map<Var, Type> typeEnvironment = new HashMap<Var, Type>();
         typeEnvironment.put(new Var("x"), new ClassNameType(className));
-        Expression targetExpression = new VarExp(new Var("x"));
+        Expression targetExpression = new VarExp(new Var("y"));
         List<Expression> arguments = new ArrayList<Expression>();
         final Type actualType = nonEmptyTypecheckerIdenticalMethodName().typeof(
                 new MethodCallExp(targetExpression, methodName, arguments),
@@ -995,12 +976,12 @@ public class TypecheckerTest {
         List<Expression> superParams = new ArrayList<Expression>();
         superParams.add(new BoolLiteralExp(false));
         List<MethodDef> methods = new ArrayList<MethodDef>();
-        Statement printStmt = new PrintlnStmt(new VarExp(new Var("x")));
+        Statement printStmt = new PrintlnStmt(new VarExp(new Var("z")));
         List<Statement> constructorBody = new ArrayList<Statement>();
         constructorBody.add(printStmt);
         MethodName methodName = new MethodName("foo");
         methods.add(new MethodDef(
-                new VoidType(), methodName, instanceVariables1, printStmt));
+                new VoidType(), methodName,  Arrays.asList(new VarDec(new BoolType(), new Var("name2"))), printStmt));
         ClassDef classToTest = new ClassDef(className, className,
                 instanceVariables2,
                 constructorArguments,
@@ -1012,5 +993,11 @@ public class TypecheckerTest {
         Program programToTest = new Program(classes, printStmt);
         final Typechecker tester = new Typechecker(programToTest);
         tester.isWellTypedProgram();
+    }
+    @Test
+    public void testlaststuff() throws TypeErrorException{
+
+       final Program program = new Program(new ArrayList<ClassDef>(),new ExpStmt(new IntLiteralExp(0)));
+       Typechecker.typecheck(program);
     }
 }
