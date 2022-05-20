@@ -319,7 +319,7 @@ public class Tokenizer {
         return retval;
     }
 
-    public List<Token> tokenize() throws TokenizerException {
+    public List<parser.Token> tokenize() throws TokenizerException {
         final List<Token> tokens = new ArrayList<Token>();
         Token token = tokenizeSingle();
 

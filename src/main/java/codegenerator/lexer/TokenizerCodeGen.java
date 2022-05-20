@@ -1,9 +1,33 @@
 package codegenerator.lexer;
-import lexer.*;
+// import lexer.*;
 
 import java.util.Map;
 
 import codegenerator.parser.IdentifierToken;
+// import lexer.Tokenizer;
+import lexer.TokenizerException;
+import parser.BooleanToken;
+import parser.ClassToken;
+import parser.CommaToken;
+import parser.ElseToken;
+import parser.EqualsToken;
+import parser.ExtendsToken;
+import parser.FalseToken;
+import parser.IfToken;
+import parser.IntegerToken;
+import parser.LeftCurlyToken;
+import parser.LeftParenToken;
+import parser.LessThanToken;
+import parser.NewToken;
+import parser.PlusToken;
+import parser.ReturnToken;
+import parser.RightCurlyToken;
+import parser.RightParenToken;
+import parser.SuperToken;
+import parser.ThisToken;
+import parser.Token;
+import parser.TrueToken;
+import parser.WhileToken;
 
 import java.util.HashMap;
 import java.util.List;
@@ -125,7 +149,7 @@ public class TokenizerCodeGen  {
     // returns null if it couldn't read in anything
     private Token tryTokenizeSingle() {
         skipWhitespace();
-        Token retval = tryTokenizeInteger();
+        Token retval = (Token) tryTokenizeInteger();
         if (retval != null) {
             return retval;
         }
@@ -156,7 +180,7 @@ public class TokenizerCodeGen  {
     }
 
     public static Token[] tokenize(final String input) throws TokenizerException {
-        final List<Token> tokens = new Tokenizer(input).tokenize();
+        final List<Token> tokens = new TokenizerCodeGen(input).tokenize();
         return tokens.toArray(new Token[tokens.size()]);
     }
 }

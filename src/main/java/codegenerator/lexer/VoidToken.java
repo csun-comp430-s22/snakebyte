@@ -1,6 +1,6 @@
 package codegenerator.lexer;
 
-import lexer.Token;
+import parser.Token;
 
 public class VoidToken implements Token {
     public int hashCode() { return 106; }
