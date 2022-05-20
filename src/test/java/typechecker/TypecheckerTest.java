@@ -1176,4 +1176,32 @@ public class TypecheckerTest {
                 
         }
 
+        @Test(expected = TypeErrorException.class)
+    public void testDuplicateInstanceVariablesError() throws TypeErrorException {
+        ClassName className = new ClassName("Foo");
+        List<VarDec> instanceVariables = new ArrayList<VarDec>();
+        List<VarDec> constructorArguments = new ArrayList<VarDec>();
+        VarDec firstParam = new VarDec(new BoolType(), new Var("test"));
+        VarDec secondParam = new VarDec(new BoolType(), new Var("test"));
+        instanceVariables.add(firstParam);
+        instanceVariables.add(secondParam);
+        List<Expression> superParams = new ArrayList<Expression>();
+        List<Statement> constructorBody = new ArrayList<Statement>();
+        List<MethodDef> methods = new ArrayList<MethodDef>();
+        Statement printStmt = new PrintlnStmt(new VarExp(new Var("x")));
+        MethodName methodName = new MethodName("foo");
+        methods.add(new MethodDef(
+                new VoidType(), methodName, new ArrayList<VarDec>(), printStmt));
+        ClassDef classToTest = new ClassDef(className,
+                instanceVariables,
+                constructorArguments,
+                superParams,
+                constructorBody,
+                methods);
+        List<ClassDef> classes = new ArrayList<ClassDef>();
+        classes.add(classToTest);
+        final Typechecker tester = new Typechecker(new Program(classes, new ExpStmt(new IntLiteralExp(0))));
+        tester.isWellTypedClassDef(classToTest);
+    }
+
 }
