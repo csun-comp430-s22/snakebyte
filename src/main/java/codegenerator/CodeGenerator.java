@@ -70,6 +70,9 @@ public class CodeGenerator  {
     public void writeIntLiteralExpression(final IntLiteralExp intExp) throws IOException {
         outputWriter.print(intExp.value);
     }
+    public void writeStringLiteralExpression(final StringLiteralExp stringExp) throws IOException {
+        outputWriter.print(stringExp.value);
+    }
     public void writeVar(final Var var, final Set<Var> localVar) throws IOException {
         if(!localVar.contains(var)){
             outputWriter.print(SELF_NAME);
@@ -113,6 +116,8 @@ public class CodeGenerator  {
                     throws CodeGeneratorException, IOException{
         if(expression instanceof IntLiteralExp){
             writeIntLiteralExpression((IntLiteralExp)expression);
+        }else if(expression instanceof StringLiteralExp) {
+            writeStringLiteralExpression((StringLiteralExp)expression);
         }else if(expression instanceof VarExp){
             writeVarExp((VarExp)expression, localVar);
         }else if(expression instanceof BoolLiteralExp){
@@ -184,6 +189,11 @@ public class CodeGenerator  {
         returnValue.addAll(vars);
         returnValue.add(var);
         return returnValue;
+    }
+    public Set<Var> writeExpStmt(final ExpStmt stmt, final Set<Var> localVar) throws CodeGeneratorException, IOException {
+        writeExp(stmt.expression, localVar);
+        outputWriter.print(";");
+        return localVar;
     }
     public Set<Var> writeVarInitialStmt(final VariableInitializationStmt stmt, final Set<Var> localVar)
     throws CodeGeneratorException,IOException{
@@ -263,8 +273,10 @@ public class CodeGenerator  {
     }
     public Set<Var> writeStmt(final Statement statement,final Set<Var> localVar) 
                         throws CodeGeneratorException,IOException{
+        // was: if(statement instanceof ExpStmt){
+        //    return writeStmt((ExpStmt)statement, localVar);
         if(statement instanceof ExpStmt){
-            return writeStmt((ExpStmt)statement, localVar);
+            return writeExpStmt((ExpStmt)statement, localVar);
         }else if(statement instanceof VariableInitializationStmt){
             return writeVarInitialStmt((VariableInitializationStmt)statement, localVar);
         }else if(statement instanceof AssignStmt){

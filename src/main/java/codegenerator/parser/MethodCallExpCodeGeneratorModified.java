@@ -4,7 +4,7 @@ import typechecker.parser.MethodName;
 import typechecker.parser.ClassNameType;
 
 import java.util.List;
-public class MethodCallExpCodeGeneratorModified {
+public class MethodCallExpCodeGeneratorModified implements Expression {
     public final Expression target;
     public ClassNameType targetTypeName;
     public final MethodName methodName;

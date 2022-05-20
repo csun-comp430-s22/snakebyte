@@ -1,7 +1,7 @@
 package typechecker.parser;
 
 public class StringLiteralExp implements Expression {
-    final String value;
+    public final String value;
 
     public StringLiteralExp(final String value) {
         this.value = value;
