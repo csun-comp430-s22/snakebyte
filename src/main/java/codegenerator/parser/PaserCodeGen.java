@@ -33,6 +33,7 @@ import typechecker.parser.Program;
 import typechecker.parser.ReturnNonVoidStmt;
 import typechecker.parser.ReturnVoidStmt;
 import typechecker.parser.Statement;
+import typechecker.parser.StringType;
 import typechecker.parser.ThisExp;
 import typechecker.parser.Type;
 import typechecker.parser.Var;
@@ -105,7 +106,10 @@ public class PaserCodeGen {
         } else if (token instanceof VoidType) {
             type = new VoidType();
             position++;
-        } else {
+        } else if(token instanceof StringType){
+            type = new StringType();
+            position++;
+        }else{
             final ParseResult<ClassName> className = parseClassName(position);
             position = className.position;
             type = new ClassNameType(className.result);
