@@ -17,9 +17,9 @@ import java.io.IOException;
 public class CodeGenerator  {
     //the following code could change according to the language
     public static final String SELF_NAME = "this";
-    public static final String MAKE_OBJ = "class Test{}";
+    public static final String MAKE_OBJ = "class Test{ Type a, Type b}";
     public static final String DOCALHELPER = "void method(){println(\"hello\");}";
-    public static final String OBJCONSTRUCTOR = "void Test(Int a){this.a = a}";
+    public static final String OBJCONSTRUCTOR = "Test(Int a){this.a = a}";
     public final Program program;
     public final PrintWriter outputWriter;
     public final Map<ClassName,ClassDef> classesMap;
