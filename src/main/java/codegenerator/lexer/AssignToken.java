@@ -1,6 +1,6 @@
 package codegenerator.lexer;
 
-import lexer.Token;
+import parser.Token;
 
 public class AssignToken implements Token{
     public int hashCode() { return 104; }

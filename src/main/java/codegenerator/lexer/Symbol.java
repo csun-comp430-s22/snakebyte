@@ -1,5 +1,5 @@
 package codegenerator.lexer;
-import lexer.Token;
+import parser.Token;
 public class Symbol {
     public final String asString;
     public final Token asToken;

@@ -1,5 +1,5 @@
 package codegenerator.lexer;
-import lexer.*;
+import parser.Token;
 public class ConstructorToken implements Token{
     public int hashCode() { return 105; }
     public boolean equals(final Object other) {

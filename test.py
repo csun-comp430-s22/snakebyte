@@ -1,1 +1,1 @@
-class Test{}void method(){println("hello");}void Test(Int a){this.a = a}{}
+class Test{ Type a, Type b}void method(){println("hello");}Test(Int a){this.a = a}{}
