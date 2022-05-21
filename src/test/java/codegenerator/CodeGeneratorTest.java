@@ -17,16 +17,22 @@ import typechecker.parser.BoolLiteralExp;
 import typechecker.parser.BoolType;
 import typechecker.parser.ClassDef;
 import typechecker.parser.ClassName;
+import typechecker.parser.DivideOp;
 import typechecker.parser.EqualsEqualsOp;
 import typechecker.parser.EqualsOp;
 import typechecker.parser.ExpStmt;
 import typechecker.parser.Expression;
+import typechecker.parser.GreaterThanEqualOp;
+import typechecker.parser.GreaterThanOp;
 import typechecker.parser.IfStatement;
 import typechecker.parser.IntLiteralExp;
 import typechecker.parser.IntType;
+import typechecker.parser.LessThanEqualOp;
+import typechecker.parser.LessThanOp;
 import typechecker.parser.MethodCallExp;
 import typechecker.parser.MethodDef;
 import typechecker.parser.MethodName;
+import typechecker.parser.MinusOP;
 import typechecker.parser.NewExp;
 import typechecker.parser.OpExp;
 import typechecker.parser.PlusOp;
@@ -38,6 +44,7 @@ import typechecker.parser.Statement;
 import typechecker.parser.StringLiteralExp;
 import typechecker.parser.StringType;
 import typechecker.parser.ThisExp;
+import typechecker.parser.TimesOp;
 import typechecker.parser.Var;
 import typechecker.parser.VarDec;
 import typechecker.parser.VarExp;
@@ -147,7 +154,7 @@ public class CodeGeneratorTest {
     @Test
     public void testExpressions() throws TypeErrorException, IOException, CodeGeneratorException {
 
-        PrintWriter fileToPrint = new PrintWriter(("generatedCode2"));
+        PrintWriter fileToPrint = new PrintWriter(("generatedCode3"));
         ClassName className = new ClassName("Foo");
         List<VarDec> instanceVariables = new ArrayList<VarDec>();
         List<VarDec> constructorArguments = new ArrayList<VarDec>();
@@ -174,6 +181,56 @@ public class CodeGeneratorTest {
         //methods.add(new MethodDef(new VoidType(), methodName4, decList, stmt4)); // NullPointerException when testing WriteMethodCall().
                                                                                    // likely due to targetTypeName in classname always being null
         methods.add(new MethodDef(new VoidType(), methodName5, decList, stmt5));                                                                      
+        ClassDef classToTest = new ClassDef(className,
+                instanceVariables,
+                constructorArguments,
+                superParams,
+                constructorBody,
+                methods);
+        List<ClassDef> classes = new ArrayList<ClassDef>();
+        classes.add(classToTest);
+
+        CodeGenerator ProgramTester = new CodeGenerator(new Program(classes, new ExpStmt(new IntLiteralExp(0))),
+                fileToPrint);
+        ProgramTester.generateCode();
+    }
+
+    @Test
+    public void testOps() throws TypeErrorException, IOException, CodeGeneratorException {
+
+        PrintWriter fileToPrint = new PrintWriter(("generatedCode4"));
+        ClassName className = new ClassName("Foo");
+        List<VarDec> instanceVariables = new ArrayList<VarDec>();
+        List<VarDec> constructorArguments = new ArrayList<VarDec>();
+        List<Expression> superParams = new ArrayList<Expression>();
+        List<Statement> constructorBody = new ArrayList<Statement>();
+        List<MethodDef> methods = new ArrayList<MethodDef>();
+        Statement stmt1 = new PrintlnStmt(new OpExp(new IntLiteralExp(2), new MinusOP(), new IntLiteralExp(1)));
+        MethodName methodName1 = new MethodName("test1"); // Tests MinusOP
+        Statement stmt2 = new PrintlnStmt(new OpExp(new IntLiteralExp(1), new TimesOp(), new IntLiteralExp(2)));
+        MethodName methodName2 = new MethodName("test2"); // Tests TimesOP
+        Statement stmt3 = new PrintlnStmt(new OpExp(new IntLiteralExp(2), new DivideOp(), new IntLiteralExp(1)));
+        MethodName methodName3 = new MethodName("test3"); // Tests DividOp
+        Statement stmt4 = new PrintlnStmt(new OpExp(new IntLiteralExp(2), new GreaterThanOp(), new IntLiteralExp(1)));
+        MethodName methodName4 = new MethodName("test4"); // Tests GreaterThanOp
+        Statement stmt5 = new PrintlnStmt(new OpExp(new IntLiteralExp(1), new LessThanOp(), new IntLiteralExp(2)));
+        MethodName methodName5 = new MethodName("test5"); // Tests LessThanOp
+        Statement stmt6 = new PrintlnStmt(new OpExp(new IntLiteralExp(2), new GreaterThanEqualOp(), new IntLiteralExp(2)));
+        MethodName methodName6 = new MethodName("test6"); // Tests GreaterThanEqualOp
+        Statement stmt7 = new PrintlnStmt(new OpExp(new IntLiteralExp(3), new LessThanEqualOp(), new IntLiteralExp(4)));
+        MethodName methodName7 = new MethodName("test7"); // Tests LessThanEqualOp
+        Statement stmt8 = new PrintlnStmt(new OpExp(new IntLiteralExp(4), new EqualsEqualsOp(), new IntLiteralExp(4)));
+        MethodName methodName8 = new MethodName("test8"); // Tests EqualEqualOp
+        List<VarDec> decList = new ArrayList<VarDec>();
+        decList.add(new VarDec(new StringType(), new Var("w")));
+        methods.add(new MethodDef(new VoidType(), methodName1, decList, stmt1));
+        methods.add(new MethodDef(new VoidType(), methodName2, decList, stmt2));
+        methods.add(new MethodDef(new VoidType(), methodName3, decList, stmt3));
+        methods.add(new MethodDef(new VoidType(), methodName4, decList, stmt4));
+        methods.add(new MethodDef(new VoidType(), methodName5, decList, stmt5));
+        methods.add(new MethodDef(new VoidType(), methodName6, decList, stmt6));
+        methods.add(new MethodDef(new VoidType(), methodName7, decList, stmt7));
+        methods.add(new MethodDef(new VoidType(), methodName8, decList, stmt8));                                                                
         ClassDef classToTest = new ClassDef(className,
                 instanceVariables,
                 constructorArguments,
