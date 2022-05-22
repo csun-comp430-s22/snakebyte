@@ -7,9 +7,29 @@ import java.util.ArrayList;
 import java.util.List;
 import org.junit.Test;
 
+import codegenerator.lexer.ConstructorToken;
+import codegenerator.lexer.IntegerTokenCodeGen;
+import codegenerator.lexer.PrintlnToken;
 import codegenerator.parser.AssignStmt;
+import codegenerator.parser.IdentifierToken;
 import codegenerator.parser.MethodCallExpCodeGeneratorModified;
+import codegenerator.parser.PaserCodeGen;
+import lexer.ClassToken;
+import lexer.CommaToken;
+import lexer.EqualsToken;
+import lexer.ExtendsToken;
+import lexer.LeftCurlyToken;
+import lexer.LeftParenToken;
+import lexer.PlusToken;
+import lexer.ReturnToken;
+import lexer.RightCurlyToken;
+import lexer.RightParenToken;
+import lexer.SemiColonToken;
+import lexer.SuperToken;
+import lexer.Token;
+import lexer.TrueToken;
 import parser.IntExp;
+import parser.ParseException;
 import parser.PlusOP;
 import typechecker.TypeErrorException;
 import typechecker.parser.BlockStmt;
@@ -92,10 +112,16 @@ public class CodeGeneratorTest {
     public void testStatements() throws TypeErrorException, IOException, CodeGeneratorException {
 
         PrintWriter fileToPrint = new PrintWriter(("generatedCode2"));
-        ClassName className = new ClassName("Foo");
+        ClassName className1 = new ClassName("Foo");
+        ClassName classname2 = new ClassName("Bar");
         List<VarDec> instanceVariables = new ArrayList<VarDec>();
         List<VarDec> constructorArguments = new ArrayList<VarDec>();
-        List<Expression> superParams = new ArrayList<Expression>();
+        VarDec constructorArg = new VarDec(new IntType(), new Var("n"));
+        constructorArguments.add(constructorArg);
+        List<Expression> superParams1 = new ArrayList<Expression>();
+        List<Expression> superParams2 = new ArrayList<Expression>();
+        Expression superExp = new VarExp(new Var("x"));
+        superParams2.add(superExp);
         List<Statement> constructorBody = new ArrayList<Statement>();
         List<MethodDef> methods = new ArrayList<MethodDef>();
         Statement stmt1 = new VariableInitializationStmt(new VarDec(new StringType(), new Var("string")), new StringLiteralExp("a"));
@@ -137,14 +163,21 @@ public class CodeGeneratorTest {
                 new VoidType(), methodName8, decList, stmt8));
         methods.add(new MethodDef(
                 new VoidType(), methodName9, decList, stmt9));
-        ClassDef classToTest = new ClassDef(className,
+        ClassDef classToTest1 = new ClassDef(className1,
                 instanceVariables,
                 constructorArguments,
-                superParams,
+                superParams1,
+                constructorBody,
+                methods);
+        ClassDef classToTest2 = new ClassDef(classname2,
+                instanceVariables,
+                constructorArguments,
+                superParams2,
                 constructorBody,
                 methods);
         List<ClassDef> classes = new ArrayList<ClassDef>();
-        classes.add(classToTest);
+        classes.add(classToTest1);
+        classes.add(classToTest2);
 
         CodeGenerator ProgramTester = new CodeGenerator(new Program(classes, new ExpStmt(new IntLiteralExp(0))),
                 fileToPrint);
@@ -244,4 +277,34 @@ public class CodeGeneratorTest {
                 fileToPrint);
         ProgramTester.generateCode();
     }
+
+    // Parser Tests ----------------------------------------------------
+    // Program should resemble the following:
+    /* class Foo extends Bar {
+        int a;
+        def constructor (self, String s, Bool b):
+                var c, var d = 1 + 2, 3 + 4; // -, *, / operators not implemented yet
+                print(true);
+        }
+
+        void Test()
+                return; 
+    }
+    */
+
+    /* @Test
+    public void testParser() throws ParseException{
+        final Token[] program = {new ClassToken(), new IdentifierToken("Foo"), new ExtendsToken(),
+                new IdentifierToken("Bar"), new LeftCurlyToken(), new IntType(), new IdentifierToken("a"),
+                new SemiColonToken(), new ConstructorToken(), new LeftParenToken(), new IdentifierToken("Foo"), 
+                new CommaToken(), new StringType(), new IdentifierToken("s"), new CommaToken(), new BoolType(), 
+                new IdentifierToken("b"), new RightParenToken(), new LeftCurlyToken(), new SuperToken(), new LeftParenToken(), 
+                new RightParenToken(), new SemiColonToken(), new IdentifierToken("c"), new CommaToken(), new IdentifierToken("d"), new EqualsToken(), new IntegerTokenCodeGen(1), 
+                new PlusToken(), new IntegerTokenCodeGen(2), new CommaToken(), new IntegerTokenCodeGen(3), new PlusToken(), 
+                new IntegerTokenCodeGen(4), new PrintlnToken(), new LeftParenToken(), new TrueToken(), new RightParenToken(), new SemiColonToken(), 
+                new RightCurlyToken(), new VoidType(), new IdentifierToken("Test"), new LeftParenToken(), new RightParenToken(), new ReturnToken(), 
+                new SemiColonToken(), new RightCurlyToken(), new ReturnToken(), new SemiColonToken()};
+        final PaserCodeGen parser = new PaserCodeGen(program);
+        parser.parseProgram();
+    } */
 }
