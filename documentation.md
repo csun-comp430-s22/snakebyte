@@ -96,7 +96,6 @@ mvn exec:java -Dexec.mainClass="Compiler" -Dexec.args="arg1 arg2"
 ```
 the following command for runtime but also no result return
 ```
-```
 mvn exec:java -Dexec.mainClass="Compiler" -Dexec.classpathScope=runtime
 ```
 ## Formal syntax definition<br>
