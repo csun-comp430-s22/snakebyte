@@ -9,29 +9,9 @@ import codegenerator.lexer.DotToken;
 import codegenerator.lexer.IntegerTokenCodeGen;
 import codegenerator.lexer.PrintlnToken;
 import codegenerator.lexer.SemicolonToken;
-import parser.ClassToken;
-import parser.CommaToken;
-import parser.ElseToken;
-import parser.EqualsToken;
-import parser.ExtendsToken;
-import parser.FalseToken;
-import parser.IfToken;
-import parser.LeftCurlyToken;
-import parser.LeftParenToken;
-import parser.LessThanToken;
-import parser.NewToken;
-// import lexer.*;
+import lexer.*;
 import parser.ParseException;
 import parser.ParseResult;
-import parser.PlusToken;
-import parser.ReturnToken;
-import parser.RightCurlyToken;
-import parser.RightParenToken;
-import parser.SuperToken;
-import parser.ThisToken;
-import parser.Token;
-import parser.TrueToken;
-import parser.WhileToken;
 import typechecker.parser.BoolType;
 import typechecker.parser.ClassDef;
 import typechecker.parser.ClassName;
@@ -53,7 +33,6 @@ import typechecker.parser.Program;
 import typechecker.parser.ReturnNonVoidStmt;
 import typechecker.parser.ReturnVoidStmt;
 import typechecker.parser.Statement;
-import typechecker.parser.StringType;
 import typechecker.parser.ThisExp;
 import typechecker.parser.Type;
 import typechecker.parser.Var;
@@ -126,10 +105,7 @@ public class PaserCodeGen {
         } else if (token instanceof VoidType) {
             type = new VoidType();
             position++;
-        } else if(token instanceof StringType){
-            type = new StringType();
-            position++;
-        }else{
+        } else {
             final ParseResult<ClassName> className = parseClassName(position);
             position = className.position;
             type = new ClassNameType(className.result);

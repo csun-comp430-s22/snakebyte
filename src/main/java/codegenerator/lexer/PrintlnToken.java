@@ -1,5 +1,5 @@
 package codegenerator.lexer;
-import parser.Token;
+import lexer.*;
 public class PrintlnToken implements Token {
     public int hashCode() { return 101; }
     public boolean equals(final Object other) {

@@ -1,5 +1,5 @@
 package codegenerator.lexer;
-import parser.Token;
+import lexer.*;
 public class IntegerTokenCodeGen implements Token{
     public final int value;
 

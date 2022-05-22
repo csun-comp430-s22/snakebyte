@@ -1,5 +1,5 @@
 package codegenerator.lexer;
-import parser.Token;
+import lexer.*;
 public class SemicolonToken implements Token{
     public int hashCode() { return 102; }
     public boolean equals(final Object other) {

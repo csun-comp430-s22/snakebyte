@@ -1,5 +1,5 @@
 
-// import typechecker.*;
+import typechecker.*;
 // import lexer.*;
 // import parser.*;
 import codegenerator.*;
@@ -7,7 +7,6 @@ import codegenerator.parser.PaserCodeGen;
 import lexer.TokenizerException;
 import parser.ParseException;
 import typechecker.TypeErrorException;
-import typechecker.Typechecker;
 import codegenerator.CodeGeneratorException;
 import codegenerator.lexer.TokenizerCodeGen;
 import typechecker.parser.Program;

@@ -7,7 +7,7 @@ Compiler written in Java targeting Python
 
 It compiles but no result return, unfortunately we could run it with absolute path to the arguments.
 ```
-mvn exec:java -Dexec.mainClass="Compiler" -Dexec.args="absolute_address\arg1 arg2"
+mvn exec:java -Dexec.mainClass="Compiler" -Dexec.args="absolute address\arg1 arg2"
 ```
 the following command for runtime but also no result return
 

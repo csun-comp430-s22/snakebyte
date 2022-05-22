@@ -1,6 +1,6 @@
 package codegenerator.parser;
 
-import parser.Token;
+import lexer.*;
 public class IdentifierToken implements Token{
     public final String identifier;
     
