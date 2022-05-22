@@ -94,7 +94,7 @@ It compiles, but returns no result.
 ```
 mvn exec:java -Dexec.mainClass="Compiler" -Dexec.args="arg1 arg2"
 ```
-the following command for runtime but also no result return
+The following command works for runtime, but also returns no results.
 ```
 mvn exec:java -Dexec.mainClass="Compiler" -Dexec.classpathScope=runtime
 ```
