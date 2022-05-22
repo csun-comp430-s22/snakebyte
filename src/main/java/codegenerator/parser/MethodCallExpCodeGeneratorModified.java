@@ -11,9 +11,10 @@ public class MethodCallExpCodeGeneratorModified implements Expression {
     public final List<Expression> params;
     public MethodCallExpCodeGeneratorModified(final Expression target,
                                             final MethodName methodName,
+                                            final ClassNameType classNameType,
                                             final List<Expression> params){
         this.target = target;
-        this.targetTypeName = null;
+        this.targetTypeName = classNameType;
         this.methodName = methodName;
         this.params = params;
     }

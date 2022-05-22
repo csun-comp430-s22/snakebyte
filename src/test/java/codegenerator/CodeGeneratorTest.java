@@ -37,6 +37,7 @@ import typechecker.parser.BoolLiteralExp;
 import typechecker.parser.BoolType;
 import typechecker.parser.ClassDef;
 import typechecker.parser.ClassName;
+import typechecker.parser.ClassNameType;
 import typechecker.parser.DivideOp;
 import typechecker.parser.EqualsEqualsOp;
 import typechecker.parser.EqualsOp;
@@ -116,35 +117,47 @@ public class CodeGeneratorTest {
         ClassName classname2 = new ClassName("Bar");
         List<VarDec> instanceVariables = new ArrayList<VarDec>();
         List<VarDec> constructorArguments = new ArrayList<VarDec>();
-        VarDec constructorArg = new VarDec(new IntType(), new Var("n"));
-        constructorArguments.add(constructorArg);
         List<Expression> superParams1 = new ArrayList<Expression>();
         List<Expression> superParams2 = new ArrayList<Expression>();
         Expression superExp = new VarExp(new Var("x"));
         superParams2.add(superExp);
         List<Statement> constructorBody = new ArrayList<Statement>();
         List<MethodDef> methods = new ArrayList<MethodDef>();
+
         Statement stmt1 = new VariableInitializationStmt(new VarDec(new StringType(), new Var("string")), new StringLiteralExp("a"));
         MethodName methodName1 = new MethodName("test1"); // Tests VariableInitializationStmt-String
+
         Statement stmt2 = new AssignStmt(new Var("assign"), new BoolLiteralExp(true));
         MethodName methodName2 = new MethodName("test2"); // Tests AssignStmt
+
         Statement stmt3 = new IfStatement(new BoolLiteralExp(true), new PrintlnStmt(new IntLiteralExp(1)), 
                                                 new PrintlnStmt(new IntLiteralExp(2)));
         MethodName methodName3 = new MethodName("test3"); // Tests IfStatement
+
         Statement stmt4 = new WhileStmt(new BoolLiteralExp(false), new PrintlnStmt(new StringLiteralExp("hello")));
         MethodName methodName4 = new MethodName("test4"); // Tests WhileStmt
+
         Statement stmt5 = new ReturnNonVoidStmt(new IntLiteralExp(1));
         MethodName methodName5 = new MethodName("test5"); // Tests ReturnNonVoidStmt
+
         Statement stmt6 = new ReturnVoidStmt();
         MethodName methodName6 = new MethodName("test6"); // Tests ReturnVoidStmt
-        Statement stmt7 = new BlockStmt(new ArrayList<Statement>());
+
+        List<Statement> nestList = new ArrayList<>();
+        Statement nestStmt = new ReturnVoidStmt();
+        nestList.add(nestStmt);
+        Statement stmt7 = new BlockStmt(nestList);
         MethodName methodName7 = new MethodName("test7"); // Tests BlockStmt
+
         Statement stmt8 = new VariableInitializationStmt(new VarDec(new BoolType(), new Var("boolean")), new BoolLiteralExp(true));
         MethodName methodName8 = new MethodName("test8"); // Tests VariableInitializationStmt-Bool
+
         Statement stmt9 = new VariableInitializationStmt(new VarDec(new IntType(), new Var("integer")), new IntLiteralExp(1));
         MethodName methodName9 = new MethodName("test9"); // Tests VariableInitializationStmt-Int
+
         List<VarDec> decList = new ArrayList<VarDec>();
-        decList.add(new VarDec(new StringType(), new Var("w")));
+        decList.add(new VarDec(new StringType(), new Var("y")));
+        decList.add(new VarDec(new StringType(), new Var("z")));
         methods.add(new MethodDef(
                 new VoidType(), methodName1, decList, stmt1));
         methods.add(new MethodDef(
@@ -201,8 +214,8 @@ public class CodeGeneratorTest {
         MethodName methodName2 = new MethodName("test2"); // Tests OpExp
         Statement stmt3 = new PrintlnStmt(new ThisExp());
         MethodName methodName3 = new MethodName("test3"); // Tests ThisExp
-        Statement stmt4 = new PrintlnStmt(new MethodCallExpCodeGeneratorModified(new IntLiteralExp(0), 
-                                new MethodName("methodCall"), new ArrayList<Expression>()));
+        Statement stmt4 = new PrintlnStmt(new MethodCallExpCodeGeneratorModified(new ThisExp(), 
+                                new MethodName("test1"), new ClassNameType(new ClassName("Foo")), new ArrayList<Expression>()));
         MethodName methodName4 = new MethodName("test4"); // Tests MethodCallExpCodeGeneratorModified
         Statement stmt5 = new PrintlnStmt(new NewExp(new ClassName("Foo"), new ArrayList<Expression>()));
         MethodName methodName5 = new MethodName("test5"); // Tests NewExp
@@ -211,7 +224,7 @@ public class CodeGeneratorTest {
         methods.add(new MethodDef(new VoidType(), methodName1, decList, stmt1));
         methods.add(new MethodDef(new VoidType(), methodName2, decList, stmt2));
         methods.add(new MethodDef(new VoidType(), methodName3, decList, stmt3));
-        //methods.add(new MethodDef(new VoidType(), methodName4, decList, stmt4)); // NullPointerException when testing WriteMethodCall().
+        methods.add(new MethodDef(new VoidType(), methodName4, decList, stmt4)); // NullPointerException when testing WriteMethodCall().
                                                                                    // likely due to targetTypeName in classname always being null
         methods.add(new MethodDef(new VoidType(), methodName5, decList, stmt5));                                                                      
         ClassDef classToTest = new ClassDef(className,
