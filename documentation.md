@@ -90,7 +90,7 @@ The team size is a critical factor in the design of our compiler. It is directly
 Your system would need to have a Java 1.8 runtime environment installed to compile, as well as Apache Maven and Junit. We have been using Visual Studio Code to build and compile everything thus far.
 ## How do I run your compiler?
 We have included a code generator, but it is buggy and no result return, to execute the following command: (Since we are using Apache Maven, the command is not convenient to use)
-It compiles but no result return
+It compiles, but returns no result.
 ```
 mvn exec:java -Dexec.mainClass="Compiler" -Dexec.args="arg1 arg2"
 ```
